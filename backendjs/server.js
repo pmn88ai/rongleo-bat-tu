@@ -168,21 +168,11 @@ process.once('SIGUSR2', () => {
 // Initialize database and start server
 (async () => {
     try {
-        await dbService.init();
-        console.log('[STARTUP] Database initialized successfully.');
-
-        app.listen(PORT, () => {
-            console.log(`🚀 BaZi Mega-Evolution API running on port ${PORT}`);
-            console.log(`📚 API Docs: http://localhost:${PORT}/api/docs`);
-            console.log(`💾 SQLite Database: data/bazi_consultant.db`);
-
-            // Auto-cleanup old access logs (>30 days)
-            dbService.cleanOldAccessLogs(30).catch(() => { });
-        });
-    } catch (error) {
-        console.error('[STARTUP] Critical Error: Failed to initialize database:', error.message);
-        process.exit(1);
-    }
+  await dbService.init();
+  console.log("DB OK");
+} catch (e) {
+  console.log("⚠️ DB FAIL → skip:", e.message);
+}
 })();
 
 module.exports = app;
