@@ -7,8 +7,7 @@ import QueTimeline from './components/QueTimeline';
 import QueShareCard from './components/QueShareCard';
 import './QuePage.css';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8888';
-
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 
 const TOPICS = [
@@ -77,7 +76,7 @@ const QuePage = ({ userData }) => {
                 'x-user-id': getUserId()
             };
 
-            const response = await fetch(`${API_BASE}/api/que/${type}?${params.toString()}`, {
+            const response = await fetch(`${API_BASE}/api/que/quick-random?${params.toString()}`, {
                 method: 'GET',
                 headers: headers
             });
@@ -138,7 +137,7 @@ const QuePage = ({ userData }) => {
                 'x-user-id': getUserId()
             };
 
-            const response = await fetch(`${API_BASE}/api/que/${type}?${params.toString()}`, {
+            const response = await fetch(`${API_BASE}/api/que/quick-random?${params.toString()}`, {
                 method: 'GET',
                 headers
             });
