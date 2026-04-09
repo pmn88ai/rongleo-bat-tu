@@ -8,7 +8,7 @@ async function saveProfileToSheet(userData) {
         await fetch("https://script.google.com/macros/s/AKfycbxqoMrIxbZXeZXRanTA91a7DznJ7xNixqzTPMciEDtLTBLJdtAgsDDOF4ofUEAqAuuQcA/exec", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain"
             },
             body: JSON.stringify({
                 type: "menhly_profile",
