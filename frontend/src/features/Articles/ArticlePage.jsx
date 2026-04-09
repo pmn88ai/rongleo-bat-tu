@@ -21,7 +21,8 @@ const ArticlePage = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`${API_CONFIG.BASE_URL}/articles/${slug}`);
+            // Correct path: /api/articles/slug?slug=xxx
+            const res = await fetch(`${API_CONFIG.BASE_URL}/articles/slug?slug=${encodeURIComponent(slug)}`);
             const data = await res.json();
             if (data.success) {
                 setArticle(data.article);
@@ -50,7 +51,6 @@ const ArticlePage = () => {
         return new Date(dateStr).toISOString();
     };
 
-    // Generate Article structured data for SEO
     const getStructuredData = () => {
         if (!article) return null;
         return {
@@ -105,7 +105,6 @@ const ArticlePage = () => {
 
     return (
         <div className="article-page">
-            {/* SEO Meta Tags */}
             <SEO
                 title={article.title}
                 description={article.excerpt || `${article.title} - Kiến thức Bát Tự chuyên sâu`}

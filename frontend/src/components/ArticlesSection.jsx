@@ -2,9 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_CONFIG } from '../config/api';
 
+// Static categories — không cần API call, không có /api/articles/categories
+const STATIC_CATEGORIES = [
+    { id: 'all',       name: 'Tất cả',              slug: 'all' },
+    { id: 'khai-niem', name: 'Khái niệm cơ bản',    slug: 'khai-niem' },
+    { id: 'cach-luan', name: 'Cách luận giải',       slug: 'cach-luan' },
+    { id: 'ngu-hanh',  name: 'Ngũ Hành',             slug: 'ngu-hanh' },
+    { id: 'can-chi',   name: 'Thiên Can - Địa Chi',  slug: 'can-chi' },
+    { id: 'ung-dung',  name: 'Ứng dụng thực tế',     slug: 'ung-dung' },
+];
+
 const ArticlesSection = () => {
     const [articles, setArticles] = useState([]);
-    const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('all');
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -12,25 +21,12 @@ const ArticlesSection = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchCategories();
         fetchArticles();
     }, []);
 
     useEffect(() => {
         fetchArticles();
     }, [activeCategory, page]);
-
-    const fetchCategories = async () => {
-        try {
-            const res = await fetch(`${API_CONFIG.BASE_URL}/articles/categories`);
-            const data = await res.json();
-            if (data.success) {
-                setCategories(data.categories || []);
-            }
-        } catch (err) {
-            console.error('Failed to fetch categories:', err);
-        }
-    };
 
     const fetchArticles = async () => {
         setLoading(true);
@@ -85,7 +81,7 @@ const ArticlesSection = () => {
                     <span className="title-highlight">KIẾN THỨC BÁT TỰ</span>
                 </h2>
                 <div className="articles-categories">
-                    {categories.map(cat => (
+                    {STATIC_CATEGORIES.map(cat => (
                         <button
                             key={cat.id}
                             className={`category-tab ${activeCategory === cat.slug ? 'active' : ''}`}
@@ -98,7 +94,6 @@ const ArticlesSection = () => {
             </div>
 
             <div className="articles-content">
-                {/* Main Featured Article */}
                 {featuredArticle && (
                     <div className="article-main" onClick={() => handleArticleClick(featuredArticle.slug)}>
                         <div className="article-main-image">
@@ -125,7 +120,6 @@ const ArticlesSection = () => {
                     </div>
                 )}
 
-                {/* Sidebar Articles */}
                 <div className="articles-sidebar">
                     {sidebarArticles.map(article => (
                         <div
@@ -149,7 +143,6 @@ const ArticlesSection = () => {
                 </div>
             </div>
 
-            {/* Pagination */}
             <div className="articles-pagination">
                 <button
                     className="pagination-btn"

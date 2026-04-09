@@ -1,3 +1,5 @@
+CÁI NÀY LÀ FRONTEND - KO CÓ BACKEND. BẢN NÀY SAU KHI XÓA ĐƯỢC LOGIN, NGÂN LƯỢNG. CHẠY ĐƯỢC LOCAL, ĐÃ XÓA BACKEND VÀ CHẠY THỬ. ĐÃ GOM TỪ HƠN 30 API VỀ TẦM 10 API ĐỂ VERCEL FREE. (20260409)
+
 # 🏮 Huyền Cơ Bát Tự — BaZi Analysis Platform
 
 > Nền tảng phân tích Tứ Trụ (Bát Tự) chuyên sâu, tích hợp AI tư vấn, được xây dựng với React 19 & Node.js.
