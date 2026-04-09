@@ -1,0 +1,134 @@
+/**
+ * scroll-fix.css
+ * Mobile scroll fixes — imported AFTER index.css to override conflicting rules.
+ *
+ * Root cause of scroll dead-zones:
+ *  1. .mobile-shell had `overscroll-behavior-y: contain` which swallows scroll events
+ *     before they reach .mobile-content on some iOS/Android browsers.
+ *  2. .mobile-shell used `min-height` instead of `height`, so flex children
+ *     (.mobile-content) could not resolve `flex: 1` to a definite pixel height,
+ *     preventing overflow-y: auto from activating a scroll container.
+ *  3. Several large card/section containers had `overflow: hidden` which blocked
+ *     touch-scroll events from bubbling up to .mobile-content.
+ */
+
+/* ── 1. Fix mobile-shell: exact height so flex:1 resolves correctly ────────── */
+.mobile-shell {
+  height: 100vh;
+  height: 100dvh;          /* dvh = dynamic viewport height — handles iOS toolbar */
+  min-height: unset;       /* remove min-height: prevents flex child height resolution */
+  overflow: hidden;        /* shell itself must NOT scroll — only .mobile-content scrolls */
+  /* REMOVED: overscroll-behavior-y: contain — was eating scroll events on Android */
+}
+
+/* ── 2. Fix mobile-content: sole scroll container ──────────────────────────── */
+.mobile-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;  /* momentum scroll on iOS */
+  overscroll-behavior-y: contain;     /* prevent page bounce leaking to body */
+  /* Keep existing padding-top / padding-bottom values from index.css */
+}
+
+/* ── 3. Allow touch-scroll to pass through all children ────────────────────── */
+/*
+ * touch-action: pan-y tells the browser: "this element participates in vertical
+ * panning". Without this, elements that capture pointer events (e.g. glass-card,
+ * chart wrappers) silently absorb touch start/move events and block scroll.
+ */
+.mobile-content * {
+  touch-action: pan-y;
+}
+
+/*
+ * Exception: interactive elements that need their own touch handling
+ * (horizontal sliders, canvas, map) must explicitly opt out.
+ */
+.mobile-content input[type="range"],
+.mobile-content canvas {
+  touch-action: auto;
+}
+
+/* ── 4. Fix large containers with overflow: hidden ─────────────────────────── */
+/*
+ * Rule: image/avatar/icon wrappers KEEP overflow: hidden (they clip visuals).
+ * Large touchable cards/sections get overflow: visible so scroll propagates.
+ */
+
+/* Cards and layout wrappers — change to visible */
+.glass-card {
+  overflow: visible;
+}
+
+.questions-area,
+.answer-area,
+.consult-header,
+.themes-grid,
+.consultant-container,
+.history-area-new,
+.result-view,
+.bazi-chart-container,
+.bazi-chart-layout,
+.main-chart-group,
+.analysis-box,
+.que-page,
+.matching-page,
+.date-selection-page,
+.articles-section,
+.article-container,
+.article-detail,
+.article-related,
+.related-grid,
+.history-grid,
+.history-detail-view,
+.loading-progress-view,
+.sample-showcase,
+.sample-showcase-container,
+.recent-customers,
+.suggested-questions-widget {
+  overflow: visible;
+}
+
+/* ── 5. Preserve overflow: hidden ONLY for small visual containers ─────────── */
+/*
+ * These clip images or decorative shapes — must keep hidden.
+ * Listed explicitly so they are not accidentally overridden by rule #4.
+ */
+.article-main-image,
+.article-sidebar-image,
+.article-detail-image,
+.related-item-image,
+.article-sidebar-title,    /* text truncation: -webkit-line-clamp needs overflow hidden */
+.dropdown-email,           /* text truncation */
+.status-notch,             /* decorative pill shape */
+.bazi-bg::after,           /* backdrop overlay */
+.loading-pulse,            /* animation circle */
+.loading-animation {
+  overflow: hidden;        /* intentional — clips visuals, not scroll paths */
+}
+
+/* Modals and overlays scroll internally — keep their own overflow */
+.comprehensive-modal,
+.result-view .result-content,
+.bazi-toc-mobile .toc-mobile-menu {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── 6. Body: never scroll — mobile-content handles everything ─────────────── */
+body {
+  overflow: hidden;
+}
+
+/* ── 7. Desktop: restore body scroll (mobile-shell is hidden at ≥768px) ──── */
+@media (min-width: 768px) {
+  body {
+    overflow-y: auto;
+  }
+  .mobile-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+}
