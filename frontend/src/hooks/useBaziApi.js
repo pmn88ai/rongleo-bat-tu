@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 // ── Tracking: gửi profile người dùng lên Google Sheet ─────────────────────────
 async function saveProfileToSheet(userData) {
     try {
-        await fetch("https://script.google.com/macros/s/AKfycbwFsVmQGmPz4-P7xkJ-9kDaAmvzJ368kmBU4QmQ0mlRyw3RNe7rAixlW9Vb8pGEsCGT/exec", {
+        await fetch("https://script.google.com/macros/s/AKfycbxqoMrIxbZXeZXRanTA91a7DznJ7xNixqzTPMciEDtLTBLJdtAgsDDOF4ofUEAqAuuQcA/exec", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
