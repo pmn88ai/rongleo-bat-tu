@@ -1,14 +1,27 @@
 'use strict';
 
-const { withHandler, parseIntParam } = require('../_helpers');
-const BaZiCalculator = require('../../lib/bazi/calculator');
-const { formatOutput } = require('../../lib/bazi/output');
-const { calculateDaiVan } = require('../../lib/bazi/dayun');
-const { solveQuestion } = require('../../lib/bazi/questions/engine');
-const { QUESTIONS } = require('../../lib/bazi/questions/data');
-const groqService = require('../../lib/services/groq.service');
+const { withHandler, parseIntParam } = require('./_helpers');
+const BaZiCalculator = require('../lib/bazi/calculator');
+const { formatOutput } = require('../lib/bazi/output');
+const { calculateDaiVan } = require('../lib/bazi/dayun');
+const { solveQuestion } = require('../lib/bazi/questions/engine');
+const { THEMES, QUESTIONS } = require('../lib/bazi/questions/data');
+const groqService = require('../lib/services/groq.service');
 
-module.exports = withHandler(async function(req, res) {
+// ── Handlers ───────────────────────────────────────────────────────────────────
+
+async function handleThemes(req, res) {
+    return res.status(200).json(THEMES);
+}
+
+async function handleQuestions(req, res) {
+    // Anti-bug shield: chấp nhận cả ?themeId= và ?theme_id=
+    const themeId = req.query.themeId || req.query.theme_id || '';
+    const questions = QUESTIONS[themeId] || [];
+    return res.status(200).json(questions);
+}
+
+async function handleAsk(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -85,4 +98,17 @@ module.exports = withHandler(async function(req, res) {
         persona:      persona || 'huyen_co',
         timestamp:    new Date().toISOString()
     });
+}
+
+// ── Router ─────────────────────────────────────────────────────────────────────
+
+module.exports = withHandler(async function(req, res) {
+    const url  = new URL(req.url, 'http://' + req.headers.host);
+    const path = url.pathname;
+
+    if (path === '/api/consultant/themes')    return handleThemes(req, res);
+    if (path === '/api/consultant/questions') return handleQuestions(req, res);
+    if (path === '/api/consultant/ask')       return handleAsk(req, res);
+
+    return res.status(404).json({ error: 'Not found' });
 });
