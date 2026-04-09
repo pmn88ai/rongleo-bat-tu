@@ -32,7 +32,7 @@ const ConsultantPage = ({ userData }) => {
 
     const location = useLocation();
 
-    // Check for pending question from homepage suggestions (stored in localStorage)
+    // Check for pending question from homepage suggestions
     useEffect(() => {
         const pendingQuestionRaw = localStorage.getItem('pending_question');
         if (pendingQuestionRaw) {
@@ -73,7 +73,6 @@ const ConsultantPage = ({ userData }) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Handle view history request
     useEffect(() => {
         if (location.state?.view === 'history') {
             fetchHistory();
@@ -81,7 +80,6 @@ const ConsultantPage = ({ userData }) => {
             navigate(location.pathname, { replace: true, state: remainingState });
         }
     }, [location.state]);
-
 
     // Fetch Themes on mount
     useEffect(() => {
@@ -91,12 +89,12 @@ const ConsultantPage = ({ userData }) => {
             .catch(err => console.error('Error fetching themes:', err));
     }, []);
 
-
     // Fetch Questions when theme changes
+    // NOTE: Uses query param ?themeId= instead of path param /:themeId (Vercel-compatible)
     useEffect(() => {
         if (selectedTheme) {
             setLoading(true);
-            fetch(`${API_BASE}/questions/${selectedTheme.id}`)
+            fetch(`${API_BASE}/questions?themeId=${selectedTheme.id}`)
                 .then(res => res.json())
                 .then(data => {
                     setQuestions(data);
@@ -150,7 +148,7 @@ const ConsultantPage = ({ userData }) => {
                 },
                 body: JSON.stringify({
                     ...userData,
-                    partnerData: partnerData, // Include partner if available
+                    partnerData: partnerData,
                     questionId: questionId,
                     questionText: questionText,
                     useAI: true,
@@ -159,25 +157,10 @@ const ConsultantPage = ({ userData }) => {
             });
             const data = await response.json();
 
-            if (response.status === 402) {
-                // No credit system - should not happen in no-auth mode
-                clearInterval(stageTimer);
-                setToast({ message: 'Lỗi server, vui lòng thử lại', type: 'error' });
-                setStep(2);
-                return;
-            }
-
-            if (response.status === 401) {
-                // Should not happen in no-auth mode
-                setToast({ message: 'Lỗi xác thực, vui lòng thử lại', type: 'error' });
-                return;
-            }
-
             if (data.error) throw new Error(data.message || data.error);
             clearInterval(stageTimer);
             setAnswer(data.answer);
             setFollowUps(data.followUps || []);
-            // Auto-scroll to answer
             setTimeout(() => {
                 answerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 200);
@@ -197,43 +180,22 @@ const ConsultantPage = ({ userData }) => {
     };
 
     const personas = [
-        {
-            id: 'huyen_co',
-            name: 'Thầy Huyền Cơ Bát Tự',
-            icon: '🧙‍♂️',
-            title: 'Bậc Thầy Bát Tự',
-            desc: '35 năm kinh nghiệm, nhân văn, uyên bác.'
-        },
-        {
-            id: 'menh_meo',
-            name: 'Thầy Mệnh Mèo GenZ',
-            icon: '🐱',
-            title: 'GenZ Tư Vấn Mệnh',
-            desc: 'Hài hước, cực viral, chuyên gia pressing vận mệnh.'
-        }
+        { id: 'huyen_co', name: 'Thầy Huyền Cơ Bát Tự', icon: '🧙‍♂️', title: 'Bậc Thầy Bát Tự', desc: '35 năm kinh nghiệm, nhân văn, uyên bác.' },
+        { id: 'menh_meo', name: 'Thầy Mệnh Mèo GenZ', icon: '🐱', title: 'GenZ Tư Vấn Mệnh', desc: 'Hài hước, cực viral, chuyên gia pressing vận mệnh.' }
     ];
 
     const currentPersona = personas.find(p => p.id === selectedPersona) || personas[0];
-
-    const filteredQuestions = questions.filter(q =>
-        q.text.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    // Pagination logic for questions
+    const filteredQuestions = questions.filter(q => q.text.toLowerCase().includes(searchQuery.toLowerCase()));
     const totalQuestionPages = Math.ceil(filteredQuestions.length / QUESTIONS_PER_PAGE);
     const questionStartIdx = (questionPage - 1) * QUESTIONS_PER_PAGE;
     const paginatedQuestions = filteredQuestions.slice(questionStartIdx, questionStartIdx + QUESTIONS_PER_PAGE);
 
-    // Reset page when search or theme changes
-    useEffect(() => {
-        setQuestionPage(1);
-    }, [searchQuery, selectedTheme]);
+    useEffect(() => { setQuestionPage(1); }, [searchQuery, selectedTheme]);
 
     return (
         <div className="consultant-container fade-in">
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-            {/* Breadcrumb / Progress */}
             <div className="consult-header glass-card">
                 <div className="breadcrumb">
                     <span className={step >= 1 && step <= 3 ? 'active' : ''} onClick={() => setStep(1)}>1. CHỦ ĐỀ</span>
@@ -244,38 +206,24 @@ const ConsultantPage = ({ userData }) => {
                 </div>
                 <div className="header-right">
                     {selectedTheme && step > 1 && step <= 3 && (
-                        <div className="current-theme-badge">
-                            {selectedTheme.icon} {selectedTheme.name}
-                        </div>
+                        <div className="current-theme-badge">{selectedTheme.icon} {selectedTheme.name}</div>
                     )}
-                    <button
-                        className={`btn-history ${step === 4 ? 'active' : ''}`}
-                        onClick={fetchHistory}
-                        title="Xem lịch sử câu hỏi"
-                    >
+                    <button className={`btn-history ${step === 4 ? 'active' : ''}`} onClick={fetchHistory} title="Xem lịch sử câu hỏi">
                         📜 Lịch sử
                     </button>
                 </div>
             </div>
 
-            {/* Step 1: Theme Selection */}
             {step === 1 && (
                 <div className="consult-welcome-intro fade-in">
-                    <h2 className="mystical-welcome-text">
-                        Hãy chọn câu hỏi về cuộc đời, Huyền cơ Bát tự sẽ giúp bạn giải đáp mọi thứ.
-                    </h2>
+                    <h2 className="mystical-welcome-text">Hãy chọn câu hỏi về cuộc đời, Huyền cơ Bát tự sẽ giúp bạn giải đáp mọi thứ.</h2>
                 </div>
             )}
 
-            {/* Step 1: Theme Selection Grid */}
             {step === 1 && (
                 <div className="themes-grid">
                     {themes.map(theme => (
-                        <div
-                            key={theme.id}
-                            className="theme-card glass-card hover-lift"
-                            onClick={() => handleSelectTheme(theme)}
-                        >
+                        <div key={theme.id} className="theme-card glass-card hover-lift" onClick={() => handleSelectTheme(theme)}>
                             <span className="theme-icon">{theme.icon}</span>
                             <h3>{theme.name}</h3>
                             <p>100 câu hỏi chuyên sâu</p>
@@ -284,19 +232,13 @@ const ConsultantPage = ({ userData }) => {
                 </div>
             )}
 
-            {/* Step 2: Question & Persona Selection */}
             {step === 2 && (
                 <div className="questions-area glass-card">
-                    {/* Persona Selector */}
                     <div className="persona-selector-section">
                         <h3 className="section-title">✨ Chọn Thầy Luận Giải</h3>
                         <div className="persona-grid">
                             {personas.map(p => (
-                                <div
-                                    key={p.id}
-                                    className={`persona-card ${selectedPersona === p.id ? 'active' : ''}`}
-                                    onClick={() => setSelectedPersona(p.id)}
-                                >
+                                <div key={p.id} className={`persona-card ${selectedPersona === p.id ? 'active' : ''}`} onClick={() => setSelectedPersona(p.id)}>
                                     <div className="persona-icon-circle">{p.icon}</div>
                                     <div className="persona-info">
                                         <h4 className="persona-name">{p.name}</h4>
@@ -307,46 +249,17 @@ const ConsultantPage = ({ userData }) => {
                             ))}
                         </div>
                     </div>
-
                     <div className="section-divider"></div>
-
-                    {/* Custom Question Form - First */}
                     <div className="custom-question-section top">
-                        <h3 className="custom-title">
-                            {currentPersona.icon} Hỏi {currentPersona.name}
-                            <span className="credit-badge custom">💎 25</span>
-                        </h3>
+                        <h3 className="custom-title">{currentPersona.icon} Hỏi {currentPersona.name}</h3>
                         <div className="custom-question-form">
-                            <textarea
-                                className="glass-input custom-textarea"
-                                placeholder="Nhập câu hỏi bạn muốn hỏi về vận mệnh, công danh, tình duyên, sức khỏe..."
-                                value={customQuestion}
-                                onChange={(e) => setCustomQuestion(e.target.value)}
-                                rows={3}
-                            />
-                    <button
-                                        className="btn-ask-custom"
-                                        onClick={handleCustomQuestion}
-                                        disabled={!customQuestion.trim()}
-                                    >
-                                        🙏 Xin {currentPersona.name} Luận Giải
-                                    </button>
+                            <textarea className="glass-input custom-textarea" placeholder="Nhập câu hỏi bạn muốn hỏi về vận mệnh..." value={customQuestion} onChange={(e) => setCustomQuestion(e.target.value)} rows={3} />
+                            <button className="btn-ask-custom" onClick={handleCustomQuestion} disabled={!customQuestion.trim()}>🙏 Xin {currentPersona.name} Luận Giải</button>
                         </div>
                     </div>
-
-                    <div className="section-divider">
-                        <span>Hoặc chọn câu hỏi có sẵn</span>
-                    </div>
-
-                    {/* Search and Questions List */}
+                    <div className="section-divider"><span>Hoặc chọn câu hỏi có sẵn</span></div>
                     <div className="search-bar">
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm câu hỏi..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="glass-input"
-                        />
+                        <input type="text" placeholder="Tìm kiếm câu hỏi..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="glass-input" />
                     </div>
                     <div className="questions-list">
                         {loading ? (
@@ -354,35 +267,15 @@ const ConsultantPage = ({ userData }) => {
                         ) : paginatedQuestions.length > 0 ? (
                             <>
                                 {paginatedQuestions.map(q => (
-                                    <div
-                                        key={q.id}
-                                        className="question-item"
-                                        onClick={() => handleSelectQuestion(q)}
-                                    >
-                                        <span className="q-bullet">🔹</span>
-                                        {q.text}
+                                    <div key={q.id} className="question-item" onClick={() => handleSelectQuestion(q)}>
+                                        <span className="q-bullet">🔹</span>{q.text}
                                     </div>
                                 ))}
-                                {/* Pagination Controls */}
                                 {totalQuestionPages > 1 && (
                                     <div className="consultant-pagination">
-                                        <button
-                                            className="pagination-btn"
-                                            onClick={() => setQuestionPage(p => Math.max(1, p - 1))}
-                                            disabled={questionPage === 1}
-                                        >
-                                            ← Trước
-                                        </button>
-                                        <span className="pagination-info">
-                                            Trang {questionPage}/{totalQuestionPages} ({filteredQuestions.length} câu hỏi)
-                                        </span>
-                                        <button
-                                            className="pagination-btn"
-                                            onClick={() => setQuestionPage(p => Math.min(totalQuestionPages, p + 1))}
-                                            disabled={questionPage === totalQuestionPages}
-                                        >
-                                            Sau →
-                                        </button>
+                                        <button className="pagination-btn" onClick={() => setQuestionPage(p => Math.max(1, p - 1))} disabled={questionPage === 1}>← Trước</button>
+                                        <span className="pagination-info">Trang {questionPage}/{totalQuestionPages} ({filteredQuestions.length} câu hỏi)</span>
+                                        <button className="pagination-btn" onClick={() => setQuestionPage(p => Math.min(totalQuestionPages, p + 1))} disabled={questionPage === totalQuestionPages}>Sau →</button>
                                     </div>
                                 )}
                             </>
@@ -393,12 +286,9 @@ const ConsultantPage = ({ userData }) => {
                 </div>
             )}
 
-            {/* Step 3: Answer Area */}
             {step === 3 && (
                 <div className="answer-area glass-card" ref={answerRef}>
-                    <div className="asked-question">
-                        <strong>Câu hỏi:</strong> {selectedQuestion?.text}
-                    </div>
+                    <div className="asked-question"><strong>Câu hỏi:</strong> {selectedQuestion?.text}</div>
                     <div className="answer-content">
                         {loading ? (
                             <div className="ai-loading-progress">
@@ -408,22 +298,12 @@ const ConsultantPage = ({ userData }) => {
                                     <div className="ai-progress-fill" style={{ width: `${(loadingStage + 1) * 25}%` }}></div>
                                 </div>
                                 <div className="ai-loading-steps">
-                                    <div className={`ai-step ${loadingStage >= 0 ? 'active' : ''} ${loadingStage > 0 ? 'done' : ''}`}>
-                                        <span className="step-icon">{loadingStage > 0 ? '✓' : '1'}</span>
-                                        <span className="step-text">Tính toán Tứ Trụ</span>
-                                    </div>
-                                    <div className={`ai-step ${loadingStage >= 1 ? 'active' : ''} ${loadingStage > 1 ? 'done' : ''}`}>
-                                        <span className="step-icon">{loadingStage > 1 ? '✓' : '2'}</span>
-                                        <span className="step-text">Phân tích Thập Thần</span>
-                                    </div>
-                                    <div className={`ai-step ${loadingStage >= 2 ? 'active' : ''} ${loadingStage > 2 ? 'done' : ''}`}>
-                                        <span className="step-icon">{loadingStage > 2 ? '✓' : '3'}</span>
-                                        <span className="step-text">Xem xét Đại Vận</span>
-                                    </div>
-                                    <div className={`ai-step ${loadingStage >= 3 ? 'active' : ''}`}>
-                                        <span className="step-icon">4</span>
-                                        <span className="step-text">Thầy soạn lời khuyên</span>
-                                    </div>
+                                    {['Tính toán Tứ Trụ','Phân tích Thập Thần','Xem xét Đại Vận','Thầy soạn lời khuyên'].map((text, i) => (
+                                        <div key={i} className={`ai-step ${loadingStage >= i ? 'active' : ''} ${loadingStage > i ? 'done' : ''}`}>
+                                            <span className="step-icon">{loadingStage > i ? '✓' : i+1}</span>
+                                            <span className="step-text">{text}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         ) : answer ? (
@@ -433,49 +313,23 @@ const ConsultantPage = ({ userData }) => {
                                         <TypewriterEffect text={para} speed={15} />
                                     </div>
                                 ))}
-
                                 {followUps.length > 0 && (
                                     <div className="follow-up-section fade-in">
-                                        <h4 className="follow-up-title pink-gradient-text">
-                                            Gợi ý từ {currentPersona.name}:
-                                        </h4>
+                                        <h4 className="follow-up-title pink-gradient-text">Gợi ý từ {currentPersona.name}:</h4>
                                         <div className="follow-up-items">
                                             {followUps.map((q, qidx) => (
-                                                <button
-                                                    key={qidx}
-                                                    className="follow-up-btn"
-                                                    onClick={() => handleFollowUpClick(q)}
-                                                >
-                                                    ✨ {q}
-                                                </button>
+                                                <button key={qidx} className="follow-up-btn" onClick={() => handleFollowUpClick(q)}>✨ {q}</button>
                                             ))}
                                         </div>
                                     </div>
                                 )}
-
-                                {/* Custom Question Form - After Follow-ups */}
                                 <div className="custom-question-inline fade-in">
-                                    <h4 className="custom-inline-title">
-                                    💬 Hoặc hỏi câu hỏi của riêng bạn:
-                                    </h4>
+                                    <h4 className="custom-inline-title">💬 Hoặc hỏi câu hỏi của riêng bạn:</h4>
                                     <div className="custom-inline-form">
-                                        <textarea
-                                            className="custom-inline-textarea"
-                                            placeholder={`Nhập câu hỏi bạn muốn hỏi ${currentPersona.name}...`}
-                                            value={customQuestion}
-                                            onChange={(e) => setCustomQuestion(e.target.value)}
-                                            rows={2}
-                                        />
-                                        <button
-                                            className="custom-inline-btn"
-                                            onClick={handleCustomQuestion}
-                                            disabled={!customQuestion.trim() || loading}
-                                        >
-                                            🙏 Xin Thầy Luận Giải
-                                        </button>
+                                        <textarea className="custom-inline-textarea" placeholder={`Nhập câu hỏi bạn muốn hỏi ${currentPersona.name}...`} value={customQuestion} onChange={(e) => setCustomQuestion(e.target.value)} rows={2} />
+                                        <button className="custom-inline-btn" onClick={handleCustomQuestion} disabled={!customQuestion.trim() || loading}>🙏 Xin Thầy Luận Giải</button>
                                     </div>
                                 </div>
-
                                 <div className="answer-footer">
                                     <button className="premium-button small" onClick={() => setStep(2)}>HỎI CÂU KHÁC</button>
                                 </div>
@@ -487,7 +341,6 @@ const ConsultantPage = ({ userData }) => {
                 </div>
             )}
 
-            {/* Step 4: History Area */}
             {step === 4 && (
                 <div className="history-area-new glass-card">
                     <ConsultationHistoryContainer onBack={() => setStep(1)} />

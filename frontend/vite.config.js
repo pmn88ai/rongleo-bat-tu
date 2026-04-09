@@ -6,13 +6,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3005,
-    host: true, // Listen on all addresses (0.0.0.0)
+    host: true,
     strictPort: true,
+    // Proxy /api to Vercel dev server (vercel dev runs on :3000)
     proxy: {
       '/api': {
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path // keep /api prefix
       }
     }
   }
