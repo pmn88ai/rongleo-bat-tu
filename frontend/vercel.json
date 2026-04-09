@@ -24,7 +24,8 @@
     { "source": "/api/classic-texts", "destination": "/api/misc" },
     { "source": "/api/luan-giai",     "destination": "/api/misc" },
     { "source": "/api/dayun",         "destination": "/api/misc" },
-    { "source": "/api/auth/me",       "destination": "/api/misc" }
+    { "source": "/api/auth/me",       "destination": "/api/misc" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {

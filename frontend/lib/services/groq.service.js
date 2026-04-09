@@ -61,8 +61,8 @@ async function callGroqWithRetry(prompt, options, maxRetries) {
             }
         }
     }
-    console.error('[Groq] All attempts failed:', lastError && lastError.message);
-    return null;
+    console.error('[Groq] All attempts failed:', lastError);
+    throw lastError;
 }
 
 function buildSystemPrompt(personaId) {
