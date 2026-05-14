@@ -22,13 +22,30 @@ const StatusBar = () => {
   );
 };
 
+const LAND_LINK_STYLE = {
+  display: 'inline-flex', alignItems: 'center', gap: '4px',
+  background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
+  color: '#fff', textDecoration: 'none',
+  padding: '5px 10px', borderRadius: '6px',
+  fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.3px',
+  boxShadow: '0 3px 10px rgba(14,165,233,0.4)'
+};
+
 // Brand Bar Component
 const BrandBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/' || location.pathname === '/input';
 
-  if (isHomePage) return null;
+  if (isHomePage) {
+    return (
+      <div style={{ position: 'fixed', top: '12px', left: '12px', zIndex: 200 }}>
+        <a href="https://rongleo-land.vercel.app/" target="_blank" rel="noopener noreferrer" style={LAND_LINK_STYLE}>
+          ← RongLeo Land
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="mobile-brand-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
@@ -36,21 +53,14 @@ const BrandBar = () => {
         href="https://rongleo-land.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          display: 'inline-flex', alignItems: 'center', gap: '4px',
-          background: 'linear-gradient(135deg, #1a6fc4 0%, #0d4f9e 100%)',
-          color: '#fff', textDecoration: 'none',
-          padding: '5px 10px', borderRadius: '6px',
-          fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.3px',
-          boxShadow: '0 3px 10px rgba(26,111,196,0.4)'
-        }}
+        style={LAND_LINK_STYLE}
       >
         ← RongLeo Land
       </a>
       <h1 className="mobile-mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         MỆNH LÝ AI
       </h1>
-      <div style={{ width: '60px' }} />
+      <div style={{ width: '80px' }} />
     </div>
   );
 };

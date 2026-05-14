@@ -67,12 +67,20 @@ async function handleAnalyzeTime(req, res) {
     const typeLabel = result.type === 'day' ? 'Ngày' : result.type === 'month' ? 'Tháng' : 'Năm';
     const icon      = result.type === 'day' ? '📅'  : result.type === 'month' ? '🗓️'  : '📆';
 
+    // evaluations values may be { status, desc } objects — flatten to string
+    const fmtEval = (v) => {
+        if (!v) return null;
+        if (typeof v === 'string') return v;
+        if (v.status && v.desc) return `${v.status} — ${v.desc}`;
+        return JSON.stringify(v);
+    };
+
     const evalLines = [];
     const ev = result.evaluations || {};
-    if (ev.career)  evalLines.push(`**Sự nghiệp**: ${ev.career}`);
-    if (ev.wealth)  evalLines.push(`**Tài lộc**: ${ev.wealth}`);
-    if (ev.love)    evalLines.push(`**Tình cảm**: ${ev.love}`);
-    if (ev.health)  evalLines.push(`**Sức khỏe**: ${ev.health}`);
+    if (fmtEval(ev.career))  evalLines.push(`**Sự nghiệp**: ${fmtEval(ev.career)}`);
+    if (fmtEval(ev.wealth))  evalLines.push(`**Tài lộc**: ${fmtEval(ev.wealth)}`);
+    if (fmtEval(ev.love))    evalLines.push(`**Tình cảm**: ${fmtEval(ev.love)}`);
+    if (fmtEval(ev.health))  evalLines.push(`**Sức khỏe**: ${fmtEval(ev.health)}`);
     if (result.interpretation) evalLines.push(`Luận giải tổng quan: ${result.interpretation}`);
 
     const sections = [
