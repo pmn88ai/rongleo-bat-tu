@@ -100,15 +100,92 @@ async function handleAsk(req, res) {
     });
 }
 
+async function handleComprehensive(req, res) {
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    const body = req.body;
+    const { chartData, persona } = body || {};
+
+    if (!chartData) return res.status(400).json({ error: 'Thiếu dữ liệu lá số' });
+
+    const calc = null; // not needed — we use chartData directly
+    const { formatOutput } = require('../lib/bazi/output');
+
+    const personaId = persona || 'huyen_co';
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+    const monthNames = ['','Tháng Giêng','Tháng Hai','Tháng Ba','Tháng Tư','Tháng Năm','Tháng Sáu','Tháng Bảy','Tháng Tám','Tháng Chín','Tháng Mười','Tháng Mười Một','Tháng Chạp'];
+
+    const personaName = personaId === 'menh_meo' ? 'Thầy Mệnh Mèo GenZ' : 'Thầy Huyền Cơ Bát Tự';
+    const personaStyle = personaId === 'menh_meo'
+        ? 'Dùng ngôn ngữ Gen Z, hài hước, nhiều emoji. Gọi người hỏi là "con" hoặc "bồ". Dùng từ lóng: chill, vibe, flex, slay.'
+        : 'Ngôn ngữ trang trọng, uyên thâm Đông phương. Gọi là "Mệnh chủ". Trích dẫn cổ nhân khi phù hợp.';
+
+    const basicInfo = chartData.thong_tin_co_ban || chartData.thong_tin || {};
+    const chiTietTru = chartData.chi_tiet_tru || [];
+    const [yearP, monthP, dayP, hourP] = [chiTietTru[0]||{}, chiTietTru[1]||{}, chiTietTru[2]||{}, chiTietTru[3]||{}];
+
+    const pillarStr = (p) => (p.can && p.chi) ? `${p.can} ${p.chi} (Nạp Âm: ${p.nap_am||''})` : 'Chưa có';
+    const daiVan = chartData.dai_van || [];
+    const daiVanStr = daiVan.slice(0,5).map(d => `- Tuổi ${d.tuoi_bat_dau||'?'}+: ${d.can_chi||''} (năm ${d.nam||''})`).join('\n') || '- Chưa có dữ liệu';
+
+    const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
+    const tomorrowStr = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
+    const nextMonth = currentMonth===12 ? 1 : currentMonth+1;
+    const nextMonthYear = currentMonth===12 ? currentYear+1 : currentYear;
+
+    const prompt = `Bạn là ${personaName}, chuyên gia Bát Tự. ${personaStyle}
+
+HÔM NAY: ${currentDay}/${currentMonth}/${currentYear}. NGÀY MAI: ${tomorrowStr}. THÁNG SAU: ${monthNames[nextMonth]} ${nextMonthYear}.
+
+Luận giải đầy đủ lá số Bát Tự sau đây gồm các phần:
+**PHẦN 1 — BẢN MỆNH**: tính cách, sự nghiệp, tài lộc, tình duyên, sức khỏe.
+**PHẦN 2 — VẬN HẠN**: ngày mai, tháng này, tháng sau, năm ${currentYear}.
+**PHẦN 3 — HƯỚNG DẪN**: màu may mắn, hướng tốt, lời khuyên thực tế.
+
+Trình bày rõ ràng, ngắn gọn, dùng đoạn văn thay vì bullet quá nhiều.
+
+THÔNG TIN:
+- Họ tên: ${basicInfo.ten||basicInfo.name||'Mệnh chủ'}
+- Ngày sinh: ${basicInfo.ngay_sinh||basicInfo.birth_date||'Không rõ'}
+- Giới tính: ${basicInfo.gioi_tinh||basicInfo.gender||'Nam/Nữ'}
+TỨ TRỤ:
+- Năm: ${pillarStr(yearP)}
+- Tháng: ${pillarStr(monthP)}
+- Ngày: ${pillarStr(dayP)} ← NHẬT CHỦ
+- Giờ: ${pillarStr(hourP)}
+NHẬT CHỦ: ${dayP.can||'?'} (${dayP.hanh_can||'?'})
+CƯỜNG NHƯỢC: ${chartData.phan_tich?.can_bang_ngu_hanh?.nhan_dinh?.cuong_do||'Cần phân tích'}
+DỤNG THẦN: ${(chartData.phan_tich?.can_bang_ngu_hanh?.dung_than?.ngu_hanh||[]).join(', ')||'Cần phân tích'}
+ĐẠI VẬN:
+${daiVanStr}`;
+
+    const aiResult = await groqService.generateAnswer(
+        { thong_tin_co_ban: basicInfo, chi_tiet_tru: chiTietTru, phan_tich: chartData.phan_tich },
+        { dai_van: daiVan },
+        prompt,
+        personaId,
+        null
+    );
+
+    return res.status(200).json({
+        interpretation: aiResult.answer,
+        followUpQuestions: aiResult.followUps || []
+    });
+}
+
 // ── Router ─────────────────────────────────────────────────────────────────────
 
 module.exports = withHandler(async function(req, res) {
     const url  = new URL(req.url, 'http://' + req.headers.host);
     const path = url.pathname;
 
-    if (path === '/api/consultant/themes')    return handleThemes(req, res);
-    if (path === '/api/consultant/questions') return handleQuestions(req, res);
-    if (path === '/api/consultant/ask')       return handleAsk(req, res);
+    if (path === '/api/consultant/themes')        return handleThemes(req, res);
+    if (path === '/api/consultant/questions')     return handleQuestions(req, res);
+    if (path === '/api/consultant/ask')           return handleAsk(req, res);
+    if (path === '/api/consultant/comprehensive') return handleComprehensive(req, res);
 
     return res.status(404).json({ error: 'Not found' });
 });

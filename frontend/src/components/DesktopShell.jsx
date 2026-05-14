@@ -31,9 +31,20 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
                 {!isHomePage && (
                     <>
                         <div className="action-bar glass-card">
-                            <h1 className="mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-                                MỆNH LÝ AI
-                            </h1>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                <a
+                                    href="https://rongleo-land.vercel.app/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', textDecoration: 'none', letterSpacing: '1px', whiteSpace: 'nowrap' }}
+                                    onClick={e => e.stopPropagation()}
+                                >
+                                    ← RONGLEO
+                                </a>
+                                <h1 className="mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+                                    MỆNH LÝ AI
+                                </h1>
+                            </div>
                             <div className="header-right">
                                 {hasData && (
                                     <button className="premium-button small" onClick={handleClearData}>

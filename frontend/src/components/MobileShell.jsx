@@ -31,8 +31,19 @@ const BrandBar = () => {
   if (isHomePage) return null;
 
   return (
-    <div className="mobile-brand-bar" onClick={() => navigate('/')}>
-      <h1 className="mobile-mini-brand">MỆNH LÝ AI</h1>
+    <div className="mobile-brand-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
+      <a
+        href="https://rongleo-land.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', textDecoration: 'none', letterSpacing: '1px' }}
+      >
+        ← RONGLEO
+      </a>
+      <h1 className="mobile-mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+        MỆNH LÝ AI
+      </h1>
+      <div style={{ width: '60px' }} />
     </div>
   );
 };

@@ -1,0 +1,64 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "Bát Tự là gì? Giới thiệu tổng quan về hệ thống mệnh lý Tứ Trụ",
+      "slug": "bat-tu-la-gi",
+      "category_slug": "khai-niem",
+      "summary": "Bát Tự (hay Tứ Trụ) là hệ thống chiêm tinh học phương Đông dựa trên 8 ký tự Can Chi từ ngày giờ sinh, phản ánh xu hướng vận mệnh của một người.",
+      "content": "Bát Tự (八字), còn gọi là Tứ Trụ (四柱), là một hệ thống mệnh lý học cổ đại của Trung Hoa. Hệ thống này dựa trên việc ghi lại Năm – Tháng – Ngày – Giờ sinh của một người theo can chi, tạo thành 4 trụ, mỗi trụ có 2 ký tự (1 Thiên Can + 1 Địa Chi), tổng cộng 8 ký tự — gọi là Bát Tự.\n\nMỗi ký tự can chi mang một hành ngũ hành (Mộc, Hỏa, Thổ, Kim, Thủy), từ đó phân tích được cấu trúc ngũ hành trong lá số, xác định Nhật Chủ (bản mệnh), Dụng Thần (yếu tố hỗ trợ), và dự đoán xu hướng vận hạn theo thời gian.",
+      "is_published": true,
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Ngũ Hành và mối quan hệ sinh khắc trong Bát Tự",
+      "slug": "ngu-hanh-sinh-khac",
+      "category_slug": "ngu-hanh",
+      "summary": "Ngũ Hành gồm Mộc – Hỏa – Thổ – Kim – Thủy là nền tảng của mọi phân tích trong Bát Tự. Hiểu quan hệ sinh khắc giúp đọc lá số chính xác hơn.",
+      "content": "Ngũ Hành (五行) là 5 loại năng lượng cơ bản vận hành vũ trụ: Mộc (gỗ/cây), Hỏa (lửa), Thổ (đất), Kim (kim loại), Thủy (nước).\n\n**Quan hệ Tương Sinh (hỗ trợ nhau):**\nMộc sinh Hỏa → Hỏa sinh Thổ → Thổ sinh Kim → Kim sinh Thủy → Thủy sinh Mộc.\n\n**Quan hệ Tương Khắc (chế ngự nhau):**\nMộc khắc Thổ → Thổ khắc Thủy → Thủy khắc Hỏa → Hỏa khắc Kim → Kim khắc Mộc.\n\nTrong Bát Tự, cân bằng ngũ hành quyết định sức mạnh lá số. Hành quá vượng hoặc quá suy đều ảnh hưởng đến cuộc đời.",
+      "is_published": true,
+      "created_at": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Thập Thần là gì? 10 loại quan hệ trong Bát Tự",
+      "slug": "thap-than-la-gi",
+      "category_slug": "khai-niem",
+      "summary": "Thập Thần là 10 mối quan hệ ngũ hành giữa Nhật Chủ và các Can Chi còn lại trong lá số, phản ánh sự nghiệp, tài lộc, tình duyên và nhiều khía cạnh khác.",
+      "content": "Thập Thần (十神) hay Thập Thần Quan Hệ là 10 loại quan hệ ngũ hành được tính từ Nhật Can (Nhật Chủ) ra các Can Chi khác trong lá số.\n\n**10 Thập Thần:**\n1. **Tỷ Kiên** — cùng hành, cùng âm dương. Biểu trưng: bạn bè, anh em.\n2. **Kiếp Tài** — cùng hành, khác âm dương. Biểu trưng: cạnh tranh.\n3. **Thực Thần** — hành do Nhật Chủ sinh ra, cùng âm dương. Biểu trưng: tài năng, phúc lộc.\n4. **Thương Quan** — hành do Nhật Chủ sinh ra, khác âm dương. Biểu trưng: sáng tạo, phá cách.\n5. **Chính Tài** — hành bị Nhật Chủ khắc, khác âm dương. Biểu trưng: tài chính, vợ (với nam).\n6. **Thiên Tài** — hành bị Nhật Chủ khắc, cùng âm dương. Biểu trưng: đầu tư, cơ may.\n7. **Chính Quan** — hành khắc Nhật Chủ, khác âm dương. Biểu trưng: quy tắc, chồng (với nữ).\n8. **Thất Sát** — hành khắc Nhật Chủ, cùng âm dương. Biểu trưng: áp lực, quyền uy.\n9. **Chính Ấn** — hành sinh Nhật Chủ, khác âm dương. Biểu trưng: học vấn, mẹ.\n10. **Thiên Ấn** — hành sinh Nhật Chủ, cùng âm dương. Biểu trưng: trực giác, nghệ thuật.",
+      "is_published": true,
+      "created_at": "2025-01-10T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Thiên Can và Địa Chi — Hệ thống ký hiệu thời gian trong Bát Tự",
+      "slug": "thien-can-dia-chi",
+      "category_slug": "can-chi",
+      "summary": "10 Thiên Can và 12 Địa Chi tạo thành 60 tổ hợp Can Chi, là ngôn ngữ cơ bản của Bát Tự và lịch âm dương phương Đông.",
+      "content": "**10 Thiên Can:** Giáp (Mộc+), Ất (Mộc-), Bính (Hỏa+), Đinh (Hỏa-), Mậu (Thổ+), Kỷ (Thổ-), Canh (Kim+), Tân (Kim-), Nhâm (Thủy+), Quý (Thủy-).\n\n**12 Địa Chi:** Tý (Thủy+), Sửu (Thổ-), Dần (Mộc+), Mão (Mộc-), Thìn (Thổ+), Tỵ (Hỏa-), Ngọ (Hỏa+), Mùi (Thổ-), Thân (Kim+), Dậu (Kim-), Tuất (Thổ+), Hợi (Thủy-).\n\nMỗi Địa Chi còn chứa các Can ẩn bên trong gọi là **Tàng Can**, ảnh hưởng sâu đến cách phân tích lá số.",
+      "is_published": true,
+      "created_at": "2025-01-15T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "title": "Đại Vận là gì? Cách đọc chu kỳ vận hạn 10 năm",
+      "slug": "dai-van-la-gi",
+      "category_slug": "cach-luan",
+      "summary": "Đại Vận là các chu kỳ vận hạn kéo dài 10 năm, được tính từ lá số Bát Tự. Mỗi Đại Vận mang Can Chi riêng, tạo ra bức tranh vận mệnh theo từng giai đoạn cuộc đời.",
+      "content": "Đại Vận (大運) là các giai đoạn 10 năm trong cuộc đời, được tính dựa trên lá số Bát Tự và giới tính.\n\n**Cách tính:** Đại Vận được sắp xếp theo thứ tự thuận hoặc nghịch tháng Can Chi kể từ tháng sinh, tùy theo giới tính và Dương/Âm năm sinh.\n\n**Cách đọc:** Mỗi Đại Vận có 1 Can và 1 Chi. Can ảnh hưởng 5 năm đầu, Chi ảnh hưởng 5 năm sau. Can Chi của Đại Vận tương tác với lá số gốc tạo ra xu hướng tốt xấu của giai đoạn đó.\n\nVí dụ: Đại Vận Bính Thìn với Nhật Chủ Nhâm Thủy — Bính Hỏa khắc Nhâm Thủy tạo áp lực, nhưng nếu Hỏa là Dụng Thần thì đây lại là vận tốt.",
+      "is_published": true,
+      "created_at": "2025-01-20T00:00:00Z"
+    },
+    {
+      "id": 6,
+      "title": "Ứng dụng Bát Tự trong chọn ngày tốt xấu",
+      "slug": "chon-ngay-bat-tu",
+      "category_slug": "ung-dung",
+      "summary": "Ngoài xem mệnh cá nhân, Bát Tự còn được dùng để chọn ngày tốt cho hôn nhân, khai trương, xây dựng dựa trên sự tương tác giữa mệnh chủ và ngũ hành của ngày.",
+      "content": "Chọn ngày tốt (Trạch Nhật) là ứng dụng thực tế của Bát Tự và Lục Nhâm. Nguyên tắc cơ bản:\n\n1. **Xác định Dụng Thần** của người dùng ngày — hành nào hỗ trợ Nhật Chủ.\n2. **Chọn ngày có Can Chi** mang hành tương sinh hoặc cùng hành với Dụng Thần.\n3. **Tránh ngày Can Chi** mang hành xung khắc với Nhật Chủ.\n4. **Kết hợp Thần Sát** của ngày — tránh ngày Tam Tai, Hoang Ốc; ưu tiên ngày Thiên Đức, Nguyệt Đức.\n\nVí dụ: Nhật Chủ Giáp Mộc nhược, Dụng Thần Thủy — nên chọn ngày Nhâm hoặc Quý (Thủy) để khai trương hoặc ký hợp đồng.",
+      "is_published": true,
+      "created_at": "2025-01-25T00:00:00Z"
+    }
+  ]
+}
