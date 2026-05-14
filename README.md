@@ -516,6 +516,45 @@ MIT License — Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
 
 ---
 
+## 🔍 SEO & Analytics
+
+### Env Variables
+
+Copy frontend env template and fill in your credentials:
+
+```bash
+cp frontend/.env.example frontend/.env
+```
+
+| Variable | Required | Purpose |
+|----------|:--------:|---------|
+| `VITE_SITE_URL` | ✅ | Base URL for sitemap, canonical, OpenGraph |
+| `VITE_GA_ID` | ❌ | Google Analytics 4 Measurement ID (format `G-XXXXXXXXXX`) |
+| `VITE_GOOGLE_SITE_VERIFICATION` | ❌ | Google Search Console verification token |
+
+### Google Search Console
+
+1. **Verify ownership** bằng cách sau khi deploy, mở:
+   `https://rongleo-menhly.vercel.app/robots.txt`
+2. Nếu dùng meta tag verification, set:
+   `VITE_GOOGLE_SITE_VERIFICATION=<your_token>`
+3. **Submit sitemap** tại Search Console:
+   `https://rongleo-menhly.vercel.app/sitemap.xml`
+
+### Google Analytics 4
+
+Set `VITE_GA_ID=G-XXXXXXXXXX` để bật GA tracking:
+- Tự động track page_view khi route thay đổi (SPA)
+- Debug bằng Network tab → filter `g/collect`
+
+### Verify
+
+- Sitemap: `https://rongleo-menhly.vercel.app/sitemap.xml`
+- Robots: `https://rongleo-menhly.vercel.app/robots.txt`
+- GA: Network tab → `g/collect`
+
+---
+
 ## 📋 Tài Liệu Kiến Trúc
 
 | Document | Mô tả |

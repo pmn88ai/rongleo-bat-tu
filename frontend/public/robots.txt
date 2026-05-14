@@ -4,4 +4,4 @@ Disallow: /admin
 Disallow: /input
 Disallow: /profile
 
-Sitemap: https://huyencobattu.com/sitemap.xml
+Sitemap: https://rongleo-menhly.vercel.app/sitemap.xml

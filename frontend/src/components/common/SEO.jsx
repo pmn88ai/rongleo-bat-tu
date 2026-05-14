@@ -12,11 +12,11 @@ const SEO = ({
     canonical,
     structuredData
 }) => {
-    const defaultTitle = "Mệnh Lý AI - Luận Giải Mệnh Lý Chuyên Sâu";
-    const defaultDescription = "Ứng dụng luận giải Bát Tự, Tứ Trụ, Xem Ngày Tốt Xấu và Tư Vấn Phong Thủy chuyên sâu với công nghệ AI.";
-    const defaultKeywords = "bát tự, tứ trụ, tử vi, xem mệnh, phong thủy, chọn ngày tốt, mệnh lý ai";
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://rongleo-menhly.vercel.app';
+    const defaultTitle = "RongLeo Mệnh Lý — Bát Tự, Đại Vận, Tử Vi Phương Tây";
+    const defaultDescription = "Công cụ tham khảo Bát Tự, Đại Vận, Gieo Quẻ, Tư vấn Mệnh Lý AI và Tử Vi Phương Tây.";
+    const defaultKeywords = "bát tự, tứ trụ, tử vi, mệnh lý, phong thủy, đại vận, lưu niên, gieo quẻ kinh dịch, tử vi tây";
     const defaultImage = "";
-    const siteUrl = "";
 
     const finalTitle = title ? `${title} | Mệnh Lý AI` : defaultTitle;
     const finalDescription = description || defaultDescription;
