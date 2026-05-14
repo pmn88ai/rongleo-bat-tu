@@ -8,6 +8,8 @@ const ganzhi = require('./ganzhi');
 const { determineCach } = require('./geju');
 const { calculateDaiVan } = require('./dayun');
 const { calculateShenSha } = require('./shensha');
+const { normalizeInterpretation, CATEGORIES, SEVERITY, CONFIDENCE } = require('./types/interpretation.types');
+const westernAstrology = require('../western/western');
 
 /**
  * Format full output for API response
@@ -364,6 +366,80 @@ function formatOutput(ctx, options = {}) {
         phan_tich_nang_cao: phanTichNangCao
     };
 
+    // ─── Structured Interpretation Metadata ──────────────────────────────────
+    // Wraps existing interpretation output with metadata for traceability.
+    // Does NOT replace or modify existing fields. Adds new field only.
+    // Backward compatible: old fields remain unchanged.
+
+    const dayGanVN = ganzhi.ganToVN(ctx.gans[2]);
+    const luanTinhData = phanTichNangCao.luan_tinh;
+
+    const structuredInterpretations = {};
+
+    // Safe area: Personality (from luan_tinh)
+    if (luanTinhData && luanTinhData.personality) {
+        structuredInterpretations.personality = normalizeInterpretation(
+            luanTinhData.personality,
+            {
+                category: 'personality',
+                title: 'Phân tích tính cách',
+                severity: SEVERITY.INFO,
+                confidence: CONFIDENCE.CALCULATED,
+                tags: ['nhat_chu', dayGanVN, 'tinh_cach'],
+                sourceRules: [`day_master = ${dayGanVN} based on gans[2] + element analysis`],
+                sourceModule: 'luan_tinh',
+            }
+        );
+    }
+
+    // Safe area: Career (from luan_tinh)
+    if (luanTinhData && luanTinhData.career) {
+        structuredInterpretations.career = normalizeInterpretation(
+            luanTinhData.career,
+            {
+                category: 'career',
+                title: 'Phân tích sự nghiệp',
+                severity: SEVERITY.INFO,
+                confidence: CONFIDENCE.CALCULATED,
+                tags: ['su_nghiep', 'tai_loc', 'nghe_nghiep'],
+                sourceRules: ['career analysis from luan_tinh module'],
+                sourceModule: 'luan_tinh',
+            }
+        );
+    }
+
+    // Safe area: Marriage (from luan_tinh)
+    if (luanTinhData && luanTinhData.marriage) {
+        structuredInterpretations.marriage = normalizeInterpretation(
+            luanTinhData.marriage,
+            {
+                category: 'relationship',
+                title: 'Phân tích hôn nhân',
+                severity: SEVERITY.INFO,
+                confidence: CONFIDENCE.CALCULATED,
+                tags: ['hon_nhan', 'tinh_cam', 'gia_dinh'],
+                sourceRules: ['marriage analysis from luan_tinh module'],
+                sourceModule: 'luan_tinh',
+            }
+        );
+    }
+
+    // ─── Western Astrology Reference ─────────────────────────────────────────
+    // Additive field. Does not affect BaZi calculations.
+    let westernResult = null;
+    if (ctx.solar) {
+        try {
+            westernResult = westernAstrology.analyze(
+                ctx.solar.getYear(),
+                ctx.solar.getMonth(),
+                ctx.solar.getDay(),
+                ctx.solar.getHour()
+            ).western_astrology;
+        } catch (e) {
+            console.warn('[Western] Analysis error:', e.message);
+        }
+    }
+
     // 7. Luận Giải (comprehensive interpretation)
     const luanGiai = luanGiaiModule.analyzeLuanGiai(ctx);
 
@@ -379,7 +455,14 @@ function formatOutput(ctx, options = {}) {
         phan_tich: phanTich,
         luan_giai: luanGiai,
         van_ban_co_dien: vanBan,
-        dai_van: daiVan
+        dai_van: daiVan,
+        // Structured interpretation metadata (NEW)
+        // Does not replace any existing field. Backward compatible.
+        structured_interpretations: Object.keys(structuredInterpretations).length > 0
+            ? structuredInterpretations : undefined,
+        // Western astrology reference (NEW — additive only)
+        // Basic personality context, NOT professional astrology.
+        western_astrology: westernResult
     };
 }
 

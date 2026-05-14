@@ -18,6 +18,7 @@ import ArticlePage from './features/Articles/ArticlePage';
 import MatchingPage from './features/Matching/MatchingPage';
 import HistoryPage from './features/ConsultationHistory/HistoryPage';
 import QuePage from './features/Que/QuePage';
+import WesternPage from './features/WesternAstrology/WesternPage';
 import PDFExportButton from './components/PDFExportButton';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
@@ -167,6 +168,9 @@ const AppContent = () => {
 
           {/* Xin Que page */}
           <Route path="/xinque" element={renderPageContent(QuePage, { userData: inputParams })} />
+
+          {/* Western Astrology page - renders standalone with its own fallback UI */}
+          <Route path="/tuviphuongtay" element={<WesternPage userData={inputParams} />} />
 
           {/* History page - Standalone */}
           <Route path="/lich-su" element={<HistoryPage />} />

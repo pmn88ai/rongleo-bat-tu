@@ -9,6 +9,7 @@ const tabs = [
     { id: 'que', path: '/xinque', label: 'GIEO QUẺ', icon: '🎴' },
     { id: 'consultant', path: '/tuvan', label: 'TƯ VẤN', icon: '💬' },
     { id: 'wisdom', path: '/dientich', label: 'ĐIỂN TỊCH', icon: '📜' },
+    { id: 'western', path: '/tuviphuongtay', label: 'TỬ VI TÂY', icon: '⭐' },
 ];
 
 const DesktopShell = ({ children, hasData, onClearData }) => {

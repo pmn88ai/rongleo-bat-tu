@@ -904,6 +904,10 @@ select option,
   margin-bottom: 2rem;
   position: relative;
   z-index: 50;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  flex-wrap: nowrap;
 }
 
 .nav-tab-btn {
@@ -911,12 +915,12 @@ select option,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
-  padding: 1rem;
+  gap: 0.3rem;
+  padding: 0.7rem 0.5rem;
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.3s ease;
-  min-width: 90px;
+  min-width: 75px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -12664,5 +12668,204 @@ select.dp-year-select {
   /* Ensure the date-picker-overlay doesn't block touches */
   .date-picker-overlay {
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   Western Astrology Page Styles
+   ═════════════════════════════════════════════════════════════ */
+
+.western-header {
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.western-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #f5e6a3, #e2c344);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.western-subtitle {
+  color: #8892b0;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.western-disclaimer {
+  color: #e2c344;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.western-section {
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.western-section-title {
+  font-size: 1.1rem;
+  color: #e2c344;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(226, 195, 68, 0.2);
+}
+
+/* ── Three Stars ────────────────────────────────────────── */
+
+.western-three-stars {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.western-star-card {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.western-star-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.western-star-name {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.western-star-role {
+  font-size: 0.8rem;
+  color: #8892b0;
+  margin-bottom: 0.25rem;
+}
+
+.western-star-element {
+  font-size: 0.8rem;
+  color: #e2c344;
+}
+
+.western-star-note {
+  font-size: 0.75rem;
+  color: #e2c344;
+  margin-top: 0.25rem;
+}
+
+/* ── Element Bars ────────────────────────────────────────── */
+
+.western-elements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.element-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.element-bar-label {
+  width: 120px;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.element-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.element-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e2c344, #f5e6a3);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.element-bar-count {
+  width: 50px;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #8892b0;
+  flex-shrink: 0;
+}
+
+.western-element-note {
+  font-size: 0.8rem;
+  color: #6b7394;
+  margin-top: 0.5rem;
+}
+
+/* ── Personality Traits ──────────────────────────────────── */
+
+.western-traits-block {
+  margin-bottom: 1rem;
+}
+
+.western-traits-block h4 {
+  font-size: 0.9rem;
+  color: #8892b0;
+  margin-bottom: 0.4rem;
+}
+
+.western-traits-block p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #ccd6f6;
+}
+
+.western-trait-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.western-tag {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  background: rgba(226, 195, 68, 0.12);
+  color: #e2c344;
+  border-radius: 6px;
+  border: 1px solid rgba(226, 195, 68, 0.2);
+}
+
+.western-warning {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(226, 195, 68, 0.08);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #e2c344;
+  line-height: 1.4;
+}
+
+/* ── Mobile responsive ───────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .western-three-stars {
+    flex-direction: column;
+  }
+
+  .western-star-card {
+    min-width: 100%;
+  }
+
+  .element-bar-label {
+    width: 90px;
+    font-size: 0.8rem;
   }
 }

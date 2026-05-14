@@ -7,6 +7,7 @@ import SuggestedQuestions from '../../components/SuggestedQuestions';
 import SampleShowcase from '../../components/SampleShowcase';
 import ArticlesSection from '../../components/ArticlesSection';
 
+
 const BirthInput = ({ onAnalyze, loading }) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [toast, setToast] = useState(null);
@@ -132,6 +133,27 @@ const BirthInput = ({ onAnalyze, loading }) => {
             <QuickDivination />
 
             <SuggestedQuestions />
+
+            {/* ⭐ Tử Vi Tây access card — fallback nếu nav không hiển thị */}
+            <div
+                className="glass-card"
+                style={{
+                    textAlign: 'center',
+                    padding: '1.5rem',
+                    marginBottom: '1rem',
+                    cursor: 'pointer',
+                }}
+                onClick={() => navigate('/tuviphuongtay')}
+            >
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⭐</div>
+                <h3 style={{ marginBottom: '0.3rem' }}>Tử Vi Phương Tây</h3>
+                <p style={{ color: '#8892b0', fontSize: '0.85rem', marginBottom: '0.8rem' }}>
+                    Xem Sun/Moon/Rising dựa trên ngày giờ sinh đã nhập.
+                </p>
+                <button className="premium-button small">
+                    XEM TỬ VI TÂY
+                </button>
+            </div>
 
             <SampleShowcase />
 

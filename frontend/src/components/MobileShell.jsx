@@ -6,7 +6,7 @@ const headerTabs = [
   { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },
   { id: 'matching', path: '/duyenso', label: 'DUYÊN SỐ', icon: '🎎' },
   { id: 'cycles', path: '/vanhan', label: 'VẬN HẠN', icon: '📈' },
-  { id: 'wisdom', path: '/dientich', label: 'ĐIỂN TỊCH', icon: '📜' },
+  { id: 'western', path: '/tuviphuongtay', label: 'TỬ VI TÂY', icon: '⭐' },
 ];
 
 // Status Bar - chỉ hiển thị thời gian

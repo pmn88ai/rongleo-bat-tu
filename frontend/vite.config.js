@@ -8,10 +8,10 @@ export default defineConfig({
     port: 3005,
     host: true,
     strictPort: true,
-    // Proxy /api to Vercel dev server (vercel dev runs on :3000)
+    // Proxy /api to Express backend (runs on :8888 or PORT env)
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:8888',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path // keep /api prefix

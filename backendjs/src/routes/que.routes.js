@@ -95,40 +95,46 @@ const generateRichAnalysis = (hexInfo, topicLabel, topicKey, interpretationText,
     const dayZhiElement = getElement(dayZhi);
 
     const pillarIntro = {
-        'love': 'khiến tình duyên hôm nay thiên về hành động thực tế hơn là lời nói suông. Sự quan tâm thầm lặng sẽ có giá trị lớn hơn ngàn lời hứa.',
+        'love':   'khiến tình duyên hôm nay thiên về hành động thực tế hơn là lời nói suông. Sự quan tâm thầm lặng sẽ có giá trị lớn hơn ngàn lời hứa.',
         'wealth': 'khiến vận tài lộc hôm nay đòi hỏi sự quyết đoán và nắm bắt cơ hội nhanh nhạy. Những dự tính cũ cần được xem xét lại dưới góc độ thực tế.',
-        'safety': 'khiến vận hạn hôm nay cần được lưu tâm đặc biệt đến các phương diện giao tiếp và di chuyển. Sự cẩn trọng sẽ là chìa khóa để giữ vững bình an.'
+        'safety': 'khiến vận hạn hôm nay cần được lưu tâm đặc biệt đến các phương diện giao tiếp và di chuyển. Sự cẩn trọng sẽ là chìa khóa để giữ vững bình an.',
+        'career': 'tạo nên luồng năng lượng cho sự nghiệp và học tập hôm nay. Tập trung và kiên định sẽ giúp bạn vượt qua mọi thử thách.',
     };
 
     const generateElementAdvice = (userElement) => {
         const relations = {
             'Mộc': {
-                'love': 'Cảm xúc hôm nay dễ bị nén lại. Bạn có thể cảm thấy mình phải cố gắng nhiều hơn để được thấu hiểu. Đừng suy diễn quá sâu.',
+                'love':   'Cảm xúc hôm nay dễ bị nén lại. Bạn có thể cảm thấy mình phải cố gắng nhiều hơn để được thấu hiểu. Đừng suy diễn quá sâu.',
                 'wealth': 'Tài lộc có dấu hiệu bị kìm hãm. Cần kiên nhẫn tích lũy thay vì mạo hiểm đầu tư lớn lúc này.',
-                'safety': 'Sức khỏe cần lưu tâm đến gan và hệ thần kinh. Tránh stress và làm việc quá sức.'
+                'safety': 'Sức khỏe cần lưu tâm đến gan và hệ thần kinh. Tránh stress và làm việc quá sức.',
+                'career': 'Hôm nay thích hợp cho việc lên kế hoạch và triển khai ý tưởng. Sức sáng tạo cao, nhưng cần kiên nhẫn với tiến độ chậm.',
             },
             'Hỏa': {
-                'love': 'Bạn có xu hướng cho đi nhiều hơn, nhưng dễ cảm thấy không được đáp lại tương xứng. Hãy chú ý giới hạn của mình.',
+                'love':   'Bạn có xu hướng cho đi nhiều hơn, nhưng dễ cảm thấy không được đáp lại tương xứng. Hãy chú ý giới hạn của mình.',
                 'wealth': 'Tiền bạc dễ chi dùng cho việc giao tiếp, xã giao. Cần cân đối ngân sách để tránh hao hụt không đáng có.',
-                'safety': 'Cẩn trọng với các vấn đề liên quan đến hỏa hoạn hoặc nóng nảy dẫn đến xô xát.'
+                'safety': 'Cẩn trọng với các vấn đề liên quan đến hỏa hoạn hoặc nóng nảy dẫn đến xô xát.',
+                'career': 'Năng lượng dồi dào, hợp cho việc thuyết trình và giao tiếp. Hãy tận dụng để thể hiện bản thân.',
             },
             'Thổ': {
-                'love': 'Tình cảm có xu hướng ổn định, nhưng thiếu đi sự bất ngờ. Hãy chủ động tạo ra niềm vui nhỏ cho đối phương.',
+                'love':   'Tình cảm có xu hướng ổn định, nhưng thiếu đi sự bất ngờ. Hãy chủ động tạo ra niềm vui nhỏ cho đối phương.',
                 'wealth': 'Vận tài lộc khá vững chắc. Đây là thời điểm tốt để lập kế hoạch tài chính dài hạn hoặc thu hồi công nợ.',
-                'safety': 'Mọi sự bình an, tuy nhiên cần chú ý đến vấn đề tiêu hóa và ăn uống điều độ.'
+                'safety': 'Mọi sự bình an, tuy nhiên cần chú ý đến vấn đề tiêu hóa và ăn uống điều độ.',
+                'career': 'Công việc ổn định, thích hợp xử lý các việc chi tiết, hành chính và củng cố nền tảng.',
             },
             'Kim': {
-                'love': 'Bạn dễ giữ thế chủ động trong giao tiếp. Đây là lúc phù hợp để trao đổi thẳng thắn nhưng cần giữ thái độ ôn hòa.',
+                'love':   'Bạn dễ giữ thế chủ động trong giao tiếp. Đây là lúc phù hợp để trao đổi thẳng thắn nhưng cần giữ thái độ ôn hòa.',
                 'wealth': 'Cơ hội kiếm dồi dào, nhưng cạnh tranh cũng cao. Cần sự sắc bén và quyết liệt để đạt được mục tiêu.',
-                'safety': 'Đề phòng thương tích do kim loại hoặc các sự cố khi tham gia giao thông tốc độ cao.'
+                'safety': 'Đề phòng thương tích do kim loại hoặc các sự cố khi tham gia giao thông tốc độ cao.',
+                'career': 'Khả năng phân tích và quyết đoán cao. Thích hợp cho việc đàm phán, ký kết và ra quyết định.',
             },
             'Thủy': {
-                'love': 'Dễ cảm thấy hụt năng lượng cảm xúc. Nên giữ nhịp nhẹ, lắng nghe nhiều hơn thay vì cố ép bản thân phải nói ra.',
+                'love':   'Dễ cảm thấy hụt năng lượng cảm xúc. Nên giữ nhịp nhẹ, lắng nghe nhiều hơn thay vì cố ép bản thân phải nói ra.',
                 'wealth': 'Tài chính như dòng nước chảy, dễ đến dễ đi. Cần quản lý chặt chẽ chi tiêu cá nhân.',
-                'safety': 'Cẩn trọng với các khu vực sông nước hoặc các bệnh liên quan đến đường tiết niệu, cảm lạnh.'
+                'safety': 'Cẩn trọng với các khu vực sông nước hoặc các bệnh liên quan đến đường tiết niệu, cảm lạnh.',
+                'career': 'Trực giác nhạy bén, hợp cho việc nghiên cứu, học hỏi và lập chiến lược dài hạn.',
             }
         };
-        return relations[userElement][topicKey] || 'Mọi sự bình ổn, cần theo dõi thêm biến động của ngày.';
+        return (relations[userElement] && relations[userElement][topicKey]) || 'Mọi sự bình ổn, cần theo dõi thêm biến động của ngày.';
     };
 
     return `### Ảnh hưởng chung của Can Chi ngày
@@ -189,11 +195,29 @@ Những phân tích trên mới chỉ dựa vào Can Chi ngày và ngũ hành Nh
 📌 **Điền lá số để nhận luận giải cá nhân hóa chi tiết nhất về vận trình của chính bạn.**`;
 };
 
+// Map Vietnamese topic IDs (sent by frontend) to internal aspect keys
+const TOPIC_MAP = {
+    'Chung':      { key: 'career',  label: 'Tổng Quan' },
+    'Công danh':  { key: 'career',  label: 'Công Danh' },
+    'Tài lộc':    { key: 'wealth',  label: 'Tài Lộc' },
+    'Tình duyên': { key: 'love',    label: 'Tình Duyên' },
+    'Gia đạo':    { key: 'love',    label: 'Gia Đạo' },
+    'Học hành':   { key: 'career',  label: 'Học Hành' },
+    'Sức khỏe':   { key: 'safety',  label: 'Sức Khỏe' },
+    'Thi cử':     { key: 'career',  label: 'Thi Cử' },
+    'Giao dịch':  { key: 'wealth',  label: 'Giao Dịch' },
+    'Xuất hành':  { key: 'safety',  label: 'Xuất Hành' },
+    // Legacy English keys (backward compat)
+    'love':       { key: 'love',    label: 'Tình Duyên' },
+    'wealth':     { key: 'wealth',  label: 'Tài Lộc' },
+    'safety':     { key: 'safety',  label: 'Bình An & Sức Khỏe' },
+};
+
 // GET /api/que/quick-random
 // Public endpoint for random hexagram
 router.get('/quick-random', async (req, res) => {
     try {
-        const { topic } = req.query; // 'love', 'wealth', 'safety'
+        const { topic } = req.query;
 
         // 1. Random Hexagram ID (1-64)
         const hexId = Math.floor(Math.random() * 64) + 1;
@@ -204,29 +228,17 @@ router.get('/quick-random', async (req, res) => {
             return res.status(500).json({ error: 'Failed to generate hexagram' });
         }
 
-        // 2. Map Topic to Data Key
-        let mappingKey = 'career';
-        let topicLabel = 'Tổng Quan';
+        // 2. Map topic → internal key + display label
+        const mapped = TOPIC_MAP[topic] || { key: 'career', label: 'Tổng Quan' };
+        const mappingKey = mapped.key;
+        const topicLabel = mapped.label;
 
-        switch (topic) {
-            case 'love':
-                mappingKey = 'love';
-                topicLabel = 'Tình Duyên';
-                break;
-            case 'wealth':
-                mappingKey = 'finance';
-                topicLabel = 'Tài Lộc';
-                break;
-            case 'safety':
-                mappingKey = 'safety';
-                topicLabel = 'Tai Tinh & Bình An';
-                break;
-        }
-
-        const rawInterpretation = interpretation.aspects[mappingKey] || interpretation.overview;
+        // aspects uses 'finance' for wealth internally
+        const aspectKey = mappingKey === 'wealth' ? 'finance' : mappingKey;
+        const rawInterpretation = interpretation.aspects[aspectKey] || interpretation.overview;
 
         // 3. Generate Rich Content
-        const richContent = generateRichAnalysis(hexInfo, topicLabel, topic, rawInterpretation, interpretation);
+        const richContent = generateRichAnalysis(hexInfo, topicLabel, mappingKey, rawInterpretation, interpretation);
 
         // 4. Construct Result
         const result = {
@@ -237,9 +249,10 @@ router.get('/quick-random', async (req, res) => {
             quality: hexInfo.quality,
             topic: topicLabel,
             overview: interpretation.overview,
-            interpretation: rawInterpretation, // Short version for preview if needed
-            ai_analysis: richContent, // This will be rendered as Markdown
+            interpretation: rawInterpretation,
+            ai_analysis: richContent,
             advice: interpretation.advice,
+            created_at: new Date().toISOString(),
             disclaimer: "Kết quả gieo quẻ ngẫu nhiên mang tính chất tham khảo. Độ chính xác phụ thuộc vào sự thành tâm của người gieo. Để có kết quả chính xác theo mệnh lý (Bát Tự), vui lòng điền ngày giờ sinh để hệ thống tính toán năng lượng Mệnh khuyết và Vận hạn chính xác."
         };
 
@@ -329,12 +342,16 @@ router.get('/timeline', injectUser, shapeUserInfo, async (req, res) => {
 
         const { type = 'daily', limit = 7 } = req.query;
 
+        // Allowlist validation — prevent SQL injection
+        const ALLOWED_TYPES = ['daily', 'monthly', 'yearly'];
+        const safeType = ALLOWED_TYPES.includes(type) ? type : 'daily';
+
         // Get recent consultations of specific type
         const query = `
             SELECT id, answer, metadata, created_at 
             FROM consultations 
             WHERE user_id = ? AND theme_id = 'xin_que' 
-            AND metadata LIKE '%"queType":"${type}"%'
+            AND metadata LIKE '%"queType":"${safeType}"%'
             ORDER BY created_at DESC 
             LIMIT ?
         `;

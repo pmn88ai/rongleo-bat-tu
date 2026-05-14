@@ -175,5 +175,13 @@ process.once('SIGUSR2', () => {
 }
 })();
 
+// Start server when run directly (not when imported by tests)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`[Server] BaZi API running on http://localhost:${PORT}`);
+        console.log(`[Server] Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+}
+
 module.exports = app;
 

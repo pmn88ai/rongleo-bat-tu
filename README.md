@@ -1,12 +1,10 @@
-CÁI NÀY LÀ FRONTEND - KO CÓ BACKEND. BẢN NÀY SAU KHI XÓA ĐƯỢC LOGIN, NGÂN LƯỢNG. CHẠY ĐƯỢC LOCAL, ĐÃ XÓA BACKEND VÀ CHẠY THỬ. ĐÃ GOM TỪ HƠN 30 API VỀ TẦM 10 API ĐỂ VERCEL FREE. (20260409)
-
-# 🏮 Huyền Cơ Bát Tự — BaZi Analysis Platform
+# 🏮 Huyền Cơ Bát Tự — RongLeo BaZi Analysis Platform
 
 > Nền tảng phân tích Tứ Trụ (Bát Tự) chuyên sâu, tích hợp AI tư vấn, được xây dựng với React 19 & Node.js.
 
-*[🇬🇧 English Version](README.en.md)*
+*[🇬🇧 English Version](README.en.md) *
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)]()
 [![React](https://img.shields.io/badge/react-19.2-61dafb.svg)]()
@@ -30,6 +28,8 @@ CÁI NÀY LÀ FRONTEND - KO CÓ BACKEND. BẢN NÀY SAU KHI XÓA ĐƯỢC LOGIN,
 ## 🌟 Giới Thiệu
 
 **Huyền Cơ Bát Tự** là nền tảng phân tích mệnh lý Tứ Trụ (Bát Tự / BaZi) toàn diện, kết hợp thuật toán tính toán truyền thống với trí tuệ nhân tạo (AI) để cung cấp luận giải chuyên sâu. Hệ thống hỗ trợ đầy đủ lịch Âm - Dương, chuyển đổi Can Chi, và phân tích Ngũ Hành theo mệnh lý học Đông phương.
+
+**Current status**: Beta — 136 tests pass (68 core engine + 43 API contract + 25 Western astrology). Security baseline established. Western astrology foundation added.
 
 ---
 
@@ -115,7 +115,14 @@ CÁI NÀY LÀ FRONTEND - KO CÓ BACKEND. BẢN NÀY SAU KHI XÓA ĐƯỢC LOGIN,
 - **Desktop Shell**: Layout chuyên nghiệp cho màn hình lớn
 - **Tự động detect**: Tự động chuyển đổi giữa Mobile/Desktop dựa trên kích thước màn hình
 
-### 12. 📤 Xuất Dữ Liệu (Export)
+### 12. ⭐ Tử Vi Phương Tây (Western Astrology)
+- **Sun sign**: Mặt Trời chính xác từ ngày sinh
+- **Moon sign**: Mặt Trăng gần đúng (±1 cung, ghi chú rõ UI)
+- **Rising sign**: Placeholder — cần nơi sinh
+- **Personality traits**: 5 đặc điểm + phong cách giao tiếp + xu hướng cảm xúc
+- **Route**: `/tuviphuongtay` — xem cùng với dữ liệu Bát Tự
+
+### 13. 📤 Xuất Dữ Liệu (Export)
 - **Xuất hình ảnh (PNG)**: Chụp lá số dạng hình ảnh chất lượng cao với `html2canvas`
 - **Xuất PDF**: Tạo file PDF chuyên nghiệp với `jsPDF`
 
@@ -220,16 +227,18 @@ npm install
 cp backendjs/.env.example backendjs/.env
 ```
 
-Mở `backendjs/.env` và điền API key:
+Mở `backendjs/.env` và điền thông tin:
 
 ```env
-PORT=8888
+PORT=3000
 NODE_ENV=development
 
-# OpenRouter AI Configuration
-# Lấy key tại: https://openrouter.ai/keys
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-OPENROUTER_MODEL=deepseek/deepseek-chat
+# Groq AI Configuration
+GROQ_API_KEY=your_groq_api_key_here
+
+# Admin Bootstrap (optional)
+ADMIN_USERNAME=
+ADMIN_PASSWORD_HASH=
 ```
 
 > **Note:** Các tính năng không cần AI (lá số, đại vận, phân tích, chọn ngày...) vẫn hoạt động bình thường mà không cần API key. Chỉ tính năng Tư vấn AI và Hợp Duyên AI cần API key.
@@ -250,6 +259,22 @@ npm run dev:backend    # API server tại http://localhost:8888
 ```bash
 npm run build   # Build frontend → frontend/dist/
 npm start       # Chạy backend production
+```
+
+### 5. Chạy Tests (136 tests)
+
+```bash
+# Engine core tests (68 tests — determinism, fixtures, edge cases)
+npm run test:core -w backendjs
+
+# API contract tests (43 tests — endpoint shape, invalid input, regression)
+npm run test:api -w backendjs
+
+# Western astrology tests (25 tests — sun/moon signs, personalities)
+npm run test:western -w backendjs
+
+# Run all backend tests
+cd backendjs && node --test tests/
 ```
 
 ---
@@ -440,16 +465,27 @@ Engine tính toán Bát Tự được xây dựng hoàn toàn bằng JavaScript,
 
 ## 🔒 Bảo Mật
 
+### Done (TASK-029)
+- **SQL injection fixed**: `que.routes.js` allowlist validation
+- **Hardcoded admin removed**: Env-driven bootstrap, no default credentials
+- **Production auth bypass disabled**: `NODE_ENV=production` blocks x-user-id
+- **Gender parsing fixed**: Exact match helper, no operator precedence bug
+
+### Infrastructure
 - **Helmet.js**: HTTP security headers
 - **Rate Limiting**: 3 tầng giới hạn request
   - General: 500 req / 15 phút
   - Auth: 50 req / 15 phút
   - AI: 15 req / 1 phút
-- **JWT Authentication**: Token-based auth với `jsonwebtoken`
 - **CORS**: Cross-Origin Resource Sharing configuration
 - **Gzip Compression**: Nén response tự động
 - **Access Logging**: Ghi log truy cập vào SQLite (IP, method, path, response time)
 - **Graceful Shutdown**: Đóng database connection an toàn khi shutdown
+
+### Remaining Limitations
+- Production admin routes still disabled (no JWT implementation)
+- CORS wide open in dev (`app.use(cors())`)
+- No full `NODE_ENV=production` testing yet
 
 ---
 
@@ -469,6 +505,7 @@ Engine tính toán Bát Tự được xây dựng hoàn toàn bằng JavaScript,
 | `/xinque` | Xin Quẻ | Gieo quẻ Kinh Dịch |
 | `/lich-su` | Lịch Sử | Lịch sử tư vấn |
 | `/bai-viet/:slug` | Bài Viết | Trang bài viết |
+| `/tuviphuongtay` | Tử Vi Tây | Western astrology (sun/moon/rising) |
 | `/admin` | Quản Trị | Admin panel |
 
 ---
@@ -476,6 +513,18 @@ Engine tính toán Bát Tự được xây dựng hoàn toàn bằng JavaScript,
 ## 📄 License
 
 MIT License — Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
+
+---
+
+## 📋 Tài Liệu Kiến Trúc
+
+| Document | Mô tả |
+|----------|-------|
+| [ENGINE_ARCHITECTURE.md](docs/ENGINE_ARCHITECTURE.md) | Kiến trúc engine Bát Tự: pipeline, modules, API contracts, known limitations |
+| [PROJECT_MAP.md](docs/PROJECT_MAP.md) | Map kiến trúc toàn bộ hệ thống, audit bảo mật & SEO, rủi ro, cơ hội cải thiện |
+| [INTERPRETATION_SYSTEM.md](docs/INTERPRETATION_SYSTEM.md) | Hệ thống luận giải: categories, metadata model, normalizer |
+| [SECURITY_REPORT.md](docs/SECURITY_REPORT.md) | Security audit: findings + fixes
+| [WESTERN_ASTROLOGY.md](docs/WESTERN_ASTROLOGY.md) | Western astrology foundation: sun/moon signs, personality traits, API integration |
 
 ---
 

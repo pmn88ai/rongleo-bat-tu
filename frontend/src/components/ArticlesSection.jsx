@@ -37,13 +37,24 @@ const ArticlesSection = () => {
                 limit: '5'
             });
             const res = await fetch(`${API_CONFIG.BASE_URL}/articles?${params}`);
+            if (!res.ok) {
+                console.warn(`[Articles] API returned ${res.status}, using empty state`);
+                setArticles([]);
+                setTotalPages(1);
+                return;
+            }
             const data = await res.json();
             if (data.success) {
                 setArticles(data.articles || []);
                 setTotalPages(data.pagination?.totalPages || 1);
+            } else {
+                setArticles([]);
+                setTotalPages(1);
             }
         } catch (err) {
-            console.error('Failed to fetch articles:', err);
+            console.warn('[Articles] Failed to fetch:', err.message);
+            setArticles([]);
+            setTotalPages(1);
         } finally {
             setLoading(false);
         }

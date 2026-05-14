@@ -4,6 +4,14 @@ const baziService = require('../services/bazi.service');
 const dbService = require('../services/database.service');
 const ganzhi = require('../bazi/ganzhi');
 
+// Gender parser — exact match, no truthy/falsy tricks
+// "Nam" → false, "Nữ" → true, default → false
+const parseGender = (gender) => {
+    if (!gender || typeof gender !== 'string') return false;
+    const g = gender.trim().toLowerCase();
+    return g === 'nữ' || g === 'nu' || g === 'female';
+};
+
 /**
  * GET /api/analyze - Full BaZi Analysis
  * Every request creates a new customer record for tracking
@@ -512,8 +520,7 @@ router.post('/matching/ai', async (req, res) => {
             const { analyzeNguHanh } = require('../bazi/phan_tich/ngu_hanh');
             const { calculateDaiVan } = require('../bazi/dayun');
 
-            const g = (person.gender || '').toLowerCase();
-            const isFemale = g.startsWith('n') && !g.includes('am') || g.includes('female') || g.includes('nữ');
+            const isFemale = parseGender(person.gender);
 
             const calc = new BaZiCalculator({
                 year: parseInt(person.year),

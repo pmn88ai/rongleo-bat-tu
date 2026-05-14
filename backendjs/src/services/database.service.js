@@ -341,24 +341,27 @@ class DatabaseService {
         await this.run(`CREATE INDEX IF NOT EXISTS idx_access_logs_ip ON access_logs(ip)`);
         await this.run(`CREATE INDEX IF NOT EXISTS idx_access_logs_path ON access_logs(path)`);
 
-        // Create Default Admins
-        const admins = [
-            { email: 'admin@huyencobattu.vn', hash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', name: 'Administrator' },
-            { email: 'admin@admin.com', hash: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', name: 'System Admin' }
-        ];
+        // Bootstrap Admin from Environment (safe, configurable)
+        // Set ADMIN_USERNAME + ADMIN_PASSWORD_HASH in .env to create initial admin.
+        // If env vars are not set, admin bootstrap is skipped (safe for production).
+        const adminEmail = process.env.ADMIN_USERNAME || '';
+        const adminHash = process.env.ADMIN_PASSWORD_HASH || '';
+        const adminName = process.env.ADMIN_NAME || 'Administrator';
 
-        for (const admin of admins) {
-            const email = admin.email.toLowerCase().trim();
-            const exists = await this.get(`SELECT id FROM users WHERE LOWER(TRIM(email)) = ?`, [email]);
-
+        if (adminEmail && adminHash) {
+            const exists = await this.get(`SELECT id FROM users WHERE LOWER(TRIM(email)) = ?`, [adminEmail.toLowerCase().trim()]);
             if (!exists) {
-                console.log(`[DB] Admin ${email} not found. Creating...`);
+                console.log(`[DB] Bootstrap admin ${adminEmail} not found. Creating from env...`);
                 await this.run(`
                     INSERT INTO users (email, password_hash, name, credits, is_admin)
                     VALUES (?, ?, ?, 9999, 1)
-                `, [email, admin.hash, admin.name]);
-                console.log(`[DB] Admin ${email} created.`);
+                `, [adminEmail.toLowerCase().trim(), adminHash, adminName]);
+                console.log(`[DB] Bootstrap admin ${adminEmail} created from env.`);
             }
+        } else {
+            console.warn('[DB] ADMIN_USERNAME or ADMIN_PASSWORD_HASH not set. Admin bootstrap skipped.');
+            console.warn('[DB] To create an admin, set ADMIN_USERNAME and ADMIN_PASSWORD_HASH in .env');
+            console.warn('[DB] ADMIN_PASSWORD_HASH must be a SHA-256 hex string of the password.');
         }
 
         console.log('[DB] Tables and indexes checked/created.');

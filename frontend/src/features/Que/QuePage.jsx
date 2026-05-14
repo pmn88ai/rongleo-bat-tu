@@ -329,10 +329,15 @@ const QuePage = ({ userData }) => {
                                     </div>
                                 ) : selectedGua ? (
                                     <div className="markdown-body">
-                                        <h3>🔮 Luận giải cơ bản (Năng lượng đang kết nối)</h3>
-                                        <p><strong>Quẻ: {selectedGua.name}</strong></p>
+                                        <h3>🔮 {selectedGua.name}</h3>
                                         <p><em>{selectedGua.meaning}</em></p>
-                                        <p>Hiện tại Thầy đang tổng hợp dữ liệu, vui lòng chờ trong giây lát hoặc thử lại sau.</p>
+                                        <p>{selectedGua.overview || selectedGua.interpretation || ''}</p>
+                                        {selectedGua.advice?.positive?.length > 0 && (
+                                            <p><strong>Nên:</strong> {selectedGua.advice.positive.join(' · ')}</p>
+                                        )}
+                                        {selectedGua.advice?.caution?.length > 0 && (
+                                            <p><strong>Tránh:</strong> {selectedGua.advice.caution.join(' · ')}</p>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="ai-loading-placeholder">

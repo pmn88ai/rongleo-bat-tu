@@ -4,7 +4,7 @@
 
 *[🇻🇳 Phiên bản Tiếng Việt](README.md)*
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)]()
 [![React](https://img.shields.io/badge/react-19.2-61dafb.svg)]()
@@ -28,6 +28,8 @@
 ## 🌟 Introduction
 
 **Huyền Cơ Bát Tự** is a full-featured Chinese metaphysics platform for Four Pillars of Destiny (BaZi / 八字) analysis. It combines traditional calculation algorithms with artificial intelligence (AI) to deliver in-depth life readings. The system supports both Solar and Lunar calendars, Heavenly Stems & Earthly Branches conversion, and Five Elements analysis following Eastern astrology principles.
+
+**Current status**: Beta — 136 tests pass (68 core engine + 43 API contract + 25 Western astrology). Security baseline established. Western astrology foundation added.
 
 ---
 
@@ -108,7 +110,14 @@
 - **Access logs**: Track visits, IPs, response times
 - **System statistics**: Activity and performance overview
 
-### 11. 📱 Responsive Design
+### 11. ⭐ Western Astrology
+- **Sun sign**: Accurate from birth date
+- **Moon sign**: Approximate (±1 sign, noted in UI)
+- **Rising sign**: Placeholder — requires birth location
+- **Personality traits**: 5 traits + communication + emotional tendency (VN/EN)
+- **Route**: `/tuviphuongtay` — viewed alongside BaZi data
+
+### 12. 📱 Responsive Design
 - **Mobile Shell**: Optimized mobile interface with dedicated navigation
 - **Desktop Shell**: Professional layout for large screens
 - **Auto-detection**: Automatically switches between Mobile/Desktop based on screen size
@@ -467,7 +476,19 @@ The BaZi calculation engine is built entirely in JavaScript:
 | `/xinque` | Hexagram | I Ching divination |
 | `/lich-su` | History | Consultation history |
 | `/bai-viet/:slug` | Article | Article page |
+| `/tuviphuongtay` | Western | Western astrology (sun/moon/rising) |
 | `/admin` | Admin | Admin panel |
+
+---
+
+## 📋 Architecture Docs
+
+| Document | Description |
+|----------|-------------|
+| [ENGINE_ARCHITECTURE.md](docs/ENGINE_ARCHITECTURE.md) | BaZi engine architecture: pipeline, modules, API contracts |
+| [PROJECT_MAP.md](docs/PROJECT_MAP.md) | Full system map, folder structure, SEO audit, risk audit |
+| [INTERPRETATION_SYSTEM.md](docs/INTERPRETATION_SYSTEM.md) | Interpretation system: categories, metadata model |
+| [SECURITY_REPORT.md](docs/SECURITY_REPORT.md) | Security audit: findings & fixes |
 
 ---
 

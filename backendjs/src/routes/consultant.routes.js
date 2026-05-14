@@ -14,6 +14,14 @@ const authRoutes = require('./auth.routes');
 // NO-AUTH: lấy userId từ x-user-id header, fallback "anonymous"
 const getUserId = (req) => req.headers['x-user-id'] || 'anonymous';
 
+// Gender parser — exact match, no truthy/falsy tricks
+// "Nam" → false, "Nữ" → true, default → false
+const parseGender = (gender) => {
+    if (!gender || typeof gender !== 'string') return false;
+    const g = gender.trim().toLowerCase();
+    return g === 'nữ' || g === 'nu' || g === 'female';
+};
+
 // AI Rate Limiter
 const aiLimiter = rateLimit({
     windowMs: 60 * 1000,
@@ -79,8 +87,7 @@ router.post('/ask', aiLimiter, async (req, res) => {
 
         const isCustomQuestion = questionText && questionText === questionId;
 
-        const g = (gender || '').toLowerCase();
-        const isFemale = g.startsWith('n') && !g.includes('am') || g.includes('female') || g.includes('nữ') || g.includes('nư');
+        const isFemale = parseGender(gender);
 
         const calc = new baziCalculator({
             name: req.body.name || 'Mệnh chủ',
@@ -99,8 +106,7 @@ router.post('/ask', aiLimiter, async (req, res) => {
         let partnerCtx = null;
         if (req.body.partnerData) {
             const p = req.body.partnerData;
-            const pg = (p.gender || '').toLowerCase();
-            const pIsFemale = pg.startsWith('n') && !pg.includes('am') || pg.includes('female') || pg.includes('nữ') || pg.includes('nư');
+            const pIsFemale = parseGender(p.gender);
             const pCalc = new baziCalculator({
                 name: p.name || 'Đối phương',
                 year: parseInt(p.year),
