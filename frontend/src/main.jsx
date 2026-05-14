@@ -4,9 +4,11 @@ import App from './App.jsx'
 import './index.css'
 import './scroll-fix.css'   // Mobile scroll fixes — must come after index.css
 import { initGA, trackPageView } from './analytics/ga4'
+import { initClarity } from './analytics/clarity'
 
-// Initialize GA4 on app load
+// Initialize analytics on app load
 initGA();
+initClarity();
 
 // Google Site Verification (optional, from env)
 const verificationToken = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION;
