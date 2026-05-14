@@ -36,10 +36,20 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
                                     href="https://rongleo-land.vercel.app/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11px', textDecoration: 'none', letterSpacing: '1px', whiteSpace: 'nowrap' }}
+                                    style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '6px',
+                                        background: 'linear-gradient(135deg, #1a6fc4 0%, #0d4f9e 100%)',
+                                        color: '#fff', textDecoration: 'none',
+                                        padding: '8px 16px', borderRadius: '8px',
+                                        fontSize: '0.8rem', fontWeight: '700', letterSpacing: '0.5px',
+                                        boxShadow: '0 4px 15px rgba(26,111,196,0.4)',
+                                        transition: 'all 0.3s ease', whiteSpace: 'nowrap'
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(26,111,196,0.6)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 15px rgba(26,111,196,0.4)'; }}
                                     onClick={e => e.stopPropagation()}
                                 >
-                                    ← RONGLEO
+                                    ← RongLeo Land
                                 </a>
                                 <h1 className="mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
                                     MỆNH LÝ AI

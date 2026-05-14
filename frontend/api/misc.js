@@ -62,7 +62,40 @@ async function handleAnalyzeTime(req, res) {
             targetDay:   parseIntParam(q.targetDay   || q.target_day,   null)
         })
     );
-    return res.status(200).json(result);
+
+    // Transform raw result into sections[] expected by PersonalizedDate.jsx
+    const typeLabel = result.type === 'day' ? 'Ngày' : result.type === 'month' ? 'Tháng' : 'Năm';
+    const icon      = result.type === 'day' ? '📅'  : result.type === 'month' ? '🗓️'  : '📆';
+
+    const evalLines = [];
+    const ev = result.evaluations || {};
+    if (ev.career)  evalLines.push(`**Sự nghiệp**: ${ev.career}`);
+    if (ev.wealth)  evalLines.push(`**Tài lộc**: ${ev.wealth}`);
+    if (ev.love)    evalLines.push(`**Tình cảm**: ${ev.love}`);
+    if (ev.health)  evalLines.push(`**Sức khỏe**: ${ev.health}`);
+    if (result.interpretation) evalLines.push(`Luận giải tổng quan: ${result.interpretation}`);
+
+    const sections = [
+        {
+            icon,
+            title: `Phân Tích ${typeLabel} — ${result.ganzhiVN || ''} (${result.shishen || ''})`,
+            content: evalLines
+        }
+    ];
+
+    if (Array.isArray(result.relationships) && result.relationships.length > 0) {
+        sections.push({ icon: '🔗', title: 'Tương Tác Can Chi', content: result.relationships });
+    }
+
+    const stars = result.special_stars || {};
+    const starLines = Object.entries(stars)
+        .filter(([, v]) => v)
+        .map(([k, v]) => `**${k}**: ${v}`);
+    if (starLines.length > 0) {
+        sections.push({ icon: '⭐', title: 'Thần Sát Ngày', content: starLines });
+    }
+
+    return res.status(200).json({ sections });
 }
 
 async function handleSelectDates(req, res) {

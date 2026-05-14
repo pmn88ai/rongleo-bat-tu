@@ -36,9 +36,16 @@ const BrandBar = () => {
         href="https://rongleo-land.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', textDecoration: 'none', letterSpacing: '1px' }}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: '4px',
+          background: 'linear-gradient(135deg, #1a6fc4 0%, #0d4f9e 100%)',
+          color: '#fff', textDecoration: 'none',
+          padding: '5px 10px', borderRadius: '6px',
+          fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.3px',
+          boxShadow: '0 3px 10px rgba(26,111,196,0.4)'
+        }}
       >
-        ← RONGLEO
+        ← RongLeo Land
       </a>
       <h1 className="mobile-mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         MỆNH LÝ AI
