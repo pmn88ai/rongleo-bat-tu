@@ -12,8 +12,9 @@ class BaZiCalculator {
         this.year = options.year;
         this.month = options.month;
         this.day = options.day;
-        this.hour = options.hour || 12;
-        this.minute = options.minute || 0;
+        // Giữ nguyên hour = 0 (giờ Tý). Chỉ mặc định 12 khi không truyền.
+        this.hour = (options.hour === undefined || options.hour === null) ? 12 : options.hour;
+        this.minute = (options.minute === undefined || options.minute === null) ? 0 : options.minute;
         this.isFemale = options.isFemale || false;
         this.isSolar = options.isSolar !== false; // default true
 
@@ -221,11 +222,15 @@ class BaZiCalculator {
             }
         }
 
+        // Đây chỉ là điểm thô để hiển thị. Không dùng các ngưỡng/trọng số này
+        // làm căn cứ chốt vượng/nhược hay dụng thần (xem phan_tich/ngu_hanh.js).
         return {
             suc_manh: {
                 diem_manh: strongScore,
                 tong_diem: totalScore,
-                la_nhuoc: isWeak
+                la_nhuoc: isWeak,
+                chua_chot: true,
+                ghi_chu: 'Điểm thô, chưa chốt'
             },
             ngu_hanh_vn: this.elements,
             nhiet_do: this._calculateTemperature()
@@ -351,9 +356,9 @@ class BaZiCalculator {
         }
 
 
-        // Calculate weak/strong (can_yeu)
-        const isWeak = this.scores?.suc_manh?.la_nhuoc;
-        const canYeu = isWeak === true ? 'Yếu' : isWeak === false ? 'Mạnh' : 'Trung bình';
+        // Không chốt vượng/nhược từ điểm thô (quy tắc tủ chưa có căn cứ số).
+        const isWeak = this.scores?.suc_manh?.la_nhuoc || null;
+        const canYeu = 'chưa xác định được';
 
         return {
             basicInfo: {
@@ -368,7 +373,8 @@ class BaZiCalculator {
                 thai_nguyen: thaiNguyen,
                 than_cung: thanCung,
                 nhap_van: nhapVan,
-                can_yeu: canYeu
+                can_yeu: canYeu,
+                can_yeu_ghi_chu: 'Điểm thô, chưa chốt'
             },
             pillars: this.pillars,
             elements: this.elements,

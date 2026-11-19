@@ -26,8 +26,8 @@ function determineCach(ctx) {
     const monthZhi = ctx.zhis[1];
     const monthGan = ctx.gans[1];
 
-    // Get Thập Thần of month stem
-    const monthShishen = ganzhi.getThapThan(dayGan, monthGan);
+    // Get Thập Thần of month stem (nhãn đầy đủ, thống nhất toàn hệ)
+    const monthShishen = ganzhi.toGodFullName(ganzhi.getThapThan(dayGan, monthGan));
 
     // Check for special patterns
     const cach = [];
@@ -37,29 +37,15 @@ function determineCach(ctx) {
         cach.push('Kiến Lộc');
     }
 
-    // Normal Cách based on month Thập Thần
-    if (monthShishen && monthShishen !== 'Tỷ' && monthShishen !== 'Kiếp') {
-        const cachName = monthShishen.replace('+', '').replace('-', '');
-        if (cachName === 'Sát') {
-            cach.push('Thất Sát');
-        } else if (cachName === 'Quan') {
-            cach.push('Chính Quan');
-        } else if (cachName === 'Ấn') {
-            cach.push('Chính Ấn');
-        } else if (cachName === 'Kiêu') {
-            cach.push('Thiên Ấn');
-        } else if (cachName === 'Thực') {
-            cach.push('Thực Thần');
-        } else if (cachName === 'Thương') {
-            cach.push('Thương Quan');
-        } else if (cachName === 'Tài') {
-            cach.push('Chính Tài');
-        }
+    // Normal Cách based on month Thập Thần.
+    // Tỷ Kiên / Kiếp Tài không lập cách theo can tháng.
+    if (monthShishen && CACH_CUC[monthShishen]) {
+        cach.push(monthShishen);
     }
 
-    // If no cách found, use Sát as default for testing
+    // Không khớp mẫu nào → không mặc định một cách cụ thể.
     if (cach.length === 0) {
-        cach.push('Sát');
+        return ['Chưa xác định được (can tháng + Kiến Lộc không khớp mẫu nào)'];
     }
 
     return cach;

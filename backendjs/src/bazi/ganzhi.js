@@ -15,6 +15,26 @@ const ZHIS_VN = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mù
 const ELEMENTS = ['Mộc', 'Mộc', 'Hỏa', 'Hỏa', 'Thổ', 'Thổ', 'Kim', 'Kim', 'Thủy', 'Thủy'];
 const ZHI_ELEMENTS = ['Thủy', 'Thổ', 'Mộc', 'Mộc', 'Thổ', 'Hỏa', 'Hỏa', 'Thổ', 'Kim', 'Kim', 'Thổ', 'Thủy'];
 
+// Nhãn đầy đủ của Thập Thần (dùng thống nhất ở các module luận giải)
+// Lưu ý: Tài+ (đồng âm dương với Nhật chủ) = Thiên Tài; Tài- = Chính Tài.
+const GOD_FULL_NAMES = {
+    'Tỷ': 'Tỷ Kiên',
+    'Kiếp': 'Kiếp Tài',
+    'Thực': 'Thực Thần',
+    'Thương': 'Thương Quan',
+    'Tài+': 'Thiên Tài',
+    'Tài-': 'Chính Tài',
+    'Sát': 'Thất Sát',
+    'Quan': 'Chính Quan',
+    'Ấn': 'Chính Ấn',
+    'Kiêu': 'Thiên Ấn'
+};
+
+function toGodFullName(shortName) {
+    if (!shortName) return '';
+    return GOD_FULL_NAMES[shortName] || shortName;
+}
+
 // Thập Thần (Ten Gods)
 const SHISHEN = {
     same_yang: 'Tỷ',
@@ -282,8 +302,8 @@ const ganzhiData = require('./ganzhi_data');
 
 module.exports = {
     GANS, GANS_VN, ZHIS, ZHIS_VN, ELEMENTS, ZHI_ELEMENTS,
-    NAP_AM, TANG_CAN, ZHI5, GAN5, GAN_YIN_YANG,
-    ganToVN, zhiToVN, ganToElement, zhiToElement,
+    NAP_AM, TANG_CAN, ZHI5, GAN5, GAN_YIN_YANG, GOD_FULL_NAMES,
+    ganToVN, zhiToVN, ganToElement, zhiToElement, toGodFullName,
     getNapAm, getTangCan, getZhiMainGan, getThapThan,
     generates, controls, getCanKhi, getFavorable, getUnfavorable,
     getVongTrangSinh, removeDiacritics,

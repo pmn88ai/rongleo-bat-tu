@@ -2,28 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { apiClient } from '../services/apiClient';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-// ── Tracking: gửi profile người dùng lên Google Sheet ─────────────────────────
-async function saveProfileToSheet(userData) {
-    try {
-        await fetch("https://script.google.com/macros/s/AKfycbxqoMrIxbZXeZXRanTA91a7DznJ7xNixqzTPMciEDtLTBLJdtAgsDDOF4ofUEAqAuuQcA/exec", {
-            method: "POST",
-            headers: {
-                "Content-Type": "text/plain"
-            },
-            body: JSON.stringify({
-                type: "menhly_profile",
-                name: userData.name || "",
-                birthdate: `${userData.year}-${String(userData.month).padStart(2,"0")}-${String(userData.day).padStart(2,"0")}`,
-                time: userData.hour,
-                gender: userData.gender || "Nam"
-            })
-        });
-    } catch (err) {
-        // Silent fail — không block trải nghiệm người dùng
-        console.error("[Tracking] saveProfileToSheet error:", err);
-    }
-}
-
 export const useBaziApi = () => {
     // Initialize from sessionStorage to prevent flash/redirect on F5
     const [data, setData] = useState(() => {
@@ -44,9 +22,6 @@ export const useBaziApi = () => {
         setLoading(true);
         setError(null);
         try {
-            // ── Tracking: fire-and-forget, không await ─────────────────────
-            saveProfileToSheet(params);
-
             const result = await apiClient.analyze(params);
 
             // Save to state and storage
@@ -92,7 +67,7 @@ export const useBaziApi = () => {
                 minute: parseInt(searchParams.get('minute') || '0'),
                 calendar: searchParams.get('calendar') || 'solar'
             };
-            // URL recovery: không gửi tracking (user không chủ động submit)
+            // URL recovery: dựng lại lá số từ tham số URL, không gửi dữ liệu ra ngoài.
             analyze(params, false);
         }
     }, [location.search, data, loading, analyze]);

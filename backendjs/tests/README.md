@@ -41,8 +41,18 @@ backendjs/tests/
 ├── fixtures/
 │   └── famous_cases.json      — 7 golden test cases (famous people)
 ├── core.test.js                — BaZi engine core test runner (68 tests)
+├── golden-fixes.test.js        — 12 test vàng cho đợt sửa 19/11/2026 (F1–F5)
 └── README.md
 ```
+
+### Test vàng cho đợt sửa F1–F8
+
+```bash
+cd backendjs
+node --test tests/golden-fixes.test.js
+```
+
+Gồm 12 ca: giờ Tý (4 ca), cách cục không mặc định Sát (1), nhãn/field strength của luận tĩnh (4), tòng cách theo quy tắc tủ (3).
 
 ## Test suites
 
@@ -78,11 +88,11 @@ backendjs/tests/
 | 23:00 (Tý) | Canh Tý | Correct: Tý hour |
 | 23:30 (Tý) | Canh Tý | Correct: Tý hour |
 | 23:59 (Tý) | Canh Tý | Correct: Tý hour |
-| 00:00 | Giáp Ngọ | **⚠️ Ngọ hour — may be inaccurate** |
-| 00:30 | Giáp Ngọ | **⚠️ Ngọ hour — may be inaccurate** |
+| 00:00 | Mậu Tý | Correct: Tý hour |
+| 00:30 | Mậu Tý | Correct: Tý hour |
 | 01:00 (Sửu) | Kỷ Sửu | Correct: Sửu hour |
 
-**Known limitation**: `lunar-javascript` maps 00:00 to Ngọ (noon) hour instead of Tý (midnight). Traditional Baži maps Tý as 23:00-01:00. This is a known issue with the library.
+**Note**: Từ bản sửa F1 (19/11/2026), engine map 00:00/00:30 → giờ Tý (子), không còn map sang Ngọ (午) như tài liệu cũ.
 
 ### Solar Term (Lập Xuân 2024)
 | Date | Year | Month | Note |
@@ -124,8 +134,8 @@ Xem `fixtures/famous_cases.json` cho format chi tiết.
 
 ### Known Limitations (Edge Cases)
 
-1. **Hour 0 mapping**: `lunar-javascript` maps 00:00 to Ngọ (午) hour instead of Tý (子).
-   - Traditional BaZi: Tý hour = 23:00-01:00. Engine follows library behavior.
+1. **Hour 0 mapping**: engine map 00:00 → Tý (子) hour (đã sửa ở F1, 19/11/2026).
+   - Traditional BaZi: Tý hour = 23:00-01:00.
 2. **Non-leap Feb 29**: Accepted silently by `lunar-javascript` (auto-corrects to Mar 1).
 3. **Negative years**: Accepted by engine (cross-epoch accuracy not guaranteed).
 4. **Hour default = 12**: When hour is undefined/null, engine defaults to 12:00 (noon).
@@ -192,7 +202,9 @@ npm run test:api
 |------|:-----:|------|---------|
 | `core.test.js` | 68 | Engine unit tests | Ganzhi, calculator, dayun, shishen, fixtures, edge cases |
 | `api-contract.test.js` | 43 | API integration | HTTP responses, field shapes, invalid input safety |
-| **Total** | **111** | | |
+| `golden-fixes.test.js` | 12 | Golden regression | F1 giờ Tý, F2 cách cục, F3 nhãn/field strength, F5 tòng cách |
+| `western.test.js` | 25 | Western astrology | Sun/moon sign, personality traits |
+| **Total** | **148** | | |
 
 ## Future phases
 
@@ -202,5 +214,5 @@ npm run test:api
 - [ ] Add leap month tests (lunar calendar intercalary months)
 - [ ] Add timezone tests
 - [ ] Add que (hexagram) endpoint tests
-- [ ] Fix hour 0 mapping if needed
+- [x] Fix hour 0 mapping if needed (F1, 19/11/2026)
 - [ ] CI/CD integration

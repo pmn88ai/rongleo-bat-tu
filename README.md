@@ -230,7 +230,7 @@ cp backendjs/.env.example backendjs/.env
 Mở `backendjs/.env` và điền thông tin:
 
 ```env
-PORT=3000
+PORT=8888
 NODE_ENV=development
 
 # Groq AI Configuration
