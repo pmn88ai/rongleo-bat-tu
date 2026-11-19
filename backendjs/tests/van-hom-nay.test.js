@@ -19,9 +19,12 @@ const {
 const {
     getDayCanChi,
     computeVanHomNay,
+    analyzeNguHanhBaTru,
     LABELS,
     LEVELS
 } = require('../src/bazi/van_hom_nay');
+const BaZiCalculator = require('../src/bazi/calculator');
+const { analyzeNguHanh } = require('../src/bazi/phan_tich/ngu_hanh');
 
 // ─── Thần số (quy tắc tủ) ───────────────────────────────────────────────────
 
@@ -101,6 +104,47 @@ describe('Đối chiếu ngày với lá số — Mô hình Tầng 1', () => {
         const result = computeVanHomNay({ ngay_sinh: '1990-06-15' }, { today: new Date(2026, 9, 26) });
         assert.equal(result.co_gio_sinh, false);
         assert.ok(result.gioi_han.some(line => line.includes('Chưa có giờ sinh')));
+    });
+
+    it('không giờ sinh → dụng thần chỉ tính từ 3 trụ, đánh dấu sơ bộ', () => {
+        const result = computeVanHomNay({ ngay_sinh: '1960-04-19' }, { today: new Date(2026, 9, 26) });
+        assert.equal(result.co_gio_sinh, false);
+        assert.equal(result.so_bo, true);
+        assert.ok(result.ghi_chu_so_bo.includes('3 trụ'));
+        assert.ok(result.ghi_chu_so_bo.includes('sơ bộ'));
+
+        const chart = new BaZiCalculator({
+            year: 1960,
+            month: 4,
+            day: 19,
+            hour: 12,
+            minute: 0,
+            isFemale: false,
+            isSolar: true
+        }).calculate();
+        const baTru = analyzeNguHanhBaTru(chart);
+
+        assert.equal(baTru.gans.length, 3);
+        assert.equal(baTru.zhis.length, 3);
+        assert.deepEqual(baTru.gans, chart.gans.slice(0, 3));
+        assert.deepEqual(baTru.zhis, chart.zhis.slice(0, 3));
+        assert.ok(!baTru.gans.includes(chart.gans[3]), 'Trụ giờ không được dùng để tính dụng thần');
+        assert.ok(!baTru.zhis.includes(chart.zhis[3]), 'Trụ giờ không được dùng để tính dụng thần');
+
+        assert.deepEqual(baTru.ngu_hanh.dung_than.ngu_hanh, ['Thổ']);
+        assert.deepEqual(analyzeNguHanh(chart).dung_than.ngu_hanh, ['Thủy']);
+        assert.deepEqual(result.ket_qua[2].noi_dung.dung_than, baTru.ngu_hanh.dung_than.ngu_hanh);
+    });
+
+    it('có giờ sinh → không đánh dấu sơ bộ, kết luận như cũ', () => {
+        const result = computeVanHomNay(
+            { ngay_sinh: '1990-06-15', gio_sinh: 12 },
+            { today: new Date(2026, 9, 26) }
+        );
+        assert.equal(result.co_gio_sinh, true);
+        assert.equal(result.so_bo, undefined);
+        assert.equal(result.ghi_chu_so_bo, undefined);
+        assert.equal(result.ket_qua[2].noi_dung.ket_luan, LEVELS.thuan);
     });
 
     it('không xác định được dụng thần → chưa đủ căn cứ', () => {
@@ -206,6 +250,24 @@ describe('GET /api/van-hom-nay', () => {
         const { status, body } = await getJson('/api/van-hom-nay', {});
         assert.equal(status, 400);
         assert.ok(body.error);
+    });
+
+    it('không giờ sinh → response có so_bo và ghi chú 3 trụ', async () => {
+        const { status, body } = await getJson('/api/van-hom-nay', { ngay_sinh: '1960-04-19' });
+        assert.equal(status, 200);
+        assert.equal(body.so_bo, true);
+        assert.ok(body.ghi_chu_so_bo.includes('3 trụ'));
+        assert.ok(body.ghi_chu_so_bo.includes('sơ bộ'));
+    });
+
+    it('có giờ sinh → response không đánh dấu so_bo', async () => {
+        const { status, body } = await getJson('/api/van-hom-nay', {
+            ngay_sinh: '1960-04-19',
+            gio_sinh: '12'
+        });
+        assert.equal(status, 200);
+        assert.equal(body.so_bo, undefined);
+        assert.equal(body.ghi_chu_so_bo, undefined);
     });
 
     it('ngày sinh sai định dạng → 400', async () => {

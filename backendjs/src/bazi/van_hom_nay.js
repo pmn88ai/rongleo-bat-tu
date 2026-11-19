@@ -13,6 +13,16 @@ const { computePersonalNumbers } = require('./than_so');
 
 const WEEKDAYS = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
 
+const THREE_PILLAR_NOTE = 'Chưa có giờ sinh nên dụng thần chỉ tính từ 3 trụ (năm/tháng/ngày), kết luận sơ bộ — có giờ sinh sẽ chính xác hơn.';
+
+const RESOURCE_OF = {
+    'Mộc': 'Thủy',
+    'Hỏa': 'Mộc',
+    'Thổ': 'Hỏa',
+    'Kim': 'Thổ',
+    'Thủy': 'Kim'
+};
+
 const LABELS = {
     can_chi: 'Can chi hôm nay',
     than_so: 'Ngày cá nhân thần số',
@@ -194,6 +204,63 @@ function doiChieuVoiLaSo({ chart, nguHanh, todayGanCn, todayZhiCn }) {
     };
 }
 
+function computeElementsFromThreePillars(gans, zhis) {
+    const elements = { Kim: 0, Mộc: 0, Thủy: 0, Hỏa: 0, Thổ: 0 };
+
+    for (const gan of gans) {
+        const element = ganzhi.GAN5[gan] || ganzhi.ganToElement(gan);
+        if (elements[element] !== undefined) {
+            elements[element] += 5;
+        }
+    }
+
+    for (const zhi of [...zhis, zhis[1]]) {
+        const hiddenStems = ganzhi.ZHI5[zhi];
+        if (!hiddenStems) continue;
+        for (const [hiddenGan, weight] of Object.entries(hiddenStems)) {
+            const element = ganzhi.GAN5[hiddenGan];
+            if (element && elements[element] !== undefined) {
+                elements[element] += weight;
+            }
+        }
+    }
+
+    return elements;
+}
+
+function pickNeutralGanForStemSupportCheck(dayElement) {
+    const resourceElement = RESOURCE_OF[dayElement];
+    return ganzhi.GANS.find((gan) => {
+        const element = ganzhi.ganToElement(gan);
+        return element !== dayElement && element !== resourceElement;
+    });
+}
+
+/**
+ * Dụng thần tính từ 3 trụ (năm/tháng/ngày) khi không có giờ sinh.
+ * Chỉ đọc engine; không dùng trụ giờ placeholder.
+ */
+function analyzeNguHanhBaTru(chart) {
+    const gans = chart.gans.slice(0, 3);
+    const zhis = chart.zhis.slice(0, 3);
+    const elements = computeElementsFromThreePillars(gans, zhis);
+    const dayElement = ganzhi.ganToElement(gans[2]);
+
+    const ctx = {
+        gans: [...gans, pickNeutralGanForStemSupportCheck(dayElement)],
+        zhis,
+        elements,
+        scores: { ngu_hanh_vn: elements }
+    };
+
+    return {
+        ngu_hanh: analyzeNguHanh(ctx),
+        gans,
+        zhis,
+        elements
+    };
+}
+
 function todayParts(now) {
     return {
         year: now.getFullYear(),
@@ -236,7 +303,7 @@ function computeVanHomNay(input, options = {}) {
         isFemale: isFemale(input && input.gioi_tinh),
         isSolar: true
     }).calculate();
-    const nguHanh = analyzeNguHanh(chart);
+    const nguHanh = co_gio_sinh ? analyzeNguHanh(chart) : analyzeNguHanhBaTru(chart).ngu_hanh;
 
     // 3. Đối chiếu ngày với lá số [MÔ HÌNH Tầng 1]
     const doiChieu = doiChieuVoiLaSo({
@@ -262,6 +329,7 @@ function computeVanHomNay(input, options = {}) {
     return {
         ngay_sinh: `${birth.year}-${String(birth.month).padStart(2, '0')}-${String(birth.day).padStart(2, '0')}`,
         co_gio_sinh,
+        ...(co_gio_sinh ? {} : { so_bo: true, ghi_chu_so_bo: THREE_PILLAR_NOTE }),
         ngay: {
             duong_lich: duongLich,
             thu: weekday,
@@ -313,9 +381,11 @@ module.exports = {
     LABELS,
     LEVELS,
     MESSAGES,
+    THREE_PILLAR_NOTE,
     parseIsoDate,
     parseHour,
     getDayCanChi,
     doiChieuVoiLaSo,
+    analyzeNguHanhBaTru,
     computeVanHomNay
 };
