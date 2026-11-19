@@ -1,0 +1,1195 @@
+{
+ "meta": {
+  "tao_ngay": "2026-10-24",
+  "doi_chieu": "iztro (npm) phien ban 2.6.3 — thu vien Tu Vi Dau So ma nguon mo doc lap, he truyen thong Trung Hoa",
+  "bang_nguon_tu_vi": "Bang vi tri sao Tu Vi cong bo tai thayphucloc.com + thayhungtuvi.com (2 nguon trung nhau tung o), nap lai ngay 24/10/2026 sau khi phat hien 48/150 o chep sai",
+  "quy_uoc_dau_vao": "Ngay/thang la AM LICH (iztro dung lich Trung Hoa; lich Viet Nam co the lech 1 ngay o mot so thang do khac mui gio/ngay soc — bo ca nay khong kiem chung duoc chech lech do). Gio: index iztro 0=Ty,1=Suu,...,11=Hoi. Khong co ca thang nhuan. Khong co ca gio Ty sat ranh gioi 23:00.",
+  "pham_vi": "Menh, Than, Cuc, 14 chinh tinh, Tu Hoa (ban mac dinh Toan Tap/Kham Thien). Chua gom: sao phu, Tuan/Triet, do sang."
+ },
+ "cases": [
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 1,
+    "ngay_am": 3,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Dần",
+    "than": "Dần",
+    "cuc": 6,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 2,
+    "ngay_am": 7,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Mão",
+    "than": "Mão",
+    "cuc": 6,
+    "sao": {
+     "Liêm Trinh": "Dần",
+     "Phá Quân": "Thìn",
+     "Thiên Đồng": "Tỵ",
+     "Vũ Khúc": "Ngọ",
+     "Thiên Phủ": "Ngọ",
+     "Thái Dương": "Mùi",
+     "Thái Âm": "Mùi",
+     "Tham Lang": "Thân",
+     "Thiên Cơ": "Dậu",
+     "Cự Môn": "Dậu",
+     "Tử Vi": "Tuất",
+     "Thiên Tướng": "Tuất",
+     "Thiên Lương": "Hợi",
+     "Thất Sát": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 3,
+    "ngay_am": 11,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Thìn",
+    "than": "Thìn",
+    "cuc": 3,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 4,
+    "ngay_am": 15,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tỵ",
+    "than": "Tỵ",
+    "cuc": 3,
+    "sao": {
+     "Vũ Khúc": "Dần",
+     "Thiên Tướng": "Dần",
+     "Thái Dương": "Mão",
+     "Thiên Lương": "Mão",
+     "Thất Sát": "Thìn",
+     "Thiên Cơ": "Tỵ",
+     "Tử Vi": "Ngọ",
+     "Phá Quân": "Thân",
+     "Liêm Trinh": "Tuất",
+     "Thiên Phủ": "Tuất",
+     "Thái Âm": "Hợi",
+     "Tham Lang": "Tý",
+     "Thiên Đồng": "Sửu",
+     "Cự Môn": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Lộc": "Liêm Trinh"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 5,
+    "ngay_am": 19,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Ngọ",
+    "than": "Ngọ",
+    "cuc": 5,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 6,
+    "ngay_am": 23,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Mùi",
+    "than": "Mùi",
+    "cuc": 5,
+    "sao": {
+     "Thất Sát": "Dần",
+     "Thiên Đồng": "Mão",
+     "Vũ Khúc": "Thìn",
+     "Thái Dương": "Tỵ",
+     "Phá Quân": "Ngọ",
+     "Thiên Cơ": "Mùi",
+     "Tử Vi": "Thân",
+     "Thiên Phủ": "Thân",
+     "Thái Âm": "Dậu",
+     "Tham Lang": "Tuất",
+     "Cự Môn": "Hợi",
+     "Liêm Trinh": "Tý",
+     "Thiên Tướng": "Tý",
+     "Thiên Lương": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Lộc": "Liêm Trinh"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 7,
+    "ngay_am": 27,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Thân",
+    "than": "Thân",
+    "cuc": 4,
+    "sao": {
+     "Thiên Đồng": "Dần",
+     "Thiên Lương": "Dần",
+     "Vũ Khúc": "Mão",
+     "Thất Sát": "Mão",
+     "Thái Dương": "Thìn",
+     "Thiên Cơ": "Ngọ",
+     "Tử Vi": "Mùi",
+     "Phá Quân": "Mùi",
+     "Thiên Phủ": "Dậu",
+     "Thái Âm": "Tuất",
+     "Liêm Trinh": "Hợi",
+     "Tham Lang": "Hợi",
+     "Cự Môn": "Tý",
+     "Thiên Tướng": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Lộc": "Liêm Trinh"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 8,
+    "ngay_am": 5,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Dậu",
+    "than": "Dậu",
+    "cuc": 4,
+    "sao": {
+     "Phá Quân": "Dần",
+     "Liêm Trinh": "Thìn",
+     "Thiên Phủ": "Thìn",
+     "Thái Âm": "Tỵ",
+     "Tham Lang": "Ngọ",
+     "Thiên Đồng": "Mùi",
+     "Cự Môn": "Mùi",
+     "Vũ Khúc": "Thân",
+     "Thiên Tướng": "Thân",
+     "Thái Dương": "Dậu",
+     "Thiên Lương": "Dậu",
+     "Thất Sát": "Tuất",
+     "Thiên Cơ": "Hợi",
+     "Tử Vi": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 9,
+    "ngay_am": 9,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tuất",
+    "than": "Tuất",
+    "cuc": 6,
+    "sao": {
+     "Phá Quân": "Dần",
+     "Liêm Trinh": "Thìn",
+     "Thiên Phủ": "Thìn",
+     "Thái Âm": "Tỵ",
+     "Tham Lang": "Ngọ",
+     "Thiên Đồng": "Mùi",
+     "Cự Môn": "Mùi",
+     "Vũ Khúc": "Thân",
+     "Thiên Tướng": "Thân",
+     "Thái Dương": "Dậu",
+     "Thiên Lương": "Dậu",
+     "Thất Sát": "Tuất",
+     "Thiên Cơ": "Hợi",
+     "Tử Vi": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 10,
+    "ngay_am": 13,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Hợi",
+    "than": "Hợi",
+    "cuc": 6,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 11,
+    "ngay_am": 21,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tý",
+    "than": "Tý",
+    "cuc": 2,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 12,
+    "ngay_am": 25,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Sửu",
+    "than": "Sửu",
+    "cuc": 2,
+    "sao": {
+     "Thiên Phủ": "Mão",
+     "Thái Âm": "Thìn",
+     "Liêm Trinh": "Tỵ",
+     "Tham Lang": "Tỵ",
+     "Cự Môn": "Ngọ",
+     "Thiên Tướng": "Mùi",
+     "Thiên Đồng": "Thân",
+     "Thiên Lương": "Thân",
+     "Vũ Khúc": "Dậu",
+     "Thất Sát": "Dậu",
+     "Thái Dương": "Tuất",
+     "Thiên Cơ": "Tý",
+     "Tử Vi": "Sửu",
+     "Phá Quân": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương",
+     "Hóa Quyền": "Phá Quân"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2022,
+    "thang_am": 6,
+    "ngay_am": 18,
+    "gio": "Ngọ",
+    "gio_index_iztro": 6,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Sửu",
+    "than": "Sửu",
+    "cuc": 3,
+    "sao": {
+     "Thiên Đồng": "Dần",
+     "Thiên Lương": "Dần",
+     "Vũ Khúc": "Mão",
+     "Thất Sát": "Mão",
+     "Thái Dương": "Thìn",
+     "Thiên Cơ": "Ngọ",
+     "Tử Vi": "Mùi",
+     "Phá Quân": "Mùi",
+     "Thiên Phủ": "Dậu",
+     "Thái Âm": "Tuất",
+     "Liêm Trinh": "Hợi",
+     "Tham Lang": "Hợi",
+     "Cự Môn": "Tý",
+     "Thiên Tướng": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Lương",
+     "Hóa Kỵ": "Vũ Khúc",
+     "Hóa Quyền": "Tử Vi",
+     "Hóa Khoa": "Tả Phụ"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 9,
+    "ngay_am": 12,
+    "gio": "Thân",
+    "gio_index_iztro": 8,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Dần",
+    "than": "Ngọ",
+    "cuc": 5,
+    "sao": {
+     "Thiên Phủ": "Mão",
+     "Thái Âm": "Thìn",
+     "Liêm Trinh": "Tỵ",
+     "Tham Lang": "Tỵ",
+     "Cự Môn": "Ngọ",
+     "Thiên Tướng": "Mùi",
+     "Thiên Đồng": "Thân",
+     "Thiên Lương": "Thân",
+     "Vũ Khúc": "Dậu",
+     "Thất Sát": "Dậu",
+     "Thái Dương": "Tuất",
+     "Thiên Cơ": "Tý",
+     "Tử Vi": "Sửu",
+     "Phá Quân": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Kỵ": "Thái Âm",
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Khoa": "Tử Vi"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2023,
+    "thang_am": 4,
+    "ngay_am": 26,
+    "gio": "Hợi",
+    "gio_index_iztro": 11,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Ngọ",
+    "than": "Thìn",
+    "cuc": 6,
+    "sao": {
+     "Liêm Trinh": "Dần",
+     "Phá Quân": "Thìn",
+     "Thiên Đồng": "Tỵ",
+     "Vũ Khúc": "Ngọ",
+     "Thiên Phủ": "Ngọ",
+     "Thái Dương": "Mùi",
+     "Thái Âm": "Mùi",
+     "Tham Lang": "Thân",
+     "Thiên Cơ": "Dậu",
+     "Cự Môn": "Dậu",
+     "Tử Vi": "Tuất",
+     "Thiên Tướng": "Tuất",
+     "Thiên Lương": "Hợi",
+     "Thất Sát": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Phá Quân",
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Tham Lang",
+     "Hóa Quyền": "Cự Môn"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 2,
+    "ngay_am": 1,
+    "gio": "Hợi",
+    "gio_index_iztro": 11,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Thìn",
+    "than": "Dần",
+    "cuc": 4,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Kỵ": "Thái Âm",
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Khoa": "Tử Vi"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2021,
+    "thang_am": 4,
+    "ngay_am": 5,
+    "gio": "Hợi",
+    "gio_index_iztro": 11,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Ngọ",
+    "than": "Thìn",
+    "cuc": 4,
+    "sao": {
+     "Phá Quân": "Dần",
+     "Liêm Trinh": "Thìn",
+     "Thiên Phủ": "Thìn",
+     "Thái Âm": "Tỵ",
+     "Tham Lang": "Ngọ",
+     "Thiên Đồng": "Mùi",
+     "Cự Môn": "Mùi",
+     "Vũ Khúc": "Thân",
+     "Thiên Tướng": "Thân",
+     "Thái Dương": "Dậu",
+     "Thiên Lương": "Dậu",
+     "Thất Sát": "Tuất",
+     "Thiên Cơ": "Hợi",
+     "Tử Vi": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Lộc": "Cự Môn",
+     "Hóa Quyền": "Thái Dương",
+     "Hóa Kỵ": "Văn Xương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 12,
+    "ngay_am": 18,
+    "gio": "Sửu",
+    "gio_index_iztro": 1,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Tý",
+    "than": "Dần",
+    "cuc": 6,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Khoa": "Tử Vi",
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Kỵ": "Thái Âm"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2020,
+    "thang_am": 1,
+    "ngay_am": 3,
+    "gio": "Mão",
+    "gio_index_iztro": 3,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Hợi",
+    "than": "Tỵ",
+    "cuc": 5,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Kỵ": "Thiên Đồng",
+     "Hóa Quyền": "Vũ Khúc",
+     "Hóa Lộc": "Thái Dương",
+     "Hóa Khoa": "Thái Âm"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 10,
+    "ngay_am": 1,
+    "gio": "Thân",
+    "gio_index_iztro": 8,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Mão",
+    "than": "Mùi",
+    "cuc": 6,
+    "sao": {
+     "Thiên Đồng": "Thìn",
+     "Vũ Khúc": "Tỵ",
+     "Phá Quân": "Tỵ",
+     "Thái Dương": "Ngọ",
+     "Thiên Phủ": "Mùi",
+     "Thiên Cơ": "Thân",
+     "Thái Âm": "Thân",
+     "Tử Vi": "Dậu",
+     "Tham Lang": "Dậu",
+     "Cự Môn": "Tuất",
+     "Thiên Tướng": "Hợi",
+     "Thiên Lương": "Tý",
+     "Liêm Trinh": "Sửu",
+     "Thất Sát": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Kỵ": "Thái Dương",
+     "Hóa Lộc": "Liêm Trinh"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 11,
+    "ngay_am": 23,
+    "gio": "Thân",
+    "gio_index_iztro": 8,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Thìn",
+    "than": "Thân",
+    "cuc": 4,
+    "sao": {
+     "Vũ Khúc": "Dần",
+     "Thiên Tướng": "Dần",
+     "Thái Dương": "Mão",
+     "Thiên Lương": "Mão",
+     "Thất Sát": "Thìn",
+     "Thiên Cơ": "Tỵ",
+     "Tử Vi": "Ngọ",
+     "Phá Quân": "Thân",
+     "Liêm Trinh": "Tuất",
+     "Thiên Phủ": "Tuất",
+     "Thái Âm": "Hợi",
+     "Tham Lang": "Tý",
+     "Thiên Đồng": "Sửu",
+     "Cự Môn": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Khoa": "Tử Vi",
+     "Hóa Kỵ": "Thái Âm"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2021,
+    "thang_am": 8,
+    "ngay_am": 19,
+    "gio": "Thìn",
+    "gio_index_iztro": 4,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tỵ",
+    "than": "Sửu",
+    "cuc": 2,
+    "sao": {
+     "Liêm Trinh": "Dần",
+     "Phá Quân": "Thìn",
+     "Thiên Đồng": "Tỵ",
+     "Vũ Khúc": "Ngọ",
+     "Thiên Phủ": "Ngọ",
+     "Thái Dương": "Mùi",
+     "Thái Âm": "Mùi",
+     "Tham Lang": "Thân",
+     "Thiên Cơ": "Dậu",
+     "Cự Môn": "Dậu",
+     "Tử Vi": "Tuất",
+     "Thiên Tướng": "Tuất",
+     "Thiên Lương": "Hợi",
+     "Thất Sát": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Kỵ": "Văn Xương",
+     "Hóa Quyền": "Thái Dương",
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Lộc": "Cự Môn"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2021,
+    "thang_am": 12,
+    "ngay_am": 14,
+    "gio": "Tỵ",
+    "gio_index_iztro": 5,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Thân",
+    "than": "Ngọ",
+    "cuc": 6,
+    "sao": {
+     "Thất Sát": "Dần",
+     "Thiên Đồng": "Mão",
+     "Vũ Khúc": "Thìn",
+     "Thái Dương": "Tỵ",
+     "Phá Quân": "Ngọ",
+     "Thiên Cơ": "Mùi",
+     "Tử Vi": "Thân",
+     "Thiên Phủ": "Thân",
+     "Thái Âm": "Dậu",
+     "Tham Lang": "Tuất",
+     "Cự Môn": "Hợi",
+     "Liêm Trinh": "Tý",
+     "Thiên Tướng": "Tý",
+     "Thiên Lương": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Thái Dương",
+     "Hóa Kỵ": "Văn Xương",
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Lộc": "Cự Môn"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2021,
+    "thang_am": 4,
+    "ngay_am": 25,
+    "gio": "Tỵ",
+    "gio_index_iztro": 5,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tý",
+    "than": "Tuất",
+    "cuc": 5,
+    "sao": {
+     "Vũ Khúc": "Dần",
+     "Thiên Tướng": "Dần",
+     "Thái Dương": "Mão",
+     "Thiên Lương": "Mão",
+     "Thất Sát": "Thìn",
+     "Thiên Cơ": "Tỵ",
+     "Tử Vi": "Ngọ",
+     "Phá Quân": "Thân",
+     "Liêm Trinh": "Tuất",
+     "Thiên Phủ": "Tuất",
+     "Thái Âm": "Hợi",
+     "Tham Lang": "Tý",
+     "Thiên Đồng": "Sửu",
+     "Cự Môn": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Thái Dương",
+     "Hóa Kỵ": "Văn Xương",
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Lộc": "Cự Môn"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2020,
+    "thang_am": 7,
+    "ngay_am": 4,
+    "gio": "Tỵ",
+    "gio_index_iztro": 5,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Mão",
+    "than": "Sửu",
+    "cuc": 5,
+    "sao": {
+     "Thiên Phủ": "Mão",
+     "Thái Âm": "Thìn",
+     "Liêm Trinh": "Tỵ",
+     "Tham Lang": "Tỵ",
+     "Cự Môn": "Ngọ",
+     "Thiên Tướng": "Mùi",
+     "Thiên Đồng": "Thân",
+     "Thiên Lương": "Thân",
+     "Vũ Khúc": "Dậu",
+     "Thất Sát": "Dậu",
+     "Thái Dương": "Tuất",
+     "Thiên Cơ": "Tý",
+     "Tử Vi": "Sửu",
+     "Phá Quân": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Thiên Đồng",
+     "Hóa Quyền": "Vũ Khúc",
+     "Hóa Lộc": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 5,
+    "ngay_am": 26,
+    "gio": "Tý",
+    "gio_index_iztro": 0,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Ngọ",
+    "than": "Ngọ",
+    "cuc": 5,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2024,
+    "thang_am": 2,
+    "ngay_am": 13,
+    "gio": "Sửu",
+    "gio_index_iztro": 1,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Dần",
+    "than": "Thìn",
+    "cuc": 6,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Liêm Trinh",
+     "Hóa Quyền": "Phá Quân",
+     "Hóa Khoa": "Vũ Khúc",
+     "Hóa Kỵ": "Thái Dương"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2026,
+    "thang_am": 3,
+    "ngay_am": 9,
+    "gio": "Mão",
+    "gio_index_iztro": 3,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Sửu",
+    "than": "Mùi",
+    "cuc": 5,
+    "sao": {
+     "Tử Vi": "Dần",
+     "Thiên Phủ": "Dần",
+     "Thái Âm": "Mão",
+     "Tham Lang": "Thìn",
+     "Cự Môn": "Tỵ",
+     "Liêm Trinh": "Ngọ",
+     "Thiên Tướng": "Ngọ",
+     "Thiên Lương": "Mùi",
+     "Thất Sát": "Thân",
+     "Thiên Đồng": "Dậu",
+     "Vũ Khúc": "Tuất",
+     "Thái Dương": "Hợi",
+     "Phá Quân": "Tý",
+     "Thiên Cơ": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Kỵ": "Liêm Trinh",
+     "Hóa Khoa": "Văn Xương",
+     "Hóa Lộc": "Thiên Đồng",
+     "Hóa Quyền": "Thiên Cơ"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2027,
+    "thang_am": 5,
+    "ngay_am": 14,
+    "gio": "Thân",
+    "gio_index_iztro": 8,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Tuất",
+    "than": "Dần",
+    "cuc": 4,
+    "sao": {
+     "Thiên Đồng": "Dần",
+     "Thiên Lương": "Dần",
+     "Vũ Khúc": "Mão",
+     "Thất Sát": "Mão",
+     "Thái Dương": "Thìn",
+     "Thiên Cơ": "Ngọ",
+     "Tử Vi": "Mùi",
+     "Phá Quân": "Mùi",
+     "Thiên Phủ": "Dậu",
+     "Thái Âm": "Tuất",
+     "Liêm Trinh": "Hợi",
+     "Tham Lang": "Hợi",
+     "Cự Môn": "Tý",
+     "Thiên Tướng": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Quyền": "Thiên Đồng",
+     "Hóa Khoa": "Thiên Cơ",
+     "Hóa Lộc": "Thái Âm",
+     "Hóa Kỵ": "Cự Môn"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2028,
+    "thang_am": 8,
+    "ngay_am": 20,
+    "gio": "Dậu",
+    "gio_index_iztro": 9,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Tý",
+    "than": "Ngọ",
+    "cuc": 4,
+    "sao": {
+     "Vũ Khúc": "Dần",
+     "Thiên Tướng": "Dần",
+     "Thái Dương": "Mão",
+     "Thiên Lương": "Mão",
+     "Thất Sát": "Thìn",
+     "Thiên Cơ": "Tỵ",
+     "Tử Vi": "Ngọ",
+     "Phá Quân": "Thân",
+     "Liêm Trinh": "Tuất",
+     "Thiên Phủ": "Tuất",
+     "Thái Âm": "Hợi",
+     "Tham Lang": "Tý",
+     "Thiên Đồng": "Sửu",
+     "Cự Môn": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Hữu Bật",
+     "Hóa Kỵ": "Thiên Cơ",
+     "Hóa Quyền": "Thái Âm",
+     "Hóa Lộc": "Tham Lang"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2029,
+    "thang_am": 11,
+    "ngay_am": 2,
+    "gio": "Sửu",
+    "gio_index_iztro": 1,
+    "gioi_tinh": "nữ"
+   },
+   "expected": {
+    "menh": "Hợi",
+    "than": "Sửu",
+    "cuc": 6,
+    "sao": {
+     "Vũ Khúc": "Dần",
+     "Thiên Tướng": "Dần",
+     "Thái Dương": "Mão",
+     "Thiên Lương": "Mão",
+     "Thất Sát": "Thìn",
+     "Thiên Cơ": "Tỵ",
+     "Tử Vi": "Ngọ",
+     "Phá Quân": "Thân",
+     "Liêm Trinh": "Tuất",
+     "Thiên Phủ": "Tuất",
+     "Thái Âm": "Hợi",
+     "Tham Lang": "Tý",
+     "Thiên Đồng": "Sửu",
+     "Cự Môn": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Vũ Khúc",
+     "Hóa Khoa": "Thiên Lương",
+     "Hóa Kỵ": "Văn Khúc",
+     "Hóa Quyền": "Tham Lang"
+    }
+   }
+  },
+  {
+   "input": {
+    "nam_am": 2021,
+    "thang_am": 12,
+    "ngay_am": 8,
+    "gio": "Hợi",
+    "gio_index_iztro": 11,
+    "gioi_tinh": "nam"
+   },
+   "expected": {
+    "menh": "Dần",
+    "than": "Tý",
+    "cuc": 3,
+    "sao": {
+     "Thiên Cơ": "Dần",
+     "Thái Âm": "Dần",
+     "Tử Vi": "Mão",
+     "Tham Lang": "Mão",
+     "Cự Môn": "Thìn",
+     "Thiên Tướng": "Tỵ",
+     "Thiên Lương": "Ngọ",
+     "Liêm Trinh": "Mùi",
+     "Thất Sát": "Mùi",
+     "Thiên Đồng": "Tuất",
+     "Vũ Khúc": "Hợi",
+     "Phá Quân": "Hợi",
+     "Thái Dương": "Tý",
+     "Thiên Phủ": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Lộc": "Cự Môn",
+     "Hóa Kỵ": "Văn Xương",
+     "Hóa Quyền": "Thái Dương"
+    }
+   }
+  }
+ ]
+}

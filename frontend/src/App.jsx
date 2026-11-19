@@ -19,6 +19,8 @@ import MatchingPage from './features/Matching/MatchingPage';
 import HistoryPage from './features/ConsultationHistory/HistoryPage';
 import QuePage from './features/Que/QuePage';
 import WesternPage from './features/WesternAstrology/WesternPage';
+import VanHomNayPage from './features/van_hom_nay/VanHomNayPage';
+import TuViPage from './features/tu_vi/TuViPage';
 import PDFExportButton from './components/PDFExportButton';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
@@ -147,6 +149,18 @@ const AppContent = () => {
         />
         <div className="bazi-bg"></div>
 
+        {location.pathname !== '/van-hom-nay' && (
+          <Link to="/van-hom-nay" className="vhn-fab" title="Vận hôm nay — miễn phí">
+            ☀️ VẬN HÔM NAY
+          </Link>
+        )}
+
+        {location.pathname !== '/tuvi' && (
+          <Link to="/tuvi" className="tuv-fab" title="Tử vi — an sao">
+            🔮 TỬ VI
+          </Link>
+        )}
+
         <Routes>
           {/* Input form routes */}
           <Route path="/" element={<InputPage onAnalyze={analyze} loading={loading} />} />
@@ -171,6 +185,12 @@ const AppContent = () => {
 
           {/* Western Astrology page - renders standalone with its own fallback UI */}
           <Route path="/tuviphuongtay" element={<WesternPage userData={inputParams} />} />
+
+          {/* Vận hôm nay - miễn phí, không cần dữ liệu lá số */}
+          <Route path="/van-hom-nay" element={<VanHomNayPage />} />
+
+          {/* Tử vi - an sao theo ngày âm + giờ Chi + Can năm */}
+          <Route path="/tuvi" element={<TuViPage />} />
 
           {/* History page - Standalone */}
           <Route path="/lich-su" element={<HistoryPage />} />

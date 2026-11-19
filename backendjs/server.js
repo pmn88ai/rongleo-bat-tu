@@ -12,6 +12,8 @@ const adminRoutes = require('./src/routes/admin.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const articlesRoutes = require('./src/routes/articles.routes');
 const queRoutes = require('./src/routes/que.routes');
+const vanHomNayRoutes = require('./src/routes/van_hom_nay');
+const tuViRoutes = require('./src/routes/tu_vi');
 // const dailyRoutes = require('./src/routes/daily.routes');
 const dbService = require('./src/services/database.service');
 
@@ -65,13 +67,18 @@ app.use((req, res, next) => {
         || req.socket?.remoteAddress
         || 'unknown';
 
+    // "Vận hôm nay" và "Tử vi" là endpoint không lưu hồ sơ: không ghi access log
+    // (tránh lưu ngày sinh nằm trong query string) và không log query ra console.
+    const isPrivateDaily = req.path === '/api/van-hom-nay' || req.path === '/api/tu-vi';
+
     // Console log for dev
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${ip}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${isPrivateDaily ? req.path : req.url} - IP: ${ip}`);
 
     // Hook into response finish to capture status code + response time
     res.on('finish', () => {
         // Skip static assets and health checks to reduce noise
         if (req.url === '/' || req.url === '/api/docs' || req.url.startsWith('/assets')) return;
+        if (isPrivateDaily) return;
 
         const responseTime = Date.now() - startTime;
         dbService.saveAccessLog({
@@ -96,6 +103,8 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authLimiter, authRoutes);  // Strict auth rate limit
 app.use('/api/articles', articlesRoutes);  // Articles routes
 app.use('/api/que', queRoutes);
+app.use('/api', vanHomNayRoutes);
+app.use('/api', tuViRoutes);
 // app.use('/api/daily', dailyRoutes);
 
 
