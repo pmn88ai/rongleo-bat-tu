@@ -15,6 +15,7 @@ const injectUser = (req, res, next) => {
 };
 const { HEXAGRAMS, TRIGRAMS } = require('../bazi/que_data/gua_64');
 const { INTERPRETATIONS } = require('../bazi/que_data/interpretations');
+const { calculateHexagram, ELEMENTS } = require('../bazi/que_data/mapping');
 const { Solar, Lunar } = require('lunar-javascript');
 
 
@@ -213,14 +214,80 @@ const TOPIC_MAP = {
     'safety':     { key: 'safety',  label: 'Bình An & Sức Khỏe' },
 };
 
+// Legacy English topic (homepage widget) → Vietnamese topic key used by mapping.js
+const LEGACY_TOPIC_TO_VI = {
+    love: 'Tình duyên',
+    wealth: 'Tài lộc',
+    safety: 'Sức khỏe'
+};
+
+const QUALITY_FROM_SCORE = (score) => {
+    if (score >= 6) return 'Đại Cát';
+    if (score >= 3) return 'Tiểu Cát';
+    if (score >= 0) return 'Bình';
+    if (score >= -3) return 'Tiểu Hung';
+    return 'Hung';
+};
+
+// Giờ gieo quẻ tính theo giờ Việt Nam → Can Chi của giờ hiện tại
+const getCastTimeInfo = () => {
+    const vnNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
+    const lunar = Solar.fromDate(vnNow).getLunar();
+    const hourGanZhi = lunar.getTimeInGanZhi();
+    return {
+        vnNow,
+        solar: Solar.fromDate(vnNow),
+        lunar,
+        timeInfo: {
+            gan: GAN_NAMES[hourGanZhi.charAt(0)] || hourGanZhi.charAt(0),
+            zhi: ZHI_NAMES[hourGanZhi.charAt(1)] || hourGanZhi.charAt(1)
+        }
+    };
+};
+
+const getDisplayPeriod = (cast, type) => {
+    const d = cast.vnNow.getDate();
+    const m = cast.vnNow.getMonth() + 1;
+    const y = cast.vnNow.getFullYear();
+    if (type === 'monthly') return `Tháng ${m}/${y}`;
+    if (type === 'yearly') return `Năm ${y}`;
+    return `Ngày ${d}/${m}/${y}`;
+};
+
 // GET /api/que/quick-random
-// Public endpoint for random hexagram
+// Gieo quẻ nhanh DETERMINISTIC: giờ gieo (giờ Việt Nam) + Nhật chủ từ hồ sơ mệnh + chủ đề.
+// Cùng người + cùng giờ gieo + cùng chủ đề = cùng quẻ. Không còn random.
 router.get('/quick-random', async (req, res) => {
     try {
-        const { topic } = req.query;
+        const { topic, type, year, month, day, hour, minute, gender } = req.query;
+        const periodType = ['daily', 'monthly', 'yearly'].includes(type) ? type : 'daily';
 
-        // 1. Random Hexagram ID (1-64)
-        const hexId = Math.floor(Math.random() * 64) + 1;
+        // 1. Hồ sơ mệnh (nếu có) → baziContext; không có thì mapping dùng Nhật chủ mặc định Giáp
+        let baziContext = {};
+        let hasProfile = false;
+        if (year && month && day) {
+            try {
+                baziContext = await baziService.analyzeComplete({
+                    year: parseInt(year),
+                    month: parseInt(month),
+                    day: parseInt(day),
+                    hour: parseInt(hour || 12),
+                    minute: parseInt(minute || 0),
+                    gender: gender || 'Nam'
+                });
+                hasProfile = true;
+            } catch (err) {
+                console.warn('Quick Que: bazi analyze failed, fallback to cast-time only:', err.message);
+            }
+        }
+
+        // 2. Can Chi giờ gieo (hiện tại, giờ Việt Nam)
+        const cast = getCastTimeInfo();
+
+        // 3. Tính quẻ DETERMINISTIC
+        const calcTopic = LEGACY_TOPIC_TO_VI[topic] || topic || 'Chung';
+        const guaResult = calculateHexagram(baziContext, cast.timeInfo, periodType, calcTopic);
+        const hexId = guaResult.hexagramId;
         const hexInfo = HEXAGRAMS[hexId];
         const interpretation = INTERPRETATIONS[hexId];
 
@@ -228,7 +295,7 @@ router.get('/quick-random', async (req, res) => {
             return res.status(500).json({ error: 'Failed to generate hexagram' });
         }
 
-        // 2. Map topic → internal key + display label
+        // 4. Map topic → internal key + display label
         const mapped = TOPIC_MAP[topic] || { key: 'career', label: 'Tổng Quan' };
         const mappingKey = mapped.key;
         const topicLabel = mapped.label;
@@ -237,28 +304,46 @@ router.get('/quick-random', async (req, res) => {
         const aspectKey = mappingKey === 'wealth' ? 'finance' : mappingKey;
         const rawInterpretation = interpretation.aspects[aspectKey] || interpretation.overview;
 
-        // 3. Generate Rich Content
+        // 5. Generate Rich Content
         const richContent = generateRichAnalysis(hexInfo, topicLabel, mappingKey, rawInterpretation, interpretation);
 
-        // 4. Construct Result
+        // 6. Construct Result
         const result = {
             id: hexId,
+            hexagramId: hexId,
             name: hexInfo.name,
             symbol: hexInfo.symbol,
             meaning: hexInfo.meaning,
-            quality: hexInfo.quality,
+            quality: QUALITY_FROM_SCORE(guaResult.qualityScore),
+            qualityScore: guaResult.qualityScore,
+            upperTrigram: guaResult.upperTrigram,
+            lowerTrigram: guaResult.lowerTrigram,
+            interaction: {
+                dayMaster: guaResult.interaction.dayMaster,
+                dayMasterElement: ELEMENTS[guaResult.interaction.dayMaster],
+                timeGan: guaResult.interaction.timeGan,
+                timeZhi: guaResult.interaction.timeZhi,
+                timeElement: ELEMENTS[guaResult.interaction.timeGan],
+                activatedShiShen: guaResult.interaction.activatedShiShen
+            },
             topic: topicLabel,
             overview: interpretation.overview,
             interpretation: rawInterpretation,
             ai_analysis: richContent,
             advice: interpretation.advice,
+            type: periodType,
+            period: dateUtils.getVNDateString(),
+            displayPeriod: getDisplayPeriod(cast, periodType),
+            cast_time: cast.vnNow.toISOString(),
+            has_profile: hasProfile,
             created_at: new Date().toISOString(),
-            disclaimer: "Kết quả gieo quẻ ngẫu nhiên mang tính chất tham khảo. Độ chính xác phụ thuộc vào sự thành tâm của người gieo. Để có kết quả chính xác theo mệnh lý (Bát Tự), vui lòng điền ngày giờ sinh để hệ thống tính toán năng lượng Mệnh khuyết và Vận hạn chính xác."
+            disclaimer: 'Quẻ được tính theo giờ gieo (giờ Việt Nam) và Nhật chủ lấy từ hồ sơ mệnh. Cùng người, cùng giờ gieo, cùng chủ đề sẽ cho cùng một quẻ.'
+                + (hasProfile ? '' : ' Chưa có hồ sơ mệnh nên quẻ chỉ tính theo giờ gieo — điền hồ sơ để tính theo mệnh.')
         };
 
         res.json(result);
     } catch (error) {
-        console.error('Quick Random Error:', error);
+        console.error('Quick Que Error:', error);
         res.status(500).json({ error: error.message });
     }
 });

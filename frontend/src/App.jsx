@@ -246,7 +246,7 @@ const AppContent = () => {
             <Route path="/duyenso" element={requireProfile(<MatchingPage userData={profileParams} />)} />
 
             {/* Xin Que page */}
-            <Route path="/xinque" element={requireProfile(<QuePage userData={profileParams} />)} />
+            <Route path="/xinque" element={<QuePage userData={profileParams} />} />
 
             {/* Western Astrology page - đọc hồ sơ mệnh chung */}
             <Route path="/tuviphuongtay" element={requireProfile(<WesternPage userData={profileParams} />)} />

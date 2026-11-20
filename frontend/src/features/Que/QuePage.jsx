@@ -51,25 +51,20 @@ const QuePage = ({ userData }) => {
     const hasUserData = userData && userData.year && userData.month && userData.day;
 
     const handleRequest = useCallback(async (type) => {
-        if (!hasUserData) {
-            setError('Vui lòng nhập thông tin lá số trước khi xin quẻ.');
-            return;
-        }
-
         setLoading(prev => ({ ...prev, [type]: true }));
         setError(null);
         setSelectedGua(null); // Clear previous result while loading new one
 
         try {
-            const params = new URLSearchParams({
-                year: userData.year,
-                month: userData.month,
-                day: userData.day,
-                hour: userData.hour || 12,
-                minute: userData.minute || 0,
-                gender: userData.gender || 'Nam',
-                topic: selectedTopic
-            });
+            const params = new URLSearchParams({ topic: selectedTopic, type });
+            if (hasUserData) {
+                params.set('year', userData.year);
+                params.set('month', userData.month);
+                params.set('day', userData.day);
+                params.set('hour', userData.hour || 12);
+                params.set('minute', userData.minute || 0);
+                params.set('gender', userData.gender || 'Nam');
+            }
 
             const headers = {
                 'Content-Type': 'application/json',
@@ -109,11 +104,6 @@ const QuePage = ({ userData }) => {
     }, []);
 
     const handleReroll = useCallback(async (type) => {
-        if (!hasUserData) {
-            setError('Vui lòng nhập thông tin lá số trước khi xin quẻ.');
-            return;
-        }
-
         // Clear existing data for this type
         setData(prev => ({ ...prev, [type]: null }));
         setLoading(prev => ({ ...prev, [type]: true }));
@@ -121,16 +111,15 @@ const QuePage = ({ userData }) => {
         setSelectedGua(null);
 
         try {
-            const params = new URLSearchParams({
-                year: userData.year,
-                month: userData.month,
-                day: userData.day,
-                hour: userData.hour || 12,
-                minute: userData.minute || 0,
-                gender: userData.gender || 'Nam',
-                topic: selectedTopic,
-                forceNew: 'true' // Force new generation
-            });
+            const params = new URLSearchParams({ topic: selectedTopic, type });
+            if (hasUserData) {
+                params.set('year', userData.year);
+                params.set('month', userData.month);
+                params.set('day', userData.day);
+                params.set('hour', userData.hour || 12);
+                params.set('minute', userData.minute || 0);
+                params.set('gender', userData.gender || 'Nam');
+            }
 
             const headers = {
                 'Content-Type': 'application/json',
@@ -201,9 +190,9 @@ const QuePage = ({ userData }) => {
                     )}
 
                     {!hasUserData && (
-                        <div className="glass-card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '1rem' }}>
-                            <p style={{ color: 'rgba(255,255,255,0.7)' }}>
-                                📋 Vui lòng nhập thông tin ngày giờ sinh để bắt đầu phân tích quẻ mệnh.
+                        <div className="glass-card" style={{ textAlign: 'center', padding: '1rem', marginBottom: '1rem' }}>
+                            <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>
+                                📋 Chưa có hồ sơ mệnh nên quẻ chỉ tính theo giờ gieo — điền hồ sơ để tính theo mệnh.
                             </p>
                         </div>
                     )}
@@ -235,7 +224,7 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={!hasUserData || isAnyLoading}
+                            disabled={isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
                         />
@@ -249,7 +238,7 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={!hasUserData || isAnyLoading}
+                            disabled={isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
                         />
@@ -263,7 +252,7 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={!hasUserData || isAnyLoading}
+                            disabled={isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
                         />

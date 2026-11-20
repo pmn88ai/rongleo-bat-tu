@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 import { API_CONFIG } from '../../config/api';
+import { useMenhProfile } from '../../context/MenhProfileContext';
 import './QuickDivination.css';
 
 const TOPICS = [
@@ -11,6 +12,7 @@ const TOPICS = [
 ];
 
 const QuickDivination = () => {
+    const { profile, hasProfile } = useMenhProfile();
     const [selectedTopic, setSelectedTopic] = useState('love');
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -27,7 +29,17 @@ const QuickDivination = () => {
         const startTime = Date.now();
 
         try {
-            const response = await fetch(`${API_CONFIG.BASE_URL}/que/quick-random?topic=${selectedTopic}`);
+            const params = new URLSearchParams({ topic: selectedTopic });
+            if (hasProfile) {
+                params.set('year', profile.year);
+                params.set('month', profile.month);
+                params.set('day', profile.day);
+                params.set('hour', profile.hour ?? 12);
+                params.set('minute', profile.minute ?? 0);
+                params.set('gender', profile.gender || 'Nam');
+            }
+
+            const response = await fetch(`${API_CONFIG.BASE_URL}/que/quick-random?${params.toString()}`);
 
             if (!response.ok) {
                 throw new Error('Không thể kết nối với thần linh, vui lòng thử lại.');
@@ -77,7 +89,7 @@ const QuickDivination = () => {
 
             <div className="quick-header">
                 <h3 className="quick-title">✨ Gieo Quẻ Nhanh</h3>
-                <p className="quick-subtitle">Kết nối ngẫu nhiên với thông điệp vũ trụ</p>
+                <p className="quick-subtitle">Quẻ tính theo giờ gieo và hồ sơ mệnh</p>
             </div>
 
             <div className="quick-topics">
