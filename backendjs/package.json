@@ -18,7 +18,7 @@
         "astrology"
     ],
     "author": "Menh Ly AI",
-    "license": "MIT",
+    "license": "UNLICENSED",
     "dependencies": {
         "compression": "^1.8.1",
         "cors": "^2.8.5",

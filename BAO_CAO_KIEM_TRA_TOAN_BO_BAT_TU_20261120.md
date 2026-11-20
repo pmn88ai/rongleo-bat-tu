@@ -44,7 +44,7 @@ Luận giải không còn bốc ngẫu nhiên. Các mẫu đã gỡ:
 ## 3. Đã kiểm và kết luận
 
 - **Google Apps Script URL:** KHÔNG còn tồn tại. Grep `useBaziApi.js` và `services/apiClient.js`: không có URL ngoài nào, chỉ gọi API nội bộ qua `apiClient`. (Kế hoạch gộp 19/11 ghi URL này ở dòng 8 của `useBaziApi.js` — trạng thái code hiện tại không còn; không rõ bị gỡ từ đợt nào.)
-- **Giấy phép:** repo KHÔNG có file LICENSE (`if exist LICENSE` → NO_LICENSE). README.md (dòng 8, 515) và README.en.md (dòng 8, 497) ghi MIT, trong đó dòng 515 dẫn tới file LICENSE không tồn tại. `backendjs/package.json` ghi `"license": "MIT"`. Engine là bản port JS của một backend Bát tự Python không rõ tên/tác giả. **Chỉ báo cáo như trên, không tự nhận giấy phép nào.**
+- **Giấy phép:** repo KHÔNG có file LICENSE (`if exist LICENSE` → NO_LICENSE). README.md (dòng 8, 515) và README.en.md (dòng 8, 497) ghi giấy phép cũ, trong đó dòng 515 dẫn tới file LICENSE không tồn tại. `backendjs/package.json` ghi trường giấy phép cũ (đã đổi sang UNLICENSED ngày 20/11/2026). Engine là bản port JS của một backend Bát tự Python không rõ tên/tác giả. **Chỉ báo cáo như trên, không tự nhận giấy phép nào.**
 - **Tử vi an-sao:** job chỉ đọc tài liệu kiểm định của Kho Huyền Học (bộ 32 ca đóng băng 24/10/2026, kỳ vọng 32/32 PASS). **Chưa chạy lại bộ 32 ca trong đợt này** — không có dòng kết quả 32/32 trong log. Bảng an-sao hiện tại chưa được đối chiếu lại với iztro trong đợt này.
 - **Ngũ hành / Đại vận / trụ giờ theo giá trị:** test chỉ kiểm hình dạng (có `diem_so.ngu_hanh_vn` 5 hành, có `can_bang_ngu_hanh`, Đại vận trả đúng cấu trúc) + vài ca cố định (F9, 7 ca nổi tiếng). **Chưa đối chiếu điểm Ngũ hành, tuổi khởi vận, trụ Đại vận với nguồn độc lập cho toàn bộ ca** — đúng như README của tests đã thừa nhận ở mục "Future phases".
 - **Linh Thạch (còn lại):** `frontend/src/components/AuthModal.jsx` vẫn ghi "Đăng ký nhận ngay 100 Linh Thạch miễn phí" (dòng 90, 198); `frontend/src/features/Admin/AdminPage.jsx` vẫn có mục thống kê/quản lý/điều chỉnh Linh Thạch và mục yêu cầu Linh Thạch. Backend `database.service.js` vẫn ghi `logCreditTransaction(..., 'Linh thạch khởi tạo')` và `openrouter.service.js` vẫn nhắc hoàn Linh Thạch khi lỗi. Chỉ mới gỡ nhãn phí trên thẻ quẻ.
@@ -55,7 +55,7 @@ Luận giải không còn bốc ngẫu nhiên. Các mẫu đã gỡ:
 1. **`frontend/lib/bazi/` là bản sao lệch của engine backend.** So sánh byte (`fc /b`): `dayun.js` giống nhau trước F9, giờ lệch 7 dòng (thiếu fix F9); `phan_tich/ngu_hanh.js` lệch 407 dòng (phiên bản khác hẳn). Các file này vẫn còn `Math.random` (vd `lib/bazi/phan_tich/luan_giai_lib.js:60,256,266`, `luan_dong.js:218`, `mega_*.js`). Chưa rõ frontend có dùng bản sao này trực tiếp ở trang nào không (hook chính gọi API backend). Cần quyết: **xóa bản sao hay đồng bộ nó với backend**.
 2. **Linh Thạch còn ở AuthModal + AdminPage** (mục 3). Cần quyết: gỡ hết nhãn + tắt hẳn hệ điểm, hay giữ lại làm hệ điểm thật (cần thanh toán).
 3. **Tử vi 32 ca chưa chạy lại** — cần chạy bộ regression của Kho Huyền Học để chốt bảng an-sao hiện tại.
-4. **README ghi MIT nhưng thiếu file LICENSE** (link gãy). Cần quyết: thêm file LICENSE MIT hay gỡ claim MIT khỏi README/package.json.
+4. **README ghi giấy phép cũ nhưng thiếu file LICENSE** (link gãy). Cần quyết: thêm file LICENSE hay gỡ claim giấy phép khỏi README/package.json. (Đã xử lý ngày 20/11/2026: LICENSE riêng của Leo, README viết lại, package.json đổi UNLICENSED.)
 5. **Ngũ hành / Đại vận chưa có fixture đối chiếu giá trị** — cần nguồn độc lập (vd bảng điểm của một lá số đã công bố) mới chốt được.
 
 ## 5. Commit
