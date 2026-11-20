@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
+import useTempleFullscreen from './useTempleFullscreen';
 import './ChuaPage.css';
+import './TempleScene.css';
 
 const PLACES = [
     {
@@ -105,9 +108,11 @@ const PLACES = [
 ];
 
 const ChuaPage = () => {
+    const fullscreen = useTempleFullscreen();
+
     return (
         <>
-            <div className="chua-scene-bg" aria-hidden="true">
+            <div className="chua-scene-bg" ref={fullscreen.sceneRef}>
                 <video
                     className="chua-scene-video"
                     src="/video/cong-chua.mp4"
@@ -117,12 +122,18 @@ const ChuaPage = () => {
                     muted
                     playsInline
                     preload="metadata"
+                    aria-hidden="true"
                     tabIndex={-1}
                 />
-                <div className="chua-scene-veil" />
+                <div className="chua-scene-veil" aria-hidden="true" />
+                <TempleSceneControls fullscreen={fullscreen} />
             </div>
 
-            <div className="chua-page fade-in">
+            <div className="chua-page chua-content fade-in">
+                <div className="chua-fs-slot">
+                    <TempleFullscreenButton onClick={fullscreen.enter} />
+                </div>
+
                 <header className="chua-hero glass-card">
                     <span className="chua-kicker">RongLeo • Bản đồ chùa</span>
                     <h1 className="chua-title">Vào Chùa Xem</h1>

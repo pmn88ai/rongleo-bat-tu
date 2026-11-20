@@ -19,9 +19,10 @@ const MusicPlayer = () => {
     } = useMusicPlayer();
 
     const isTempleRoute = location.pathname === '/chanh-dien' || location.pathname === '/vuon-tinh-tam';
+    const keepsMusicAlive = isTempleRoute || location.pathname === '/chua';
 
     useEffect(() => {
-        if (!isTempleRoute && isPlaying) pause();
+        if (!keepsMusicAlive && isPlaying) pause();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 

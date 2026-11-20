@@ -36,6 +36,21 @@
     box-sizing: border-box;
 }
 
+.chua-fs-slot {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.7rem;
+}
+
+/* ===== Fullscreen / cinema mode for the entrance scene ===== */
+body.temple-fullscreen-active .chua-content {
+    display: none !important;
+}
+
+body.temple-fullscreen-active .chua-scene-bg {
+    z-index: 2147483000;
+}
+
 /* ===== Hero ===== */
 .chua-hero {
     text-align: center;
