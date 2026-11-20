@@ -99,6 +99,21 @@
     align-items: start;
 }
 
+.tuv-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.tuv-time-inputs span {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+}
+
+.tuv-time-inputs .glass-input {
+    min-width: 0;
+}
+
 .tuv-derived {
     font-size: 0.7rem;
     color: rgba(226, 192, 68, 0.85);

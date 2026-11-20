@@ -45,11 +45,35 @@ const hourToGioChi = (hour) => {
     return GIO_CHI_OPTIONS[Math.floor((h + 1) / 2)]?.value || 'Ngọ';
 };
 
+// Giờ đại diện (giữa khoảng) cho từng Chi — chỉ dùng làm phương án dự phòng
+// khi đường nhập mới (âm Việt / tháng nhuận / dương lịch) bắt buộc có giờ:phút
+// mà người dùng chưa nhập, nhưng đã chọn giờ Chi.
+const GIO_CHI_MID_HOUR = {
+    'Tý': 0, 'Sửu': 2, 'Dần': 4, 'Mão': 6, 'Thìn': 8, 'Tỵ': 10,
+    'Ngọ': 12, 'Mùi': 14, 'Thân': 16, 'Dậu': 18, 'Tuất': 20, 'Hợi': 22
+};
+
+const pad2 = (n) => String(n).padStart(2, '0');
+
+const emptyForm = {
+    ngay_am: 23,
+    thang_am: 5,
+    nam_am: 1990,
+    gio_chi: 'Ngọ',
+    gioi_tinh: 'Nam',
+    lich: 'trung_hoa',
+    thang_nhuan: false,
+    gio: '',
+    phut: '',
+    duong_lich: ''
+};
+
 const formFromProfile = (profile) => {
     if (!profile || !profile.year) return null;
     try {
         const lunar = Solar.fromYmd(profile.year, profile.month, profile.day).getLunar();
         return {
+            ...emptyForm,
             ngay_am: lunar.getDay(),
             thang_am: Math.abs(lunar.getMonth()),
             nam_am: lunar.getYear(),
@@ -69,13 +93,7 @@ const TuViPage = () => {
         month: profile?.month ?? 6,
         day: profile?.day ?? 15
     }));
-    const [form, setForm] = useState(() => initialForm || {
-        ngay_am: 23,
-        thang_am: 5,
-        nam_am: 1990,
-        gio_chi: 'Ngọ',
-        gioi_tinh: 'Nam'
-    });
+    const [form, setForm] = useState(() => initialForm || emptyForm);
     const [khongRoGio, setKhongRoGio] = useState(false);
     const [convertNote, setConvertNote] = useState(null);
     const [error, setError] = useState(null);
@@ -95,10 +113,29 @@ const TuViPage = () => {
 
     const handleChange = (field) => (event) => {
         const value = event.target.value;
+        const asString = ['gio_chi', 'gioi_tinh', 'lich', 'duong_lich'].includes(field);
         setForm(prev => ({
             ...prev,
-            [field]: field === 'gio_chi' || field === 'gioi_tinh' ? value : Number(value)
+            [field]: asString || value === '' ? value : Number(value)
         }));
+    };
+
+    const handleThangNhuan = (event) => {
+        setForm(prev => ({ ...prev, thang_nhuan: event.target.checked }));
+    };
+
+    const hasTimeInput = form.gio !== '' || form.phut !== '';
+
+    const resolveTime = () => {
+        if (hasTimeInput) {
+            const hour = Number(form.gio || 0);
+            const minute = Number(form.phut || 0);
+            if (!Number.isInteger(hour) || hour < 0 || hour > 23) return null;
+            if (!Number.isInteger(minute) || minute < 0 || minute > 59) return null;
+            return { hour, minute };
+        }
+        const hour = GIO_CHI_MID_HOUR[form.gio_chi];
+        return hour === undefined ? null : { hour, minute: 0 };
     };
 
     const handleSolarChange = (field) => (event) => {
@@ -113,11 +150,12 @@ const TuViPage = () => {
             const month = lunar.getMonth();
             const isLeap = month < 0;
             const next = {
+                ...form,
                 ngay_am: lunar.getDay(),
                 thang_am: Math.abs(month),
                 nam_am: lunar.getYear(),
-                gio_chi: form.gio_chi,
-                gioi_tinh: form.gioi_tinh
+                thang_nhuan: isLeap,
+                duong_lich: ''
             };
             setForm(next);
             setResult(null);
@@ -125,7 +163,7 @@ const TuViPage = () => {
             const can = canNamFromLunarYear(next.nam_am);
             let note = `Đã đổi ${String(solar.day).padStart(2, '0')}/${String(solar.month).padStart(2, '0')}/${solar.year} dương → ${next.ngay_am}/${next.thang_am}/${next.nam_am} âm (Can năm: ${can || 'chưa xác định được'}).`;
             if (isLeap) {
-                note += ' Ngày này rơi vào THÁNG NHUẬN — bộ ca kiểm định chưa có tháng nhuận nên lá số chưa được kiểm chứng.';
+                note += ' Ngày này rơi vào THÁNG NHUẬN — đã tự bật ô "Tháng nhuận".';
             }
             setConvertNote(note);
         } catch {
@@ -139,8 +177,16 @@ const TuViPage = () => {
             setError('Cần giờ sinh để an sao — chưa có bảng 12 giờ, vui lòng chọn giờ gần đúng (không tự đoán giờ).');
             return;
         }
-        if (!canNam) {
+        const duongLich = form.duong_lich.trim();
+        const usesNewPath = Boolean(duongLich) || form.lich === 'viet'
+            || form.thang_nhuan || hasTimeInput;
+        if (!usesNewPath && !canNam) {
             setError('Chưa xác định được Can năm từ năm âm đã nhập.');
+            return;
+        }
+        const time = resolveTime();
+        if (usesNewPath && !time) {
+            setError('Giờ/phút không hợp lệ: giờ 0–23, phút 0–59.');
             return;
         }
 
@@ -149,13 +195,24 @@ const TuViPage = () => {
         setResult(null);
 
         try {
-            const params = new URLSearchParams({
-                ngay_am: String(form.ngay_am),
-                thang_am: String(form.thang_am),
-                gio_chi: form.gio_chi,
-                can_nam: canNam,
-                gioi_tinh: form.gioi_tinh
-            });
+            const params = new URLSearchParams();
+            if (duongLich) {
+                params.set('duong_lich', duongLich);
+                params.set('gio', `${pad2(time.hour)}:${pad2(time.minute)}`);
+            } else if (usesNewPath) {
+                params.set('nam_am', String(form.nam_am));
+                params.set('thang_am', String(form.thang_am));
+                params.set('ngay_am', String(form.ngay_am));
+                params.set('gio', `${pad2(time.hour)}:${pad2(time.minute)}`);
+                if (form.thang_nhuan) params.set('thang_nhuan', 'true');
+                if (form.lich === 'viet') params.set('lich', 'viet');
+            } else {
+                params.set('ngay_am', String(form.ngay_am));
+                params.set('thang_am', String(form.thang_am));
+                params.set('gio_chi', form.gio_chi);
+                params.set('can_nam', canNam);
+            }
+            params.set('gioi_tinh', form.gioi_tinh);
             const response = await fetch(`${API_BASE}/api/tu-vi?${params.toString()}`);
             const body = await response.json().catch(() => null);
             if (!response.ok) {
@@ -226,7 +283,53 @@ const TuViPage = () => {
                     </div>
 
                     <div className="tuv-field">
-                        <label>Giờ sinh (Chi)</label>
+                        <label>Loại âm lịch</label>
+                        <select className="glass-input" value={form.lich} onChange={handleChange('lich')}>
+                            <option value="trung_hoa">Âm lịch Trung Hoa (mặc định)</option>
+                            <option value="viet">Âm lịch Việt</option>
+                        </select>
+                        <label className="tuv-checkbox">
+                            <input
+                                type="checkbox"
+                                checked={form.thang_nhuan}
+                                onChange={handleThangNhuan}
+                            />
+                            Tháng nhuận
+                        </label>
+                    </div>
+
+                    <div className="tuv-field">
+                        <label>Giờ : phút (tùy chọn)</label>
+                        <div className="tuv-time-inputs">
+                            <input
+                                type="number"
+                                min="0"
+                                max="23"
+                                placeholder="Giờ"
+                                className="glass-input"
+                                value={form.gio}
+                                disabled={khongRoGio}
+                                onChange={handleChange('gio')}
+                            />
+                            <span>:</span>
+                            <input
+                                type="number"
+                                min="0"
+                                max="59"
+                                placeholder="Phút"
+                                className="glass-input"
+                                value={form.phut}
+                                disabled={khongRoGio}
+                                onChange={handleChange('phut')}
+                            />
+                        </div>
+                        <span className="tuv-derived">
+                            Nhập giờ:phút để gửi chính xác; nếu để trống sẽ dùng giờ Chi bên dưới.
+                        </span>
+                    </div>
+
+                    <div className="tuv-field">
+                        <label>Giờ sinh (Chi){hasTimeInput ? ' — dự phòng' : ''}</label>
                         <select className="glass-input" value={form.gio_chi} disabled={khongRoGio} onChange={handleChange('gio_chi')}>
                             {GIO_CHI_OPTIONS.map(opt => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -240,6 +343,19 @@ const TuViPage = () => {
                             />
                             Không rõ giờ sinh
                         </label>
+                    </div>
+
+                    <div className="tuv-field">
+                        <label>Ngày dương (tùy chọn)</label>
+                        <input
+                            type="date"
+                            className="glass-input"
+                            value={form.duong_lich}
+                            onChange={handleChange('duong_lich')}
+                        />
+                        <span className="tuv-derived">
+                            Nhập ngày dương để an sao trực tiếp (bỏ trống thì dùng ngày âm ở trên).
+                        </span>
                     </div>
 
                     <div className="tuv-field">
@@ -345,8 +461,8 @@ const TuViPage = () => {
                             <li>Chỉ an sao: Mệnh/Thân, Cục, 14 chính tinh, Tứ Hóa. Không luận giải.</li>
                             <li>Chưa có phụ tinh, Tuần/Triệt, độ sáng sao (nguồn Python chưa có).</li>
                             <li>Không lưu hồ sơ; kết quả chỉ dùng trong phiên xem này.</li>
-                            <li>Ngày âm theo lịch Việt Nam có thể lệch 1 ngày so với lịch Trung Hoa ở một số tháng — chưa kiểm chứng độ lệch.</li>
-                            <li>Chưa có ca tháng nhuận và ca giờ Tý sát ranh giới 23:00.</li>
+                            <li>Ngày âm theo lịch Việt Nam có thể lệch 1 ngày so với lịch Trung Hoa ở một số tháng — đã có đường nhập riêng cho lịch Việt.</li>
+                            <li>Giờ Tý muộn 23:00–23:59 tính sang ngày kế tiếp; tháng nhuận theo quy ước iztro (nửa sau tháng nhuận tính sang tháng kế).</li>
                         </ul>
                     </div>
                 </div>
