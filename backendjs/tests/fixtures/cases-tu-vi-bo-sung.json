@@ -1,0 +1,674 @@
+{
+ "meta": {
+  "tao_ngay": "2026-11-20",
+  "nguon": "iztro 2.6.3 (npm) — thu vien Tu Vi Dau So doc lap, cai rieng tren HP (ngoai repo)",
+  "quy_uoc_gio_ty": "iztro timeIndex=12 cho 23:00-23:59: an sao dung ngay am +1 (neu la ngay cuoi thang thi ve mung 1, thang giu nguyen), khong ap fixLeap; tru ngay/gio lay theo ngay ke tiep (khop iztro)",
+  "quy_uoc_thang_nhuan": "iztro byLunar(..., isLeapMonth=true) voi fixLeap=true (mac dinh): ngay <= 15 tinh theo thang nhuan, ngay > 15 tinh sang thang ke tiep",
+  "quy_uoc_lich_viet": "ngay am Viet -> duong bang thuat toan Ho Ngoc Duc (UTC+7), roi iztro an sao tren ngay duong do (iztro van dung lich Trung Hoa de an sao)",
+  "pham_vi": "Menh, Than, Cuc, 14 chinh tinh, Tu Hoa (ban mac dinh Toan Tap/Kham Thien); them tru ngay/gio cho ca gio Ty",
+  "khong_gom": "sao phu, Tuan/Triet, do sang sao"
+ },
+ "cases": [
+  {
+   "id": "ty-2300-1990-05-15",
+   "loai": "gio_ty",
+   "gioi_tinh": "nam",
+   "input": {
+    "duong_lich": "1990-05-15",
+    "gio": "23:00",
+    "gio_index_iztro": 12
+   },
+   "am_trung_hoa": {
+    "nam": 1990,
+    "thang": 4,
+    "ngay": 21,
+    "nhuan": false
+   },
+   "quy_uoc": "gio Ty 23:00-23:59 theo iztro: tinh sang ngay ke tiep (+1 ngay am); thang giu nguyen; khong fix thang nhuan",
+   "nguon": "iztro 2.6.3 astro.bySolar('1990-5-15', 12, '男')",
+   "expected": {
+    "menh": "Tỵ",
+    "than": "Tỵ",
+    "cuc": 4,
+    "sao": {
+     "Thiên Đồng": "Thìn",
+     "Vũ Khúc": "Tỵ",
+     "Phá Quân": "Tỵ",
+     "Thái Dương": "Ngọ",
+     "Thiên Phủ": "Mùi",
+     "Thiên Cơ": "Thân",
+     "Thái Âm": "Thân",
+     "Tử Vi": "Dậu",
+     "Tham Lang": "Dậu",
+     "Cự Môn": "Tuất",
+     "Thiên Tướng": "Hợi",
+     "Thiên Lương": "Tý",
+     "Liêm Trinh": "Sửu",
+     "Thất Sát": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thái Dương",
+     "Hóa Quyền": "Vũ Khúc",
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Thiên Đồng"
+    },
+    "tru_ngay": {
+     "can": "Tân",
+     "chi": "Tỵ",
+     "can_chi": "Tân Tỵ"
+    },
+    "tru_gio": {
+     "can": "Mậu",
+     "chi": "Tý",
+     "can_chi": "Mậu Tý"
+    }
+   }
+  },
+  {
+   "id": "ty-2330-2016-08-20",
+   "loai": "gio_ty",
+   "gioi_tinh": "nữ",
+   "input": {
+    "duong_lich": "2016-08-20",
+    "gio": "23:30",
+    "gio_index_iztro": 12
+   },
+   "am_trung_hoa": {
+    "nam": 2016,
+    "thang": 7,
+    "ngay": 18,
+    "nhuan": false
+   },
+   "quy_uoc": "gio Ty 23:00-23:59 theo iztro: tinh sang ngay ke tiep (+1 ngay am); thang giu nguyen; khong fix thang nhuan",
+   "nguon": "iztro 2.6.3 astro.bySolar('2016-8-20', 12, '女')",
+   "expected": {
+    "menh": "Thân",
+    "than": "Thân",
+    "cuc": 6,
+    "sao": {
+     "Phá Quân": "Dần",
+     "Liêm Trinh": "Thìn",
+     "Thiên Phủ": "Thìn",
+     "Thái Âm": "Tỵ",
+     "Tham Lang": "Ngọ",
+     "Thiên Đồng": "Mùi",
+     "Cự Môn": "Mùi",
+     "Vũ Khúc": "Thân",
+     "Thiên Tướng": "Thân",
+     "Thái Dương": "Dậu",
+     "Thiên Lương": "Dậu",
+     "Thất Sát": "Tuất",
+     "Thiên Cơ": "Hợi",
+     "Tử Vi": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Đồng",
+     "Hóa Quyền": "Thiên Cơ",
+     "Hóa Khoa": "Văn Xương",
+     "Hóa Kỵ": "Liêm Trinh"
+    },
+    "tru_ngay": {
+     "can": "Ất",
+     "chi": "Hợi",
+     "can_chi": "Ất Hợi"
+    },
+    "tru_gio": {
+     "can": "Bính",
+     "chi": "Tý",
+     "can_chi": "Bính Tý"
+    }
+   }
+  },
+  {
+   "id": "ty-2359-2031-12-03",
+   "loai": "gio_ty",
+   "gioi_tinh": "nam",
+   "input": {
+    "duong_lich": "2031-12-03",
+    "gio": "23:59",
+    "gio_index_iztro": 12
+   },
+   "am_trung_hoa": {
+    "nam": 2031,
+    "thang": 10,
+    "ngay": 19,
+    "nhuan": false
+   },
+   "quy_uoc": "gio Ty 23:00-23:59 theo iztro: tinh sang ngay ke tiep (+1 ngay am); thang giu nguyen; khong fix thang nhuan",
+   "nguon": "iztro 2.6.3 astro.bySolar('2031-12-3', 12, '男')",
+   "expected": {
+    "menh": "Hợi",
+    "than": "Hợi",
+    "cuc": 3,
+    "sao": {
+     "Thiên Đồng": "Dần",
+     "Thiên Lương": "Dần",
+     "Vũ Khúc": "Mão",
+     "Thất Sát": "Mão",
+     "Thái Dương": "Thìn",
+     "Thiên Cơ": "Ngọ",
+     "Tử Vi": "Mùi",
+     "Phá Quân": "Mùi",
+     "Thiên Phủ": "Dậu",
+     "Thái Âm": "Tuất",
+     "Liêm Trinh": "Hợi",
+     "Tham Lang": "Hợi",
+     "Cự Môn": "Tý",
+     "Thiên Tướng": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Cự Môn",
+     "Hóa Quyền": "Thái Dương",
+     "Hóa Khoa": "Văn Khúc",
+     "Hóa Kỵ": "Văn Xương"
+    },
+    "tru_ngay": {
+     "can": "Mậu",
+     "chi": "Dần",
+     "can_chi": "Mậu Dần"
+    },
+    "tru_gio": {
+     "can": "Nhâm",
+     "chi": "Tý",
+     "can_chi": "Nhâm Tý"
+    }
+   }
+  },
+  {
+   "id": "nhuan-2023-02-06",
+   "loai": "thang_nhuan",
+   "gioi_tinh": "nam",
+   "input": {
+    "nam_am": 2023,
+    "thang_am": 2,
+    "ngay_am": 6,
+    "thang_nhuan": true,
+    "gio": "09:15",
+    "gio_index_iztro": 5
+   },
+   "duong_lich": "2023-03-27",
+   "am_trung_hoa": {
+    "nam": 2023,
+    "thang": 2,
+    "ngay": 6,
+    "nhuan": true
+   },
+   "quy_uoc": "thang nhuan theo iztro fixLeap=true: ngay <= 15 tinh theo thang nhuan, ngay > 15 tinh sang thang ke tiep",
+   "nguon": "iztro 2.6.3 astro.byLunar('2023-2-6', 5, '男', true)",
+   "expected": {
+    "menh": "Tuất",
+    "than": "Thân",
+    "cuc": 2,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Phá Quân",
+     "Hóa Quyền": "Cự Môn",
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Tham Lang"
+    },
+    "tru_ngay": {
+     "can": "Giáp",
+     "chi": "Thân",
+     "can_chi": "Giáp Thân"
+    },
+    "tru_gio": {
+     "can": "Kỷ",
+     "chi": "Tỵ",
+     "can_chi": "Kỷ Tỵ"
+    }
+   }
+  },
+  {
+   "id": "nhuan-2023-02-22",
+   "loai": "thang_nhuan",
+   "gioi_tinh": "nữ",
+   "input": {
+    "nam_am": 2023,
+    "thang_am": 2,
+    "ngay_am": 22,
+    "thang_nhuan": true,
+    "gio": "14:30",
+    "gio_index_iztro": 7
+   },
+   "duong_lich": "2023-04-12",
+   "am_trung_hoa": {
+    "nam": 2023,
+    "thang": 2,
+    "ngay": 22,
+    "nhuan": true
+   },
+   "quy_uoc": "thang nhuan theo iztro fixLeap=true: ngay <= 15 tinh theo thang nhuan, ngay > 15 tinh sang thang ke tiep",
+   "nguon": "iztro 2.6.3 astro.byLunar('2023-2-22', 7, '女', true)",
+   "expected": {
+    "menh": "Dậu",
+    "than": "Hợi",
+    "cuc": 3,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Phá Quân",
+     "Hóa Quyền": "Cự Môn",
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Tham Lang"
+    },
+    "tru_ngay": {
+     "can": "Canh",
+     "chi": "Tý",
+     "can_chi": "Canh Tý"
+    },
+    "tru_gio": {
+     "can": "Quý",
+     "chi": "Mùi",
+     "can_chi": "Quý Mùi"
+    }
+   }
+  },
+  {
+   "id": "nhuan-2025-06-12",
+   "loai": "thang_nhuan",
+   "gioi_tinh": "nam",
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 6,
+    "ngay_am": 12,
+    "thang_nhuan": true,
+    "gio": "08:00",
+    "gio_index_iztro": 4
+   },
+   "duong_lich": "2025-08-05",
+   "am_trung_hoa": {
+    "nam": 2025,
+    "thang": 6,
+    "ngay": 12,
+    "nhuan": true
+   },
+   "quy_uoc": "thang nhuan theo iztro fixLeap=true: ngay <= 15 tinh theo thang nhuan, ngay > 15 tinh sang thang ke tiep",
+   "nguon": "iztro 2.6.3 astro.byLunar('2025-6-12', 4, '男', true)",
+   "expected": {
+    "menh": "Mão",
+    "than": "Hợi",
+    "cuc": 5,
+    "sao": {
+     "Thiên Phủ": "Mão",
+     "Thái Âm": "Thìn",
+     "Liêm Trinh": "Tỵ",
+     "Tham Lang": "Tỵ",
+     "Cự Môn": "Ngọ",
+     "Thiên Tướng": "Mùi",
+     "Thiên Đồng": "Thân",
+     "Thiên Lương": "Thân",
+     "Vũ Khúc": "Dậu",
+     "Thất Sát": "Dậu",
+     "Thái Dương": "Tuất",
+     "Thiên Cơ": "Tý",
+     "Tử Vi": "Sửu",
+     "Phá Quân": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Khoa": "Tử Vi",
+     "Hóa Kỵ": "Thái Âm"
+    },
+    "tru_ngay": {
+     "can": "Bính",
+     "chi": "Ngọ",
+     "can_chi": "Bính Ngọ"
+    },
+    "tru_gio": {
+     "can": "Nhâm",
+     "chi": "Thìn",
+     "can_chi": "Nhâm Thìn"
+    }
+   }
+  },
+  {
+   "id": "nhuan-2025-06-25",
+   "loai": "thang_nhuan",
+   "gioi_tinh": "nữ",
+   "input": {
+    "nam_am": 2025,
+    "thang_am": 6,
+    "ngay_am": 25,
+    "thang_nhuan": true,
+    "gio": "16:45",
+    "gio_index_iztro": 8
+   },
+   "duong_lich": "2025-08-18",
+   "am_trung_hoa": {
+    "nam": 2025,
+    "thang": 6,
+    "ngay": 25,
+    "nhuan": true
+   },
+   "quy_uoc": "thang nhuan theo iztro fixLeap=true: ngay <= 15 tinh theo thang nhuan, ngay > 15 tinh sang thang ke tiep",
+   "nguon": "iztro 2.6.3 astro.byLunar('2025-6-25', 8, '女', true)",
+   "expected": {
+    "menh": "Tý",
+    "than": "Thìn",
+    "cuc": 6,
+    "sao": {
+     "Thiên Phủ": "Mão",
+     "Thái Âm": "Thìn",
+     "Liêm Trinh": "Tỵ",
+     "Tham Lang": "Tỵ",
+     "Cự Môn": "Ngọ",
+     "Thiên Tướng": "Mùi",
+     "Thiên Đồng": "Thân",
+     "Thiên Lương": "Thân",
+     "Vũ Khúc": "Dậu",
+     "Thất Sát": "Dậu",
+     "Thái Dương": "Tuất",
+     "Thiên Cơ": "Tý",
+     "Tử Vi": "Sửu",
+     "Phá Quân": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Cơ",
+     "Hóa Quyền": "Thiên Lương",
+     "Hóa Khoa": "Tử Vi",
+     "Hóa Kỵ": "Thái Âm"
+    },
+    "tru_ngay": {
+     "can": "Kỷ",
+     "chi": "Mùi",
+     "can_chi": "Kỷ Mùi"
+    },
+    "tru_gio": {
+     "can": "Nhâm",
+     "chi": "Thân",
+     "can_chi": "Nhâm Thân"
+    }
+   }
+  },
+  {
+   "id": "viet-2006-06-10",
+   "loai": "lich_viet",
+   "gioi_tinh": "nam",
+   "input": {
+    "nam_am": 2006,
+    "thang_am": 6,
+    "ngay_am": 10,
+    "thang_nhuan": false,
+    "gio": "09:00",
+    "gio_index_iztro": 5,
+    "lich": "viet"
+   },
+   "am_viet": {
+    "nam": 2006,
+    "thang": 6,
+    "ngay": 10
+   },
+   "duong_lich": "2006-07-04",
+   "am_trung_hoa": {
+    "nam": 2006,
+    "thang": 6,
+    "ngay": 9,
+    "nhuan": false
+   },
+   "quy_uoc": "ngay am Viet quy doi sang duong bang lich Viet (Ho Ngoc Duc, UTC+7) roi an sao bang iztro tren ngay duong do",
+   "nguon": "lich Viet (Ho Ngoc Duc) 10/6/2006 -> duong 4/7/2006; iztro 2.6.3 astro.bySolar('2006-7-4', 5, '男')",
+   "expected": {
+    "menh": "Dần",
+    "than": "Tý",
+    "cuc": 3,
+    "sao": {
+     "Tham Lang": "Dần",
+     "Thiên Cơ": "Mão",
+     "Cự Môn": "Mão",
+     "Tử Vi": "Thìn",
+     "Thiên Tướng": "Thìn",
+     "Thiên Lương": "Tỵ",
+     "Thất Sát": "Ngọ",
+     "Liêm Trinh": "Thân",
+     "Phá Quân": "Tuất",
+     "Thiên Đồng": "Hợi",
+     "Vũ Khúc": "Tý",
+     "Thiên Phủ": "Tý",
+     "Thái Dương": "Sửu",
+     "Thái Âm": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Đồng",
+     "Hóa Quyền": "Thiên Cơ",
+     "Hóa Khoa": "Văn Xương",
+     "Hóa Kỵ": "Liêm Trinh"
+    },
+    "tru_ngay": {
+     "can": "Giáp",
+     "chi": "Ngọ",
+     "can_chi": "Giáp Ngọ"
+    },
+    "tru_gio": {
+     "can": "Kỷ",
+     "chi": "Tỵ",
+     "can_chi": "Kỷ Tỵ"
+    }
+   }
+  },
+  {
+   "id": "viet-2007-01-01",
+   "loai": "lich_viet",
+   "gioi_tinh": "nữ",
+   "input": {
+    "nam_am": 2007,
+    "thang_am": 1,
+    "ngay_am": 1,
+    "thang_nhuan": false,
+    "gio": "12:00",
+    "gio_index_iztro": 6,
+    "lich": "viet"
+   },
+   "am_viet": {
+    "nam": 2007,
+    "thang": 1,
+    "ngay": 1
+   },
+   "duong_lich": "2007-02-17",
+   "am_trung_hoa": {
+    "nam": 2006,
+    "thang": 12,
+    "ngay": 30,
+    "nhuan": false
+   },
+   "quy_uoc": "ngay am Viet quy doi sang duong bang lich Viet (Ho Ngoc Duc, UTC+7) roi an sao bang iztro tren ngay duong do",
+   "nguon": "lich Viet (Ho Ngoc Duc) 1/1/2007 -> duong 17/2/2007; iztro 2.6.3 astro.bySolar('2007-2-17', 6, '女')",
+   "expected": {
+    "menh": "Mùi",
+    "than": "Mùi",
+    "cuc": 4,
+    "sao": {
+     "Liêm Trinh": "Mão",
+     "Phá Quân": "Mão",
+     "Thiên Phủ": "Tỵ",
+     "Thiên Đồng": "Ngọ",
+     "Thái Âm": "Ngọ",
+     "Vũ Khúc": "Mùi",
+     "Tham Lang": "Mùi",
+     "Thái Dương": "Thân",
+     "Cự Môn": "Thân",
+     "Thiên Tướng": "Dậu",
+     "Thiên Cơ": "Tuất",
+     "Thiên Lương": "Tuất",
+     "Tử Vi": "Hợi",
+     "Thất Sát": "Hợi"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thiên Đồng",
+     "Hóa Quyền": "Thiên Cơ",
+     "Hóa Khoa": "Văn Xương",
+     "Hóa Kỵ": "Liêm Trinh"
+    },
+    "tru_ngay": {
+     "can": "Nhâm",
+     "chi": "Ngọ",
+     "can_chi": "Nhâm Ngọ"
+    },
+    "tru_gio": {
+     "can": "Bính",
+     "chi": "Ngọ",
+     "can_chi": "Bính Ngọ"
+    }
+   }
+  },
+  {
+   "id": "viet-2018-10-20",
+   "loai": "lich_viet",
+   "gioi_tinh": "nam",
+   "input": {
+    "nam_am": 2018,
+    "thang_am": 10,
+    "ngay_am": 20,
+    "thang_nhuan": false,
+    "gio": "15:00",
+    "gio_index_iztro": 8,
+    "lich": "viet"
+   },
+   "am_viet": {
+    "nam": 2018,
+    "thang": 10,
+    "ngay": 20
+   },
+   "duong_lich": "2018-11-26",
+   "am_trung_hoa": {
+    "nam": 2018,
+    "thang": 10,
+    "ngay": 19,
+    "nhuan": false
+   },
+   "quy_uoc": "ngay am Viet quy doi sang duong bang lich Viet (Ho Ngoc Duc, UTC+7) roi an sao bang iztro tren ngay duong do",
+   "nguon": "lich Viet (Ho Ngoc Duc) 20/10/2018 -> duong 26/11/2018; iztro 2.6.3 astro.bySolar('2018-11-26', 8, '男')",
+   "expected": {
+    "menh": "Mão",
+    "than": "Mùi",
+    "cuc": 2,
+    "sao": {
+     "Liêm Trinh": "Dần",
+     "Phá Quân": "Thìn",
+     "Thiên Đồng": "Tỵ",
+     "Vũ Khúc": "Ngọ",
+     "Thiên Phủ": "Ngọ",
+     "Thái Dương": "Mùi",
+     "Thái Âm": "Mùi",
+     "Tham Lang": "Thân",
+     "Thiên Cơ": "Dậu",
+     "Cự Môn": "Dậu",
+     "Tử Vi": "Tuất",
+     "Thiên Tướng": "Tuất",
+     "Thiên Lương": "Hợi",
+     "Thất Sát": "Tý"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Tham Lang",
+     "Hóa Quyền": "Thái Âm",
+     "Hóa Khoa": "Hữu Bật",
+     "Hóa Kỵ": "Thiên Cơ"
+    },
+    "tru_ngay": {
+     "can": "Nhâm",
+     "chi": "Tuất",
+     "can_chi": "Nhâm Tuất"
+    },
+    "tru_gio": {
+     "can": "Mậu",
+     "chi": "Thân",
+     "can_chi": "Mậu Thân"
+    }
+   }
+  },
+  {
+   "id": "viet-2030-01-15",
+   "loai": "lich_viet",
+   "gioi_tinh": "nữ",
+   "input": {
+    "nam_am": 2030,
+    "thang_am": 1,
+    "ngay_am": 15,
+    "thang_nhuan": false,
+    "gio": "21:00",
+    "gio_index_iztro": 11,
+    "lich": "viet"
+   },
+   "am_viet": {
+    "nam": 2030,
+    "thang": 1,
+    "ngay": 15
+   },
+   "duong_lich": "2030-02-16",
+   "am_trung_hoa": {
+    "nam": 2030,
+    "thang": 1,
+    "ngay": 14,
+    "nhuan": false
+   },
+   "quy_uoc": "ngay am Viet quy doi sang duong bang lich Viet (Ho Ngoc Duc, UTC+7) roi an sao bang iztro tren ngay duong do",
+   "nguon": "lich Viet (Ho Ngoc Duc) 15/1/2030 -> duong 16/2/2030; iztro 2.6.3 astro.bySolar('2030-2-16', 11, '女')",
+   "expected": {
+    "menh": "Mão",
+    "than": "Sửu",
+    "cuc": 5,
+    "sao": {
+     "Thiên Cơ": "Dần",
+     "Thái Âm": "Dần",
+     "Tử Vi": "Mão",
+     "Tham Lang": "Mão",
+     "Cự Môn": "Thìn",
+     "Thiên Tướng": "Tỵ",
+     "Thiên Lương": "Ngọ",
+     "Liêm Trinh": "Mùi",
+     "Thất Sát": "Mùi",
+     "Thiên Đồng": "Tuất",
+     "Vũ Khúc": "Hợi",
+     "Phá Quân": "Hợi",
+     "Thái Dương": "Tý",
+     "Thiên Phủ": "Sửu"
+    },
+    "tu_hoa": {
+     "Hóa Lộc": "Thái Dương",
+     "Hóa Quyền": "Vũ Khúc",
+     "Hóa Khoa": "Thái Âm",
+     "Hóa Kỵ": "Thiên Đồng"
+    },
+    "tru_ngay": {
+     "can": "Nhâm",
+     "chi": "Ngọ",
+     "can_chi": "Nhâm Ngọ"
+    },
+    "tru_gio": {
+     "can": "Tân",
+     "chi": "Hợi",
+     "can_chi": "Tân Hợi"
+    }
+   }
+  }
+ ]
+}
