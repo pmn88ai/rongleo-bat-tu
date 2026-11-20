@@ -1,4 +1,35 @@
+/* ===== Temple entrance background ===== */
+.chua-scene-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background-color: #050806;
+    background-image: url('/images/chua/nen-cong-chua.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.chua-scene-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.chua-scene-veil {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(3, 7, 5, 0.62) 0%, rgba(3, 7, 5, 0.4) 35%, rgba(3, 7, 5, 0.72) 100%),
+        radial-gradient(circle at 50% 38%, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
 .chua-page {
+    position: relative;
+    z-index: 1;
     max-width: 1180px;
     margin: 0 auto;
     padding: 1rem 1rem 110px;
@@ -91,238 +122,268 @@
     background: rgba(226, 192, 68, 0.08);
 }
 
-/* ===== Map grid: courtyard in the middle, stalls around ===== */
-.chua-map {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-areas:
-        "tuvi battu xemngay"
-        "vanhomnay courtyard duyenso"
-        "xinque tuvan tuvan";
-    gap: 1rem;
-    align-items: stretch;
+/* ===== Overhead map ===== */
+.chua-atlas {
+    padding: 0.7rem;
+    margin-bottom: 1.4rem;
 }
 
-.chua-stall--tuvi { grid-area: tuvi; }
-.chua-stall--battu { grid-area: battu; }
-.chua-stall--xemngay { grid-area: xemngay; }
-.chua-stall--vanhomnay { grid-area: vanhomnay; }
-.chua-stall--duyenso { grid-area: duyenso; }
-.chua-stall--xinque { grid-area: xinque; }
-.chua-stall--tuvan { grid-area: tuvan; }
-
-.chua-stall {
-    --stall-accent: var(--accent-gold);
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    min-width: 0;
-    padding: 1rem;
+.chua-atlas-frame {
     position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: 12px;
     overflow: hidden;
+    background: #0a0f0c;
 }
 
-.chua-stall::before {
-    content: '';
+.chua-atlas-image {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--stall-accent), transparent);
-    opacity: 0.75;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
-.chua-stall--tuvi { --stall-accent: #c084fc; }
-.chua-stall--battu { --stall-accent: #fbbf24; }
-.chua-stall--xemngay { --stall-accent: #4ade80; }
-.chua-stall--vanhomnay { --stall-accent: #fb923c; }
-.chua-stall--duyenso { --stall-accent: #f472b6; }
-.chua-stall--xinque { --stall-accent: #60a5fa; }
-.chua-stall--tuvan { --stall-accent: #e2c044; }
+.chua-atlas-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4, 8, 6, 0.12) 0%, rgba(4, 8, 6, 0.02) 40%, rgba(4, 8, 6, 0.34) 100%);
+    pointer-events: none;
+}
 
-.chua-stall-head {
+.chua-pin {
+    position: absolute;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-decoration: none;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    cursor: pointer;
 }
 
-.chua-stall-title {
-    margin: 0;
-    font-size: 0.98rem;
+.chua-pin-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--pin-accent, var(--accent-gold));
+    border: 2px solid rgba(255, 255, 255, 0.92);
+    box-shadow:
+        0 0 0 5px rgba(0, 0, 0, 0.25),
+        0 0 16px var(--pin-accent, var(--accent-gold));
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chua-pin:hover .chua-pin-dot,
+.chua-pin:focus-visible .chua-pin-dot {
+    transform: scale(1.25);
+    box-shadow:
+        0 0 0 7px rgba(0, 0, 0, 0.28),
+        0 0 22px var(--pin-accent, var(--accent-gold));
+}
+
+.chua-pin:focus-visible {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+.chua-pin-tip {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translate(-50%, 4px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 92px;
+    max-width: 150px;
+    padding: 0.35rem 0.6rem;
+    border-radius: 10px;
+    border: 1px solid rgba(226, 192, 68, 0.45);
+    background: rgba(5, 9, 7, 0.94);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 3;
+}
+
+.chua-pin:hover .chua-pin-tip,
+.chua-pin:focus-visible .chua-pin-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+.chua-pin-name {
+    font-size: 0.74rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.chua-pin-teacher {
+    font-size: 0.65rem;
+    line-height: 1.3;
+    color: var(--pin-accent, var(--accent-gold));
+    white-space: normal;
+}
+
+.chua-pin--tuvi .chua-pin-tip {
+    left: -8px;
+    transform: translate(0, 4px);
+    align-items: flex-start;
+    text-align: left;
+}
+
+.chua-pin--tuvi:hover .chua-pin-tip,
+.chua-pin--tuvi:focus-visible .chua-pin-tip {
+    transform: translate(0, 0);
+}
+
+.chua-pin--vuontinhtam .chua-pin-tip {
+    top: calc(100% + 4px);
+    bottom: auto;
+    transform: translate(-50%, -4px);
+}
+
+.chua-pin--vuontinhtam:hover .chua-pin-tip,
+.chua-pin--vuontinhtam:focus-visible .chua-pin-tip {
+    transform: translate(-50%, 0);
+}
+
+.chua-pin--battu .chua-pin-tip {
+    left: auto;
+    right: -8px;
+    transform: translate(0, 4px);
+    align-items: flex-end;
+    text-align: right;
+}
+
+.chua-pin--battu:hover .chua-pin-tip,
+.chua-pin--battu:focus-visible .chua-pin-tip {
+    transform: translate(0, 0);
+}
+
+.chua-atlas-caption {
+    margin: 0.65rem 0 0;
+    text-align: center;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* ===== Street-view style cards ===== */
+.chua-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.chua-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(226, 192, 68, 0.22);
+    background: rgba(8, 13, 10, 0.86);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.chua-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-accent, var(--accent-gold));
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.chua-card-media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #0a0f0c;
+}
+
+.chua-card-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(5, 9, 7, 0.55) 100%);
+}
+
+.chua-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.chua-card:hover .chua-card-media img {
+    transform: scale(1.04);
+}
+
+.chua-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 1rem 1rem;
+    min-width: 0;
+    border-top: 3px solid var(--card-accent, var(--accent-gold));
+}
+
+.chua-card-title {
+    font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.02em;
     color: var(--text-primary);
 }
 
-.chua-stall-dot {
-    flex: 0 0 auto;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--stall-accent);
-    box-shadow: 0 0 10px var(--stall-accent);
+.chua-card-teacher {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--card-accent, var(--accent-gold));
 }
 
-.chua-stall-desc {
-    margin: 0;
-    font-size: 0.79rem;
+.chua-card-desc {
+    font-size: 0.78rem;
     line-height: 1.5;
     color: var(--text-secondary);
 }
 
-.chua-npc-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-top: 0.15rem;
-}
-
-.chua-npc {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    min-width: 0;
-}
-
-.chua-npc-avatar {
-    flex: 0 0 42px;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-family: var(--font-accent);
-    font-size: 1.05rem;
-    font-weight: 800;
-    line-height: 1;
-    color: #10130f;
-    background: radial-gradient(circle at 30% 24%, #f8ecc0 0%, var(--stall-accent) 78%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.35);
-    user-select: none;
-}
-
-.chua-npc-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    min-width: 0;
-}
-
-.chua-npc-name {
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: var(--stall-accent);
-}
-
-.chua-npc-line {
+.chua-card-cta {
+    margin-top: 0.55rem;
+    align-self: flex-start;
+    padding: 0.38rem 0.8rem;
+    border-radius: 9px;
     font-size: 0.75rem;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.66);
-    font-style: italic;
-}
-
-.chua-stall-btn {
-    margin-top: auto;
-    display: block;
-    padding: 0.55rem 0.8rem;
-    border-radius: 10px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--accent-gold);
     background: linear-gradient(135deg, rgba(226, 192, 68, 0.16), rgba(226, 192, 68, 0.04));
     border: 1px solid rgba(226, 192, 68, 0.35);
-    transition: all 0.25s ease;
+    transition: background 0.25s ease, border-color 0.25s ease;
 }
 
-.chua-stall-btn:hover {
-    background: linear-gradient(135deg, rgba(226, 192, 68, 0.28), rgba(226, 192, 68, 0.1));
+.chua-card:hover .chua-card-cta {
+    background: linear-gradient(135deg, rgba(226, 192, 68, 0.3), rgba(226, 192, 68, 0.1));
     border-color: rgba(226, 192, 68, 0.65);
-    box-shadow: 0 6px 18px rgba(226, 192, 68, 0.16);
-}
-
-/* ===== Courtyard ===== */
-.chua-courtyard {
-    grid-area: courtyard;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem;
-    min-width: 0;
-}
-
-.chua-yard-svg {
-    width: 100%;
-    max-width: 240px;
-    height: auto;
-    display: block;
-}
-
-.chua-yard-halo {
-    fill: rgba(226, 192, 68, 0.05);
-    stroke: rgba(226, 192, 68, 0.12);
-    stroke-width: 1;
-}
-
-.chua-yard-ring {
-    fill: none;
-    stroke: rgba(226, 192, 68, 0.28);
-    stroke-width: 1.2;
-    stroke-dasharray: 3 7;
-}
-
-.chua-yard-line {
-    fill: none;
-    stroke: rgba(226, 192, 68, 0.45);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-}
-
-.chua-yard-roof {
-    fill: none;
-    stroke: var(--accent-gold);
-    stroke-width: 3;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-}
-
-.chua-yard-eave {
-    fill: none;
-    stroke: rgba(226, 192, 68, 0.65);
-    stroke-width: 1.6;
-    stroke-linecap: round;
-}
-
-.chua-yard-body {
-    fill: rgba(226, 192, 68, 0.08);
-    stroke: rgba(226, 192, 68, 0.8);
-    stroke-width: 2;
-    stroke-linejoin: round;
-}
-
-.chua-yard-door {
-    fill: rgba(5, 5, 5, 0.55);
-    stroke: rgba(226, 192, 68, 0.8);
-    stroke-width: 1.6;
-}
-
-.chua-yard-lamp {
-    fill: #fbbf24;
-    stroke: rgba(251, 191, 36, 0.5);
-    stroke-width: 1;
-}
-
-.chua-yard-text {
-    fill: rgba(226, 192, 68, 0.75);
-    font-family: var(--font-accent);
-    font-size: 10px;
-    letter-spacing: 3px;
 }
 
 /* ===== Footer note ===== */
@@ -408,109 +469,10 @@
     white-space: nowrap;
 }
 
-/* ===== Two special spaces ===== */
-.chua-spaces {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
-    margin-bottom: 1.1rem;
-}
-
-.chua-space {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 1rem 1.1rem;
-    border-radius: 14px;
-    text-decoration: none;
-    border: 1px solid rgba(226, 192, 68, 0.32);
-    background: linear-gradient(135deg, rgba(226, 192, 68, 0.1), rgba(10, 14, 12, 0.75));
-    min-width: 0;
-    transition: all 0.25s ease;
-}
-
-.chua-space:hover {
-    border-color: rgba(226, 192, 68, 0.6);
-    transform: translateY(-2px);
-}
-
-.chua-space--vuontinhtam {
-    border-color: rgba(110, 200, 160, 0.32);
-    background: linear-gradient(135deg, rgba(60, 150, 120, 0.14), rgba(10, 16, 14, 0.75));
-}
-
-.chua-space--vuontinhtam:hover {
-    border-color: rgba(110, 200, 160, 0.6);
-}
-
-.chua-space-icon {
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    font-size: 1.35rem;
-    background: rgba(226, 192, 68, 0.12);
-    border: 1px solid rgba(226, 192, 68, 0.3);
-}
-
-.chua-space--vuontinhtam .chua-space-icon {
-    background: rgba(80, 180, 140, 0.12);
-    border-color: rgba(110, 200, 160, 0.32);
-}
-
-.chua-space-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    min-width: 0;
-}
-
-.chua-space-title {
-    font-size: 0.96rem;
-    font-weight: 800;
-    color: var(--accent-gold);
-    letter-spacing: 0.02em;
-}
-
-.chua-space--vuontinhtam .chua-space-title {
-    color: #86d8b4;
-}
-
-.chua-space-desc {
-    font-size: 0.76rem;
-    line-height: 1.45;
-    color: var(--text-secondary);
-}
-
-.chua-space-cta {
-    flex: 0 0 auto;
-    margin-left: auto;
-    font-size: 0.74rem;
-    font-weight: 800;
-    color: var(--accent-gold);
-    white-space: nowrap;
-}
-
 /* ===== Tablet ===== */
 @media (max-width: 900px) {
-    .chua-map {
+    .chua-gallery {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-areas:
-            "courtyard courtyard"
-            "tuvi battu"
-            "xemngay vanhomnay"
-            "duyenso xinque"
-            "tuvan tuvan";
-    }
-
-    .chua-courtyard {
-        padding: 0.25rem;
-    }
-
-    .chua-yard-svg {
-        max-width: 200px;
     }
 }
 
@@ -524,26 +486,41 @@
         padding: 1.2rem 0.9rem;
     }
 
-    .chua-map {
+    .chua-atlas {
+        padding: 0.45rem;
+    }
+
+    .chua-atlas-frame {
+        border-radius: 10px;
+    }
+
+    .chua-pin {
+        width: 36px;
+        height: 36px;
+    }
+
+    .chua-pin-dot {
+        width: 14px;
+        height: 14px;
+    }
+
+    .chua-pin-tip {
+        min-width: 84px;
+        max-width: 128px;
+        padding: 0.3rem 0.5rem;
+    }
+
+    .chua-pin-name {
+        font-size: 0.7rem;
+    }
+
+    .chua-pin-teacher {
+        font-size: 0.62rem;
+    }
+
+    .chua-gallery {
         grid-template-columns: minmax(0, 1fr);
-        grid-template-areas:
-            "courtyard"
-            "tuvi"
-            "battu"
-            "xemngay"
-            "vanhomnay"
-            "duyenso"
-            "xinque"
-            "tuvan";
         gap: 0.85rem;
-    }
-
-    .chua-courtyard {
-        min-height: 170px;
-    }
-
-    .chua-yard-svg {
-        max-width: 175px;
     }
 
     .chua-quick {
@@ -564,13 +541,5 @@
         flex: 1 1 100%;
         margin-left: 0;
         text-align: center;
-    }
-
-    .chua-spaces {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .chua-space {
-        padding: 0.9rem;
     }
 }

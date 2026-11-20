@@ -2,238 +2,206 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './ChuaPage.css';
 
-const STALLS = [
-    {
-        id: 'tuvi',
-        title: 'Điện Tử Vi',
-        path: '/tuvi',
-        short: 'Tử Vi',
-        desc: 'An sao 12 cung theo ngày âm và giờ sinh.',
-        npcs: [
-            {
-                initial: 'T',
-                name: 'Thầy Tinh Tú',
-                line: 'Ta coi sao, đoán vận — mời con vào điện.'
-            }
-        ]
-    },
-    {
-        id: 'battu',
-        title: 'Điện Bát Tự',
-        path: '/',
-        short: 'Bát Tự',
-        desc: 'Nhập ngày giờ sinh để xem lá số Tứ Trụ.',
-        npcs: [
-            {
-                initial: 'C',
-                name: 'Thầy Can Chi',
-                line: 'Bát Tự là gốc — đưa ngày giờ đây, ta lập lá số.'
-            }
-        ]
-    },
-    {
-        id: 'xemngay',
-        title: 'Quầy Xem Ngày',
-        path: '/xemngay',
-        short: 'Xem Ngày',
-        desc: 'Chọn ngày tốt cho việc lớn, việc nhỏ.',
-        npcs: [
-            {
-                initial: 'Đ',
-                name: 'Thầy Hoàng Đạo',
-                line: 'Ngày nào nên làm, ngày nào nên hoãn — ta xem cho.'
-            }
-        ]
-    },
-    {
-        id: 'vanhomnay',
-        title: 'Quầy Vận Hôm Nay',
-        path: '/van-hom-nay',
-        short: 'Vận Hôm Nay',
-        desc: 'Xem vận may, việc nên và nên tránh trong ngày.',
-        npcs: [
-            {
-                initial: 'V',
-                name: 'Thầy Thời Vận',
-                line: 'Hôm nay thế nào, ta nói gọn một câu.'
-            }
-        ]
-    },
-    {
-        id: 'duyenso',
-        title: 'Quầy Tình Duyên',
-        path: '/duyenso',
-        short: 'Tình Duyên',
-        desc: 'So duyên hai người, xem hợp hay không hợp.',
-        npcs: [
-            {
-                initial: 'D',
-                name: 'Thầy Duyên Khởi',
-                line: 'Duyên đến hay chưa, cứ đưa hai lá số ta xem.'
-            }
-        ]
-    },
-    {
-        id: 'xinque',
-        title: 'Quầy Xin Quẻ',
-        path: '/xinque',
-        short: 'Xin Quẻ',
-        desc: 'Gieo quẻ, hỏi một việc đang băn khoăn.',
-        npcs: [
-            {
-                initial: 'Q',
-                name: 'Thầy Quẻ Cát',
-                line: 'Lòng thành thì quẻ ứng — mời con gieo một quẻ.'
-            }
-        ]
-    },
-    {
-        id: 'tuvan',
-        title: 'Phòng Hỏi Thầy',
-        path: '/tuvan',
-        short: 'Hỏi Thầy',
-        desc: 'Đặt câu hỏi riêng, được hai thầy luận giải.',
-        npcs: [
-            {
-                initial: 'H',
-                name: 'Thầy Huyền Cơ Bát Tự',
-                line: '35 năm kinh nghiệm, nhân văn, uyên bác.'
-            },
-            {
-                initial: 'M',
-                name: 'Thầy Mệnh Mèo GenZ',
-                line: 'Hài hước, cực viral, chuyên gia pressing vận mệnh.'
-            }
-        ]
-    }
-];
-
-const SPACES = [
+const PLACES = [
     {
         id: 'chanhdien',
         title: 'Chánh Điện',
         path: '/chanh-dien',
         short: 'Chánh Điện',
-        icon: '🛕',
-        desc: 'Không gian Phật, nhang khói và nhạc thiền — lắng lòng trước khi hỏi.'
+        teacher: 'Không gian Phật',
+        image: '/images/chua/chanh-dien.jpg',
+        desc: 'Không gian Phật, nhang khói và nhạc thiền — lắng lòng trước khi hỏi.',
+        accent: '#e2c044',
+        map: { x: 50, y: 44 }
     },
     {
         id: 'vuontinhtam',
         title: 'Vườn Tịnh Tâm',
         path: '/vuon-tinh-tam',
         short: 'Vườn Tịnh Tâm',
-        icon: '🍃',
-        desc: 'Suối, vườn đá, cây lá và khung video nhạc piano của Leo.'
+        teacher: 'Không gian tĩnh tâm',
+        image: '/images/chua/vuon-tinh-tam.jpg',
+        desc: 'Suối, vườn đá, cây lá và khung video nhạc piano của Leo.',
+        accent: '#6ec8a0',
+        map: { x: 50, y: 13 }
+    },
+    {
+        id: 'tuvi',
+        title: 'Điện Tử Vi',
+        path: '/tuvi',
+        short: 'Tử Vi',
+        teacher: 'Thầy Tinh Tú',
+        image: '/images/chua/dien-tu-vi.jpg',
+        desc: 'An sao 12 cung theo ngày âm và giờ sinh.',
+        accent: '#c084fc',
+        map: { x: 14, y: 50 }
+    },
+    {
+        id: 'battu',
+        title: 'Điện Bát Tự',
+        path: '/',
+        short: 'Bát Tự',
+        teacher: 'Thầy Can Chi',
+        image: '/images/chua/dien-bat-tu.jpg',
+        desc: 'Nhập ngày giờ sinh để xem lá số Tứ Trụ.',
+        accent: '#fbbf24',
+        map: { x: 87, y: 50 }
+    },
+    {
+        id: 'xemngay',
+        title: 'Quầy Xem Ngày',
+        path: '/xemngay',
+        short: 'Xem Ngày',
+        teacher: 'Thầy Hoàng Đạo',
+        image: '/images/chua/quay-xem-ngay.jpg',
+        desc: 'Chọn ngày tốt cho việc lớn, việc nhỏ.',
+        accent: '#4ade80',
+        map: { x: 31, y: 67 }
+    },
+    {
+        id: 'vanhomnay',
+        title: 'Quầy Vận Hôm Nay',
+        path: '/van-hom-nay',
+        short: 'Vận Hôm Nay',
+        teacher: 'Thầy Thời Vận',
+        image: '/images/chua/quay-van-hom-nay.jpg',
+        desc: 'Xem vận may, việc nên và nên tránh trong ngày.',
+        accent: '#fb923c',
+        map: { x: 36, y: 84 }
+    },
+    {
+        id: 'duyenso',
+        title: 'Quầy Tình Duyên',
+        path: '/duyenso',
+        short: 'Tình Duyên',
+        teacher: 'Thầy Duyên Khởi',
+        image: '/images/chua/quay-tinh-duyen.jpg',
+        desc: 'So duyên hai người, xem hợp hay không hợp.',
+        accent: '#f472b6',
+        map: { x: 64, y: 84 }
+    },
+    {
+        id: 'xinque',
+        title: 'Quầy Xin Quẻ',
+        path: '/xinque',
+        short: 'Xin Quẻ',
+        teacher: 'Thầy Quẻ Cát',
+        image: '/images/chua/quay-xin-que.jpg',
+        desc: 'Gieo quẻ, hỏi một việc đang băn khoăn.',
+        accent: '#60a5fa',
+        map: { x: 71, y: 66 }
+    },
+    {
+        id: 'tuvan',
+        title: 'Phòng Hỏi Thầy',
+        path: '/tuvan',
+        short: 'Hỏi Thầy',
+        teacher: 'Thầy Huyền Cơ Bát Tự + Thầy Mệnh Mèo GenZ',
+        image: '/images/chua/phong-hoi-thay.jpg',
+        desc: 'Đặt câu hỏi riêng, được hai thầy luận giải.',
+        accent: '#e2c044',
+        map: { x: 50, y: 89 }
     }
 ];
 
-const CourtyardMark = () => (
-    <svg
-        className="chua-yard-svg"
-        viewBox="0 0 220 220"
-        role="img"
-        aria-label="Sân chùa ở giữa bản đồ"
-    >
-        <circle className="chua-yard-halo" cx="110" cy="110" r="104" />
-        <circle className="chua-yard-ring" cx="110" cy="110" r="88" />
-        <path className="chua-yard-line" d="M34 164 H186" />
-        <path className="chua-yard-line" d="M52 178 H168" />
-        <path className="chua-yard-roof" d="M36 96 L110 56 L184 96" />
-        <path className="chua-yard-eave" d="M46 94 Q110 112 174 94" />
-        <path className="chua-yard-body" d="M70 120 V96 H150 V120" />
-        <path className="chua-yard-body" d="M70 120 H150 V160 H70 Z" />
-        <path className="chua-yard-door" d="M98 160 V130 Q110 120 122 130 V160" />
-        <path className="chua-yard-line" d="M70 140 H92 M128 140 H150" />
-        <circle className="chua-yard-lamp" cx="62" cy="150" r="5" />
-        <circle className="chua-yard-lamp" cx="158" cy="150" r="5" />
-        <path className="chua-yard-line" d="M62 145 V130 M158 145 V130" />
-        <text className="chua-yard-text" x="110" y="202" textAnchor="middle">
-            SÂN CHÙA
-        </text>
-    </svg>
-);
-
 const ChuaPage = () => {
     return (
-        <div className="chua-page fade-in">
-            <header className="chua-hero glass-card">
-                <span className="chua-kicker">RongLeo • Bản đồ chùa</span>
-                <h1 className="chua-title">Vào Chùa Xem</h1>
-                <p className="chua-subtitle">
-                    Đi một vòng sân chùa, ghé từng quầy — mỗi quầy có một thầy phụ trách.
+        <>
+            <div className="chua-scene-bg" aria-hidden="true">
+                <video
+                    className="chua-scene-video"
+                    src="/video/cong-chua.mp4"
+                    poster="/images/chua/nen-cong-chua.jpg"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    tabIndex={-1}
+                />
+                <div className="chua-scene-veil" />
+            </div>
+
+            <div className="chua-page fade-in">
+                <header className="chua-hero glass-card">
+                    <span className="chua-kicker">RongLeo • Bản đồ chùa</span>
+                    <h1 className="chua-title">Vào Chùa Xem</h1>
+                    <p className="chua-subtitle">
+                        Đi một vòng sân chùa, ghé từng quầy — mỗi quầy có một thầy phụ trách.
+                    </p>
+                </header>
+
+                <nav className="chua-quick" aria-label="Xem nhanh">
+                    <span className="chua-quick-label">Xem nhanh</span>
+                    <div className="chua-quick-links">
+                        {PLACES.map(place => (
+                            <Link key={place.id} to={place.path} className="chua-quick-link">
+                                {place.short}
+                            </Link>
+                        ))}
+                    </div>
+                </nav>
+
+                <section className="chua-atlas glass-card" aria-label="Bản đồ chùa nhìn từ trên cao">
+                    <div className="chua-atlas-frame">
+                        <img
+                            className="chua-atlas-image"
+                            src="/images/chua/ban-do-chua.jpg"
+                            alt="Toàn cảnh chùa nhìn từ trên cao, chánh điện ở giữa, các điện và quầy xung quanh"
+                        />
+                        <div className="chua-atlas-shade" aria-hidden="true" />
+
+                        {PLACES.map(place => (
+                            <Link
+                                key={place.id}
+                                to={place.path}
+                                className={`chua-pin chua-pin--${place.id}`}
+                                style={{ left: `${place.map.x}%`, top: `${place.map.y}%`, '--pin-accent': place.accent }}
+                                aria-label={`${place.title} — ${place.teacher}`}
+                            >
+                                <span className="chua-pin-dot" aria-hidden="true" />
+                                <span className="chua-pin-tip">
+                                    <span className="chua-pin-name">{place.title}</span>
+                                    <span className="chua-pin-teacher">{place.teacher}</span>
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                    <p className="chua-atlas-caption">
+                        Bấm vào điểm đánh dấu để đi tới khu đó — nhìn từ trên cao thấy toàn cảnh chùa.
+                    </p>
+                </section>
+
+                <section className="chua-gallery" aria-label="Các khu trong chùa">
+                    {PLACES.map(place => (
+                        <Link
+                            key={place.id}
+                            to={place.path}
+                            className="chua-card"
+                            style={{ '--card-accent': place.accent }}
+                        >
+                            <span className="chua-card-media">
+                                <img
+                                    src={place.image}
+                                    alt={`Không gian ${place.title}`}
+                                    loading="lazy"
+                                />
+                            </span>
+                            <span className="chua-card-body">
+                                <span className="chua-card-title">{place.title}</span>
+                                <span className="chua-card-teacher">{place.teacher}</span>
+                                <span className="chua-card-desc">{place.desc}</span>
+                                <span className="chua-card-cta">Vào →</span>
+                            </span>
+                        </Link>
+                    ))}
+                </section>
+
+                <p className="chua-login-note">
+                    Đăng nhập ở góc trên để lưu hồ sơ — lần sau vào quầy không phải gõ lại ngày giờ sinh.
                 </p>
-            </header>
-
-            <div className="chua-spaces">
-                {SPACES.map(space => (
-                    <Link key={space.id} to={space.path} className={`chua-space chua-space--${space.id}`}>
-                        <span className="chua-space-icon" aria-hidden="true">{space.icon}</span>
-                        <span className="chua-space-body">
-                            <span className="chua-space-title">{space.title}</span>
-                            <span className="chua-space-desc">{space.desc}</span>
-                        </span>
-                        <span className="chua-space-cta">Vào →</span>
-                    </Link>
-                ))}
             </div>
-
-            <nav className="chua-quick" aria-label="Xem nhanh">
-                <span className="chua-quick-label">Xem nhanh</span>
-                <div className="chua-quick-links">
-                    {SPACES.map(space => (
-                        <Link key={space.id} to={space.path} className="chua-quick-link">
-                            {space.short}
-                        </Link>
-                    ))}
-                    {STALLS.map(stall => (
-                        <Link key={stall.id} to={stall.path} className="chua-quick-link">
-                            {stall.short}
-                        </Link>
-                    ))}
-                </div>
-            </nav>
-
-            <div className="chua-map">
-                <div className="chua-courtyard" aria-hidden="true">
-                    <CourtyardMark />
-                </div>
-
-                {STALLS.map(stall => (
-                    <article
-                        key={stall.id}
-                        className={`chua-stall glass-card chua-stall--${stall.id}`}
-                    >
-                        <div className="chua-stall-head">
-                            <h2 className="chua-stall-title">{stall.title}</h2>
-                            <span className="chua-stall-dot" aria-hidden="true" />
-                        </div>
-                        <p className="chua-stall-desc">{stall.desc}</p>
-
-                        <div className="chua-npc-list">
-                            {stall.npcs.map(npc => (
-                                <div className="chua-npc" key={npc.name}>
-                                    <span className="chua-npc-avatar" aria-hidden="true">
-                                        {npc.initial}
-                                    </span>
-                                    <div className="chua-npc-body">
-                                        <span className="chua-npc-name">{npc.name}</span>
-                                        <span className="chua-npc-line">{npc.line}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <Link to={stall.path} className="chua-stall-btn">
-                            Vào xem
-                        </Link>
-                    </article>
-                ))}
-            </div>
-
-            <p className="chua-login-note">
-                Đăng nhập ở góc trên để lưu hồ sơ — lần sau vào quầy không phải gõ lại ngày giờ sinh.
-            </p>
-        </div>
+        </>
     );
 };
 
