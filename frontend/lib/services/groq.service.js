@@ -224,6 +224,16 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
             '\n- Cường độ Nhật Chủ: ' + cuongDo;
     }
 
+    const tuVi = baziContext.tu_vi || null;
+    let tuViInfo = '';
+    if (tuVi && tuVi.summary) {
+        tuViInfo = '\n## LÁ SỐ TỬ VI (AN SAO TỰ ĐỘNG — ĐÃ KIỂM CHỨNG)\n' +
+            tuVi.summary + '\n' +
+            'Lưu ý: Phần lá số Tử vi trên là kết quả an sao tự động đã kiểm chứng (32/32 ca đóng băng + 11/11 ca bổ sung). Hãy dùng làm căn cứ, KHÔNG tự bịa lại lá số.\n';
+    } else if (tuVi && tuVi.note) {
+        tuViInfo = '\n## LÁ SỐ TỬ VI\n' + tuVi.note + '\n';
+    }
+
     let partnerInfo = '';
     if (partnerContext) {
         const g = partnerContext.gans || [];
@@ -245,13 +255,14 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
         'Bát Tự tóm tắt: ' + pillarsSimple + '\n' +
         pillarsDetail + '\n' +
         'Phân tích Cách Cục:' + godInfo + '\n' +
-        'Vận hạn hiện tại:' + luckInfo + '\n\n' +
+        'Vận hạn hiện tại:' + luckInfo + '\n' +
+        tuViInfo + '\n' +
         '---\n## CÂU HỎI\n"' + questionText + '"\n\n' +
         'Hãy trả lời theo phong cách ' + (personaId === 'menh_meo' ? 'Thầy Mệnh Mèo GenZ' : 'Thầy Huyền Cơ Bát Tự') + '.\n' +
         'Đưa ra 3-5 đoạn ngắn gọn, súc tích. CUỐI CÙNG thêm phần [FOLLOW_UP] với 3-5 câu hỏi gợi mở.';
 }
 
-module.exports = {
+const groqService = {
     generateAnswer: async function(baziContext, luckCyclesData, questionText, personaId, partnerContext) {
         personaId = personaId || 'huyen_co';
         const systemPrompt = buildSystemPrompt(personaId);
@@ -332,3 +343,7 @@ module.exports = {
         }
     }
 };
+
+groqService.buildUserPrompt = buildUserPrompt;
+
+module.exports = groqService;

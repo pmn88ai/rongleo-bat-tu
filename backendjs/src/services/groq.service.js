@@ -231,6 +231,21 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
 - Cường độ Nhật Chủ: ${cb.nhan_dinh?.cuong_do || 'Chưa xác định'}`;
     }
 
+    const tuVi = baziContext.tu_vi || null;
+    let tuViInfo = '';
+    if (tuVi && tuVi.summary) {
+        tuViInfo = `
+## LÁ SỐ TỬ VI (AN SAO TỰ ĐỘNG — ĐÃ KIỂM CHỨNG)
+${tuVi.summary}
+Lưu ý: Phần lá số Tử vi trên là kết quả an sao tự động đã kiểm chứng (32/32 ca đóng băng + 11/11 ca bổ sung). Hãy dùng làm căn cứ, KHÔNG tự bịa lại lá số.
+`;
+    } else if (tuVi && tuVi.note) {
+        tuViInfo = `
+## LÁ SỐ TỬ VI
+${tuVi.note}
+`;
+    }
+
     return `
 ## THỜI GIAN HIỆN TẠI
 ${currentDateTime} (Năm ${currentYear})
@@ -255,7 +270,7 @@ ${pillarsDetailedInfo}
 
 Phân tích Cách Cục: ${godInfo}
 Vận hạn hiện tại: ${luckInfo}
-
+${tuViInfo}
 ---
 ## CÂU HỎI
 "${questionText}"
@@ -358,5 +373,7 @@ Trả về JSON hợp lệ duy nhất, không thêm bất kỳ văn bản nào n
         }
     }
 };
+
+groqService.buildUserPrompt = buildUserPrompt;
 
 module.exports = groqService;

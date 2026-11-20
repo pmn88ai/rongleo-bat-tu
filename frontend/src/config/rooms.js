@@ -110,17 +110,6 @@ export const ROOMS = [
         desc: 'Gieo quẻ, hỏi một việc đang băn khoăn.'
     },
     {
-        id: 'tuvi',
-        path: '/tuvi',
-        label: 'TỬ VI',
-        title: 'Điện Tử Vi',
-        icon: '🔮',
-        image: '/images/chua/dien-tu-vi.jpg',
-        accent: '#a78bfa',
-        glow: 'rgba(167, 139, 250, 0.28)',
-        desc: 'An sao 12 cung theo ngày âm và giờ sinh.'
-    },
-    {
         id: 'tuviphuongtay',
         path: '/tuviphuongtay',
         label: 'TỬ VI TÂY',

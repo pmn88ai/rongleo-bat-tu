@@ -203,12 +203,6 @@ const AppContent = () => {
           </Link>
         )}
 
-        {!isTempleRoute && location.pathname !== '/tuvi' && (
-          <Link to="/tuvi" className="tuv-fab" title="Tử vi — an sao">
-            🔮 TỬ VI
-          </Link>
-        )}
-
         <div
           className={`room-scope ${room ? 'room-scope--active' : ''}`}
           style={room ? { '--accent-gold': room.accent, '--accent-gold-glow': room.glow } : undefined}

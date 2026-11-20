@@ -9,6 +9,7 @@ const openRouterService = require('../services/groq.service');
 const dbService = require('../services/database.service');
 const { formatOutput } = require('../bazi/output');
 const { calculateDaiVan } = require('../bazi/dayun');
+const { buildTuViPromptContext } = require('../bazi/tu_vi_summary');
 const authRoutes = require('./auth.routes');
 
 // NO-AUTH: lấy userId từ x-user-id header, fallback "anonymous"
@@ -151,10 +152,20 @@ router.post('/ask', aiLimiter, async (req, res) => {
         if (useAI) {
             const fullOutput = formatOutput(ctx);
             const daiVanData = calculateDaiVan(ctx);
+            const tuViContext = buildTuViPromptContext({
+                year: parseInt(year),
+                month: parseInt(month),
+                day: parseInt(day),
+                hour,
+                minute,
+                gender,
+                calendar
+            });
             const baziContext = {
                 thong_tin_co_ban: fullOutput.thong_tin_co_ban,
                 chi_tiet_tru: fullOutput.chi_tiet_tru,
-                phan_tich: fullOutput.phan_tich
+                phan_tich: fullOutput.phan_tich,
+                tu_vi: tuViContext
             };
             const luckCyclesData = { dai_van: daiVanData };
             answerData = await openRouterService.generateAnswer(

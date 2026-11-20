@@ -29,17 +29,6 @@ const PLACES = [
         map: { x: 50, y: 13 }
     },
     {
-        id: 'tuvi',
-        title: 'Điện Tử Vi',
-        path: '/tuvi',
-        short: 'Tử Vi',
-        teacher: 'Thầy Tinh Tú',
-        image: '/images/chua/dien-tu-vi.jpg',
-        desc: 'An sao 12 cung theo ngày âm và giờ sinh.',
-        accent: '#c084fc',
-        map: { x: 14, y: 50 }
-    },
-    {
         id: 'battu',
         title: 'Điện Bát Tự',
         path: '/',

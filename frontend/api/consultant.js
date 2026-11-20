@@ -4,6 +4,7 @@ const { withHandler, parseIntParam } = require('./_helpers');
 const BaZiCalculator = require('../lib/bazi/calculator');
 const { formatOutput } = require('../lib/bazi/output');
 const { calculateDaiVan } = require('../lib/bazi/dayun');
+const { buildTuViPromptContext } = require('../lib/bazi/tu_vi_summary');
 const { solveQuestion } = require('../lib/bazi/questions/engine');
 const { THEMES, QUESTIONS } = require('../lib/bazi/questions/data');
 const groqService = require('../lib/services/groq.service');
@@ -68,10 +69,20 @@ async function handleAsk(req, res) {
     if (useAI) {
         const fullOutput = formatOutput(ctx);
         const daiVanData = calculateDaiVan(ctx);
+        const tuViContext = buildTuViPromptContext({
+            year:     parseIntParam(year),
+            month:    parseIntParam(month),
+            day:      parseIntParam(day),
+            hour:     hour,
+            minute:   minute,
+            gender:   gender,
+            calendar: calendar
+        });
         const baziContext = {
             thong_tin_co_ban: fullOutput.thong_tin_co_ban,
             chi_tiet_tru:     fullOutput.chi_tiet_tru,
-            phan_tich:        fullOutput.phan_tich
+            phan_tich:        fullOutput.phan_tich,
+            tu_vi:            tuViContext
         };
         const aiResult = await groqService.generateAnswer(
             baziContext,
