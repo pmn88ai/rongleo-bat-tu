@@ -1,19 +1,33 @@
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import AccountButton from './AccountButton';
+import { TEMPLE_LINKS, ROOMS } from '../config/rooms';
 
-const tabs = [
-    { id: 'chua', path: '/chua', label: 'VÀO CHÙA', icon: '🏮' },
-    { id: 'chanhdien', path: '/chanh-dien', label: 'CHÁNH ĐIỆN', icon: '🛕' },
-    { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', icon: '🍃' },
-    { id: 'chart', path: '/laso', label: 'LÁ SỐ', icon: '🎨' },
-    { id: 'matrix', path: '/phantich', label: 'PHÂN TÍCH', icon: '⚙️' },
-    { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },
-    { id: 'matching', path: '/duyenso', label: 'DUYÊN SỐ', icon: '🎎' },
-    { id: 'que', path: '/xinque', label: 'GIEO QUẺ', icon: '🎴' },
-    { id: 'consultant', path: '/tuvan', label: 'TƯ VẤN', icon: '💬' },
-    { id: 'wisdom', path: '/dientich', label: 'ĐIỂN TỊCH', icon: '📜' },
-    { id: 'western', path: '/tuviphuongtay', label: 'TỬ VI TÂY', icon: '⭐' },
+// Hai nhóm điều hướng tách bạch: đi dạo chùa và tra cứu.
+const navGroups = [
+    {
+        id: 'temple',
+        label: 'Đi dạo chùa',
+        items: TEMPLE_LINKS.map(link => ({
+            id: link.id,
+            path: link.path,
+            label: link.label,
+            icon: link.icon
+        }))
+    },
+    {
+        id: 'lookup',
+        label: 'Tra cứu',
+        items: [
+            { id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ & TRA CỨU', icon: '🧭' },
+            ...ROOMS.map(room => ({
+                id: room.id,
+                path: room.path,
+                label: room.label,
+                icon: room.icon
+            }))
+        ]
+    }
 ];
 
 const LAND_BTN_STYLE = {
@@ -84,16 +98,23 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
                             </div>
                         </div>
 
-                        <nav className="main-nav-tabs glass-card">
-                            {tabs.map(tab => (
-                                <NavLink
-                                    key={tab.id}
-                                    to={{ pathname: tab.path, search: location.search }}
-                                    className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
-                                >
-                                    <span className="tab-icon">{tab.icon}</span>
-                                    <span className="tab-label">{tab.label}</span>
-                                </NavLink>
+                        <nav className="main-nav-groups glass-card" aria-label="Điều hướng chính">
+                            {navGroups.map(group => (
+                                <div key={group.id} className="nav-group">
+                                    <span className="nav-group-label">{group.label}</span>
+                                    <div className="nav-group-items">
+                                        {group.items.map(tab => (
+                                            <NavLink
+                                                key={tab.id}
+                                                to={tab.path}
+                                                className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
+                                            >
+                                                <span className="tab-icon">{tab.icon}</span>
+                                                <span className="tab-label">{tab.label}</span>
+                                            </NavLink>
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
                         </nav>
                     </>

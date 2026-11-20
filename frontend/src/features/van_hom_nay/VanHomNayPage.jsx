@@ -1,6 +1,7 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from '../Homepage/DatePicker';
 import VanHomNayShareCard from './VanHomNayShareCard';
+import { useMenhProfile } from '../../context/MenhProfileContext';
 import './VanHomNayPage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -34,20 +35,34 @@ const formatDate = ({ day, month, year }) => {
 };
 
 const VanHomNayPage = () => {
-    const [form, setForm] = useState({
-        year: 1990,
-        month: 6,
-        day: 15,
-        hour: 10,
-        gender: 'Nam',
+    const { profile } = useMenhProfile();
+    const [form, setForm] = useState(() => ({
+        year: profile?.year ?? 1990,
+        month: profile?.month ?? 6,
+        day: profile?.day ?? 15,
+        hour: profile?.hour ?? 10,
+        gender: profile?.gender || 'Nam',
         khongRoGio: false
-    });
+    }));
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [sharing, setSharing] = useState(false);
     const [error, setError] = useState(null);
     const shareCardRef = useRef(null);
+
+    // Hồ sơ mệnh là nguồn chung: tự điền khi có hồ sơ, vẫn cho phép sửa riêng.
+    useEffect(() => {
+        if (!profile || !profile.year) return;
+        setForm(prev => ({
+            ...prev,
+            year: profile.year,
+            month: profile.month,
+            day: profile.day,
+            hour: profile.hour ?? prev.hour,
+            gender: profile.gender || prev.gender
+        }));
+    }, [profile]);
 
     const handleDateChange = useCallback((date) => {
         setForm(prev => ({ ...prev, year: date.year, month: date.month, day: date.day }));

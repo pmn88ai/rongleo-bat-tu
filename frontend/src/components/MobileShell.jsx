@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import AccountButton from './AccountButton';
+import { TEMPLE_LINKS, ROOMS } from '../config/rooms';
 
-// Header navigation items
-const headerTabs = [
-  { id: 'chanhdien', path: '/chanh-dien', label: 'CHÁNH ĐIỆN', icon: '🛕' },
-  { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', icon: '🍃' },
-  { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },
-  { id: 'matching', path: '/duyenso', label: 'DUYÊN SỐ', icon: '🎎' },
-  { id: 'cycles', path: '/vanhan', label: 'VẬN HẠN', icon: '📈' },
-  { id: 'western', path: '/tuviphuongtay', label: 'TỬ VI TÂY', icon: '⭐' },
+// Hai nhóm điều hướng tách bạch trên header: đi dạo chùa và tra cứu.
+const headerGroups = [
+  {
+    id: 'temple',
+    label: 'Đi dạo chùa',
+    items: TEMPLE_LINKS.map(link => ({
+      id: link.id,
+      path: link.path,
+      label: link.label,
+      icon: link.icon
+    }))
+  },
+  {
+    id: 'lookup',
+    label: 'Tra cứu',
+    items: [
+      { id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ', icon: '🧭' },
+      ...ROOMS.map(room => ({
+        id: room.id,
+        path: room.path,
+        label: room.label,
+        icon: room.icon
+      }))
+    ]
+  }
 ];
 
 // Status Bar - chỉ hiển thị thời gian
@@ -73,22 +91,27 @@ const BrandBar = () => {
   );
 };
 
-// Header Navigation Component - Simplified
+// Header Navigation Component - hai nhóm tách bạch
 const HeaderNav = () => {
-  const location = useLocation();
-
   return (
     <header className="mobile-header">
-      <nav className="header-nav">
-        {headerTabs.map(tab => (
-          <NavLink
-            key={tab.id}
-            to={{ pathname: tab.path, search: location.search }}
-            className={({ isActive }) => `header-nav-item ${isActive ? 'active' : ''}`}
-          >
-            <span className="nav-icon">{tab.icon}</span>
-            <span className="nav-label">{tab.label}</span>
-          </NavLink>
+      <nav className="header-nav header-nav-groups" aria-label="Điều hướng chính">
+        {headerGroups.map(group => (
+          <div key={group.id} className="header-nav-group">
+            <span className="header-nav-group-label">{group.label}</span>
+            <div className="header-nav-group-items">
+              {group.items.map(tab => (
+                <NavLink
+                  key={tab.id}
+                  to={tab.path}
+                  className={({ isActive }) => `header-nav-item ${isActive ? 'active' : ''}`}
+                >
+                  <span className="nav-icon">{tab.icon}</span>
+                  <span className="nav-label">{tab.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
     </header>
@@ -129,7 +152,7 @@ const BottomNav = ({ onClearData }) => {
         {leftTabs.map(tab => (
           <NavLink
             key={tab.id}
-            to={{ pathname: tab.path, search: location.search }}
+            to={tab.path}
             className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
           >
             <span className="nav-icon">{tab.icon}</span>
@@ -140,7 +163,7 @@ const BottomNav = ({ onClearData }) => {
 
       {/* Center Floating Button */}
       <NavLink
-        to={{ pathname: centerTab.path, search: location.search }}
+        to={centerTab.path}
         className={({ isActive }) => `bottom-nav-center ${isActive ? 'active' : ''}`}
       >
         <span className="center-icon">{centerTab.icon}</span>
@@ -162,7 +185,7 @@ const BottomNav = ({ onClearData }) => {
           ) : (
             <NavLink
               key={tab.id}
-              to={{ pathname: tab.path, search: location.search }}
+              to={tab.path}
               className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
             >
               <span className="nav-icon">{tab.icon}</span>

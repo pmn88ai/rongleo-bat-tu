@@ -12889,3 +12889,456 @@ select.dp-year-select {
     font-size: 0.8rem;
   }
 }
+
+/* ============================================================
+   Đường vào 2 luồng (20/11/2026)
+   - Trang chủ 2 cửa
+   - Hồ sơ mệnh dùng chung
+   - Mỗi phòng tra cứu một ảnh nền + màu nhấn riêng
+   - Nav tách 2 nhóm: Đi dạo chùa / Tra cứu
+   ============================================================ */
+
+/* --- Nền riêng từng phòng --- */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.4) contrast(1.05) saturate(1.1);
+  pointer-events: none;
+}
+
+.room-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 0%, var(--room-accent, #e2c044) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(6, 6, 10, 0.55) 0%, rgba(6, 6, 10, 0.92) 100%);
+  opacity: 0.35;
+}
+
+.room-scope {
+  position: relative;
+}
+
+.room-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 1.25rem;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.4px;
+  color: var(--room-accent, #e2c044);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid color-mix(in srgb, var(--room-accent, #e2c044) 45%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--room-accent, #e2c044) 22%, transparent);
+  width: fit-content;
+}
+
+.room-ribbon-icon { font-size: 1rem; }
+.room-ribbon-name { font-weight: 800; text-transform: uppercase; }
+.room-ribbon-sep { opacity: 0.6; }
+.room-ribbon-text { color: var(--text-secondary, #cbd5e1); }
+
+.room-scope--active .glass-card:hover {
+  border-color: color-mix(in srgb, var(--room-accent, #e2c044) 45%, transparent);
+}
+
+/* --- Trang chủ: 2 cửa --- */
+.home-doors {
+  max-width: 1100px;
+  margin: 3.5rem auto 4rem;
+  padding: 0 1rem;
+}
+
+.home-doors-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.home-doors-kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.home-doors-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  margin: 0;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #fef3c7, var(--accent-gold), #b8960a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-doors-subtitle {
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+}
+
+.home-doors-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.home-door {
+  position: relative;
+  display: flex;
+  min-height: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  isolation: isolate;
+}
+
+.home-door:hover {
+  transform: translateY(-6px);
+  border-color: var(--door-accent, var(--accent-gold));
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55);
+}
+
+.home-door--temple { --door-accent: #f59e0b; }
+.home-door--lookup { --door-accent: #38bdf8; }
+
+.home-door-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+.home-door:hover .home-door-media { transform: scale(1.06); }
+
+.home-door--temple .home-door-media {
+  background-image: url('/images/chua/nen-cong-chua.jpg');
+}
+
+.home-door--lookup .home-door-media {
+  background-image: url('/images/chua/dien-bat-tu.jpg');
+}
+
+.home-door::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(8, 8, 12, 0.25) 0%, rgba(8, 8, 12, 0.9) 78%);
+}
+
+.home-door-body {
+  margin-top: auto;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #f8fafc;
+  text-align: left;
+}
+
+.home-door-step {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--door-accent);
+  border: 1px solid var(--door-accent);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.home-door-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.home-door-desc {
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.home-door-cta {
+  margin-top: 0.5rem;
+  font-weight: 800;
+  color: var(--door-accent);
+  letter-spacing: 0.5px;
+}
+
+.home-doors-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 1.75rem;
+}
+
+/* --- Trang Tra cứu --- */
+.tra-cuu-page {
+  max-width: 1180px;
+  margin: 2.5rem auto 4rem;
+  padding: 0 1rem;
+}
+
+.tra-cuu-header {
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tra-cuu-title {
+  margin: 0 0 0.5rem;
+  color: var(--accent-gold);
+  letter-spacing: 1px;
+}
+
+.tra-cuu-subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.tra-cuu-edit-link {
+  color: var(--accent-gold);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.tra-cuu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.tra-cuu-card {
+  position: relative;
+  display: flex;
+  min-height: 210px;
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  isolation: isolate;
+}
+
+.tra-cuu-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--card-accent);
+  box-shadow: 0 16px 40px var(--card-glow);
+}
+
+.tra-cuu-card-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.75;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.tra-cuu-card:hover .tra-cuu-card-media { transform: scale(1.06); opacity: 0.9; }
+
+.tra-cuu-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(8, 8, 12, 0.2) 0%, rgba(8, 8, 12, 0.92) 85%);
+}
+
+.tra-cuu-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-top: 3px solid var(--card-accent);
+  opacity: 0.85;
+}
+
+.tra-cuu-card-body {
+  margin-top: auto;
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: #f8fafc;
+  text-align: left;
+}
+
+.tra-cuu-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--card-accent);
+}
+
+.tra-cuu-card-icon { font-size: 1.1rem; }
+.tra-cuu-card-room { font-size: 0.9rem; font-weight: 700; }
+.tra-cuu-card-desc { font-size: 0.8rem; color: #cbd5e1; line-height: 1.45; }
+.tra-cuu-card-cta { margin-top: 0.35rem; font-weight: 800; color: var(--card-accent); font-size: 0.85rem; }
+
+.tra-cuu-temple {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+
+.tra-cuu-temple-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f59e0b;
+}
+
+.tra-cuu-temple-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tra-cuu-temple-link {
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.06);
+  transition: all 0.2s ease;
+}
+
+.tra-cuu-temple-link:hover {
+  color: #fbbf24;
+  border-color: #fbbf24;
+  background: rgba(245, 158, 11, 0.14);
+}
+
+/* --- Thông báo hồ sơ mệnh --- */
+.profile-notice {
+  max-width: 720px;
+  margin: 0 auto 1.5rem;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent-gold);
+  text-align: left;
+}
+
+/* --- Nav desktop 2 nhóm --- */
+.main-nav-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 50;
+}
+
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.nav-group-label {
+  flex: 0 0 auto;
+  writing-mode: horizontal-tb;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.nav-group:first-child .nav-group-label { color: #fbbf24; border-color: rgba(245, 158, 11, 0.35); }
+.nav-group:last-child .nav-group-label { color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); }
+
+.nav-group-items {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.nav-group-items .nav-tab-btn {
+  flex: 0 0 auto;
+  min-width: 84px;
+}
+
+/* --- Nav mobile 2 nhóm --- */
+.header-nav-groups {
+  gap: 0.6rem;
+  justify-content: flex-start !important;
+  align-items: stretch;
+}
+
+.header-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+}
+
+.header-nav-group + .header-nav-group {
+  padding-left: 0.6rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-nav-group-label {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.header-nav-group:first-child .header-nav-group-label { color: #fbbf24; }
+.header-nav-group:last-child .header-nav-group-label { color: #38bdf8; }
+
+.header-nav-group-items {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+
+@media (max-width: 767px) {
+  .home-doors { margin-top: 2.25rem; }
+  .home-doors-grid { grid-template-columns: 1fr; }
+  .home-door { min-height: 260px; }
+  .header-nav-group-label { font-size: 7px; }
+  .header-nav-group-items .header-nav-item { min-width: 52px; padding: 5px 5px; }
+  .tra-cuu-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .tra-cuu-card { min-height: 180px; }
+}

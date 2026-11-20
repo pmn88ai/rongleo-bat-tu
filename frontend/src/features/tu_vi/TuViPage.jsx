@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Solar, Lunar } from 'lunar-javascript';
+import { useMenhProfile } from '../../context/MenhProfileContext';
 import './TuViPage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -37,9 +38,38 @@ function canNamFromLunarYear(year) {
     }
 }
 
+const hourToGioChi = (hour) => {
+    const h = Number(hour);
+    if (!Number.isFinite(h)) return 'Ngọ';
+    if (h >= 23 || h < 1) return 'Tý';
+    return GIO_CHI_OPTIONS[Math.floor((h + 1) / 2)]?.value || 'Ngọ';
+};
+
+const formFromProfile = (profile) => {
+    if (!profile || !profile.year) return null;
+    try {
+        const lunar = Solar.fromYmd(profile.year, profile.month, profile.day).getLunar();
+        return {
+            ngay_am: lunar.getDay(),
+            thang_am: Math.abs(lunar.getMonth()),
+            nam_am: lunar.getYear(),
+            gio_chi: hourToGioChi(profile.hour),
+            gioi_tinh: profile.gender || 'Nam'
+        };
+    } catch {
+        return null;
+    }
+};
+
 const TuViPage = () => {
-    const [solar, setSolar] = useState({ year: 1990, month: 6, day: 15 });
-    const [form, setForm] = useState({
+    const { profile } = useMenhProfile();
+    const initialForm = formFromProfile(profile);
+    const [solar, setSolar] = useState(() => ({
+        year: profile?.year ?? 1990,
+        month: profile?.month ?? 6,
+        day: profile?.day ?? 15
+    }));
+    const [form, setForm] = useState(() => initialForm || {
         ngay_am: 23,
         thang_am: 5,
         nam_am: 1990,
@@ -51,6 +81,15 @@ const TuViPage = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
+
+    // Hồ sơ mệnh là nguồn chung: tự điền khi có hồ sơ, vẫn cho phép sửa riêng.
+    useEffect(() => {
+        const next = formFromProfile(profile);
+        if (!next || !profile?.year) return;
+        setSolar({ year: profile.year, month: profile.month, day: profile.day });
+        setForm(next);
+        setResult(null);
+    }, [profile]);
 
     const canNam = useMemo(() => canNamFromLunarYear(form.nam_am), [form.nam_am]);
 

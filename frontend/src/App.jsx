@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/common/SEO';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import './index.css';
+import HomePage from './features/Homepage/HomePage';
+import TraCuuPage from './features/Homepage/TraCuuPage';
 import BirthInput from './features/Homepage/BirthInput';
 import BaziChart from './features/BaziChart/BaziChart';
 import RelationshipRadar from './features/BaziChart/RelationshipRadar';
@@ -24,49 +26,32 @@ import TuViPage from './features/tu_vi/TuViPage';
 import ChuaPage from './features/chua/ChuaPage';
 import ChanhDienPage from './features/chua/ChanhDienPage';
 import VuonTinhTamPage from './features/chua/VuonTinhTamPage';
-import PDFExportButton from './components/PDFExportButton';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
 import MobileShell from './components/MobileShell';
 import DesktopShell from './components/DesktopShell';
 import useWindowSize from './hooks/useWindowSize';
 import { useBaziApi } from './hooks/useBaziApi';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
+import { MenhProfileProvider, useMenhProfile, profileSignature } from './context/MenhProfileContext';
 import { MusicPlayerProvider } from './context/MusicPlayerContext';
 import MusicPlayer from './components/MusicPlayer';
+import { getRoomByPath } from './config/rooms';
 
-// Input Page Component
-const InputPage = ({ onAnalyze, loading }) => {
+// Hồ sơ mệnh Page — chính là form nhập bát tự hiện tại, lưu một lần dùng chung.
+const ProfilePage = ({ onAnalyze, loading }) => {
   const navigate = useNavigate();
-  const { isAuthenticated, updateProfile } = useAuth();
+  const [searchParams] = useSearchParams();
+  const { saveProfile } = useMenhProfile();
+  const next = searchParams.get('next') || '/tra-cuu';
 
-  const handleAnalyze = async (params) => {
-    const result = await onAnalyze(params);
-    if (result) {
-      // Người đã đăng nhập: lưu hồ sơ để các quầy tự điền lần sau
-      if (isAuthenticated && params.year && params.month && params.day) {
-        updateProfile({
-          name: params.name || '',
-          baziData: {
-            year: parseInt(params.year),
-            month: parseInt(params.month),
-            day: parseInt(params.day),
-            hour: parseInt(params.hour) || 0,
-            minute: parseInt(params.minute) || 0,
-            gender: params.gender || 'Nam',
-            calendar: params.calendar || 'solar'
-          }
-        }).catch(() => {});
-      }
-      // Navigate to chart page, preserving the query params updated by useBaziApi
-      navigate({
-        pathname: '/laso',
-        search: window.location.search
-      });
-    }
+  const handleSave = async (params) => {
+    const saved = saveProfile(params);
+    if (!saved) return;
+    navigate(next, { replace: true });
   };
 
-  return <BirthInput onAnalyze={handleAnalyze} loading={loading} />;
+  return <BirthInput onAnalyze={handleSave} loading={loading} profileMode />;
 };
 
 // Chart Page Content
@@ -78,7 +63,7 @@ const ChartPage = ({ data, isMobile }) => {
       <div className="chart-actions-bar">
         <div style={{ display: 'flex', gap: '8px' }}>
           {!isMobile && (
-            <Link to={{ pathname: '/vanhan', search: window.location.search }} className="btn-vanhan-inline">
+            <Link to="/vanhan" className="btn-vanhan-inline">
               📈 Vận Hạn
             </Link>
           )}
@@ -112,50 +97,75 @@ const LoadingOverlay = () => (
 
 // Main App Component
 const AppContent = () => {
-  const { data, inputParams, loading, error, analyze, clearData } = useBaziApi();
-  const { savedProfile } = useAuth();
+  const { data, loading, error, analyze, clearData } = useBaziApi();
+  const { profile, hasProfile } = useMenhProfile();
   const { isMobile } = useWindowSize();
   const location = useLocation();
-  const navigate = useNavigate();
+  const analyzedSigRef = useRef('');
 
-  const hasSavedProfile = !!(savedProfile && savedProfile.year && savedProfile.month && savedProfile.day);
-  const effectiveUserData = inputParams || (hasSavedProfile ? savedProfile : null);
+  const profileParams = profile ? {
+    name: profile.name || '',
+    gender: profile.gender || 'Nam',
+    year: profile.year,
+    month: profile.month,
+    day: profile.day,
+    hour: profile.hour ?? 0,
+    minute: profile.minute ?? 0,
+    calendar: profile.calendar || 'solar'
+  } : null;
 
-  // If we have data and we're on home page, redirect to chart preserving params
-  // But skip if there's a pending question from suggestions
-  // Redirect to chart disabled to keep InputForm as homepage
-  /*
-  useEffect(() => {
-    const hasPendingQuestion = localStorage.getItem('pending_question');
-    if (data && (location.pathname === '/' || location.pathname === '/input') && !hasPendingQuestion) {
-      navigate({
-        pathname: '/laso',
-        search: location.search
-      }, { replace: true });
-    }
-  }, [data, location.pathname, navigate, location.search]);
-  */
-
-  const hasData = data !== null;
   const searchParams = new URLSearchParams(location.search);
-  const isRecovering = !hasData && searchParams.get('year') && searchParams.get('month') && searchParams.get('day');
+  const urlHasBirthParams = !!(searchParams.get('year') && searchParams.get('month') && searchParams.get('day'));
+  const hasData = data !== null;
+  const isRecovering = !hasData && urlHasBirthParams;
+  const needsChart = ['/laso', '/phantich', '/vanhan', '/dientich'].includes(location.pathname);
 
-  // Render content based on route
-  const renderPageContent = (PageComponent, props = {}, options = {}) => {
-    if (loading || isRecovering) {
+  // Hồ sơ mệnh là nguồn duy nhất: tự dựng lá số một lần cho các mục cần dữ liệu.
+  useEffect(() => {
+    if (!needsChart || !hasProfile || loading || urlHasBirthParams) return;
+    const sig = profileSignature(profile);
+    if (!sig) return;
+    if (hasData && sessionStorage.getItem('bazi_profile_sig') === sig) return;
+    if (analyzedSigRef.current === sig) return;
+    analyzedSigRef.current = sig;
+    analyze(profileParams, false).then((result) => {
+      if (result) {
+        try { sessionStorage.setItem('bazi_profile_sig', sig); } catch (e) { /* ignore */ }
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needsChart, hasProfile, profile, hasData, loading, urlHasBirthParams, analyze]);
+
+  const backToProfile = (path) => (
+    <Navigate to={`/ho-so-menh?next=${encodeURIComponent(path)}`} replace />
+  );
+
+  // Trang chỉ cần hồ sơ mệnh (không cần lá số đã phân tích).
+  const requireProfile = (element) => {
+    if (!hasProfile) return backToProfile(location.pathname);
+    return element;
+  };
+
+  // Trang cần lá số đã phân tích từ hồ sơ mệnh.
+  const renderDataPage = (PageComponent, props = {}) => {
+    if (!hasProfile) return backToProfile(location.pathname);
+    if (loading || isRecovering || !hasData) {
+      if (error && !hasData && !loading) {
+        return (
+          <div className="glass-card" style={{ padding: '2rem', textAlign: 'center' }}>
+            <p>⚠️ Không dựng được lá số từ hồ sơ mệnh: {error}</p>
+            <Link to="/ho-so-menh" className="premium-button small">Sửa hồ sơ mệnh</Link>
+          </div>
+        );
+      }
       return <LoadingOverlay />;
-    }
-    // Allow consultant page if there's pending question from suggestion click
-    const hasPendingQuestion = localStorage.getItem('pending_question');
-    const canUseProfile = options.allowProfile && hasSavedProfile;
-    if (!hasData && !hasPendingQuestion && !canUseProfile) {
-      return <Navigate to="/" replace />;
     }
     return <PageComponent {...props} />;
   };
 
   const Shell = isMobile ? MobileShell : DesktopShell;
   const isTempleRoute = location.pathname === '/chanh-dien' || location.pathname === '/vuon-tinh-tam';
+  const room = getRoomByPath(location.pathname);
 
   // Admin page renders standalone without Shell
   if (location.pathname.startsWith('/admin')) {
@@ -174,7 +184,15 @@ const AppContent = () => {
           title={hasData ? "Luận Giải Chi Tiết" : "Mệnh Lý AI - Trang Chủ"}
           url={location.pathname}
         />
-        <div className="bazi-bg"></div>
+        {room ? (
+          <div
+            className="room-bg"
+            style={{ backgroundImage: `url(${room.image})`, '--room-accent': room.accent }}
+            aria-hidden="true"
+          />
+        ) : (
+          <div className="bazi-bg"></div>
+        )}
 
         {!isTempleRoute && location.pathname !== '/van-hom-nay' && (
           <Link to="/van-hom-nay" className="vhn-fab" title="Vận hôm nay — miễn phí">
@@ -188,53 +206,71 @@ const AppContent = () => {
           </Link>
         )}
 
-        <Routes>
-          {/* Input form routes */}
-          <Route path="/" element={<InputPage onAnalyze={analyze} loading={loading} />} />
-          <Route path="/input" element={<Navigate to="/" replace />} />
+        <div
+          className={`room-scope ${room ? 'room-scope--active' : ''}`}
+          style={room ? { '--accent-gold': room.accent, '--accent-gold-glow': room.glow } : undefined}
+        >
+          {room && (
+            <div className="room-ribbon" style={{ '--room-accent': room.accent }}>
+              <span className="room-ribbon-icon" aria-hidden="true">{room.icon}</span>
+              <span className="room-ribbon-name">{room.title}</span>
+              <span className="room-ribbon-sep" aria-hidden="true">•</span>
+              <span className="room-ribbon-text">Phòng tra cứu dùng chung hồ sơ mệnh</span>
+            </div>
+          )}
 
-          {/* Chart page */}
-          <Route path="/laso" element={renderPageContent(ChartPage, { data, isMobile })} />
+          <Routes>
+            {/* Hai cửa vào */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/input" element={<Navigate to="/" replace />} />
 
-          {/* Analysis pages */}
-          <Route path="/phantich" element={renderPageContent(MatrixAnalysis, { data })} />
-          <Route path="/xemngay" element={renderPageContent(PersonalizedDate, { data, userData: effectiveUserData }, { allowProfile: true })} />
-          <Route path="/chonngay" element={renderPageContent(AuspiciousDatePicker, { userData: effectiveUserData }, { allowProfile: true })} />
-          <Route path="/tuvan" element={renderPageContent(ConsultantPage, { userData: effectiveUserData }, { allowProfile: true })} />
-          <Route path="/vanhan" element={renderPageContent(LuckCycles, { data })} />
-          <Route path="/dientich" element={renderPageContent(ClassicTexts, { data })} />
+            {/* Hồ sơ mệnh — nhập một lần */}
+            <Route path="/ho-so-menh" element={<ProfilePage onAnalyze={analyze} loading={loading} />} />
+            <Route path="/tra-cuu" element={<TraCuuPage />} />
 
-          {/* Matching page - uses current userData as person1 */}
-          <Route path="/duyenso" element={<MatchingPage userData={inputParams} />} />
+            {/* Chart page */}
+            <Route path="/laso" element={renderDataPage(ChartPage, { data, isMobile })} />
 
-          {/* Xin Que page */}
-          <Route path="/xinque" element={renderPageContent(QuePage, { userData: effectiveUserData }, { allowProfile: true })} />
+            {/* Analysis pages */}
+            <Route path="/phantich" element={renderDataPage(MatrixAnalysis, { data })} />
+            <Route path="/xemngay" element={requireProfile(<PersonalizedDate data={data} userData={profileParams} />)} />
+            <Route path="/chonngay" element={requireProfile(<AuspiciousDatePicker userData={profileParams} />)} />
+            <Route path="/tuvan" element={requireProfile(<ConsultantPage userData={profileParams} />)} />
+            <Route path="/vanhan" element={renderDataPage(LuckCycles, { data })} />
+            <Route path="/dientich" element={renderDataPage(ClassicTexts, { data })} />
 
-          {/* Western Astrology page - renders standalone with its own fallback UI */}
-          <Route path="/tuviphuongtay" element={<WesternPage userData={inputParams} />} />
+            {/* Matching page - dùng hồ sơ mệnh chung làm person1 */}
+            <Route path="/duyenso" element={requireProfile(<MatchingPage userData={profileParams} />)} />
 
-          {/* Vận hôm nay - miễn phí, không cần dữ liệu lá số */}
-          <Route path="/van-hom-nay" element={<VanHomNayPage />} />
+            {/* Xin Que page */}
+            <Route path="/xinque" element={requireProfile(<QuePage userData={profileParams} />)} />
 
-          {/* Tử vi - an sao theo ngày âm + giờ Chi + Can năm */}
-          <Route path="/tuvi" element={<TuViPage />} />
+            {/* Western Astrology page - đọc hồ sơ mệnh chung */}
+            <Route path="/tuviphuongtay" element={requireProfile(<WesternPage userData={profileParams} />)} />
 
-          {/* Bản đồ chùa - mặt tiền mới, không cần dữ liệu lá số */}
-          <Route path="/chua" element={<ChuaPage />} />
+            {/* Vận hôm nay - đọc hồ sơ mệnh chung để tự điền */}
+            <Route path="/van-hom-nay" element={requireProfile(<VanHomNayPage />)} />
 
-          {/* Không gian tĩnh tâm - không cần dữ liệu lá số */}
-          <Route path="/chanh-dien" element={<ChanhDienPage />} />
-          <Route path="/vuon-tinh-tam" element={<VuonTinhTamPage />} />
+            {/* Tử vi - an sao theo ngày âm + giờ Chi + Can năm */}
+            <Route path="/tuvi" element={requireProfile(<TuViPage />)} />
 
-          {/* History page - Standalone */}
-          <Route path="/lich-su" element={<HistoryPage />} />
+            {/* Bản đồ chùa - mặt tiền mới, không cần dữ liệu lá số */}
+            <Route path="/chua" element={<ChuaPage />} />
 
-          {/* Article page - standalone, no data required */}
-          <Route path="/bai-viet/:slug" element={<ArticlePage />} />
+            {/* Không gian tĩnh tâm - không cần dữ liệu lá số */}
+            <Route path="/chanh-dien" element={<ChanhDienPage />} />
+            <Route path="/vuon-tinh-tam" element={<VuonTinhTamPage />} />
 
-          {/* Catch all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* History page - Standalone */}
+            <Route path="/lich-su" element={<HistoryPage />} />
+
+            {/* Article page - standalone, no data required */}
+            <Route path="/bai-viet/:slug" element={<ArticlePage />} />
+
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
 
         {error && (
           <div className="error-toast glass-card">
@@ -252,11 +288,13 @@ const AppContent = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <MusicPlayerProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </MusicPlayerProvider>
+      <MenhProfileProvider>
+        <MusicPlayerProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </MusicPlayerProvider>
+      </MenhProfileProvider>
     </AuthProvider>
   );
 };

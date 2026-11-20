@@ -7,31 +7,31 @@ import RecentCustomers from '../../components/RecentCustomers';
 import SuggestedQuestions from '../../components/SuggestedQuestions';
 import SampleShowcase from '../../components/SampleShowcase';
 import ArticlesSection from '../../components/ArticlesSection';
-import { useAuth } from '../../context/AuthContext';
+import { useMenhProfile } from '../../context/MenhProfileContext';
 
 
-const BirthInput = ({ onAnalyze, loading }) => {
+const BirthInput = ({ onAnalyze, loading, profileMode = false }) => {
     const navigate = useNavigate();
-    const { savedProfile } = useAuth();
+    const { profile } = useMenhProfile();
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [toast, setToast] = useState(null);
 
     const [formData, setFormData] = useState(() => {
+        if (profile && profile.year) {
+            return {
+                name: profile.name || '',
+                gender: profile.gender || 'Nam',
+                year: profile.year,
+                month: profile.month,
+                day: profile.day,
+                hour: profile.hour ?? 0,
+                minute: profile.minute ?? 0,
+                calendar: profile.calendar || 'solar'
+            };
+        }
         const savedForm = sessionStorage.getItem('homepage_form_data');
         if (savedForm) {
             try { return JSON.parse(savedForm); } catch (e) {}
-        }
-        if (savedProfile && savedProfile.year) {
-            return {
-                name: savedProfile.name || '',
-                gender: savedProfile.gender || 'Nam',
-                year: savedProfile.year,
-                month: savedProfile.month,
-                day: savedProfile.day,
-                hour: savedProfile.hour ?? 0,
-                minute: savedProfile.minute ?? 0,
-                calendar: savedProfile.calendar || 'solar'
-            };
         }
         return { name: '', gender: 'Nam', year: 1990, month: 6, day: 15, hour: 10, minute: 0, calendar: 'solar' };
     });
@@ -72,28 +72,42 @@ const BirthInput = ({ onAnalyze, loading }) => {
             )}
 
             <header className="branding-header">
-                <h2 className="brand-title">MỆNH LÝ AI</h2>
-                <p className="brand-tagline">Bát Tự • Tứ Trụ • Luận Giải Chuyên Sâu</p>
+                <h2 className="brand-title">{profileMode ? 'HỒ SƠ MỆNH' : 'MỆNH LÝ AI'}</h2>
+                <p className="brand-tagline">
+                    {profileMode
+                        ? 'Nhập một lần — dùng cho mọi mục tra cứu'
+                        : 'Bát Tự • Tứ Trụ • Luận Giải Chuyên Sâu'}
+                </p>
             </header>
 
-            <Link to="/chua" className="chua-entry-card glass-card">
-                <span className="chua-entry-icon" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 13 L16 6 L28 13" />
-                        <path d="M7 13 Q16 17 25 13" />
-                        <path d="M9 20 H23 V27 H9 Z" />
-                        <path d="M14 27 V21 Q16 19 18 21 V27" />
-                        <path d="M4 27 H28" />
-                    </svg>
-                </span>
-                <span className="chua-entry-body">
-                    <span className="chua-entry-title">Vào chùa xem</span>
-                    <span className="chua-entry-desc">
-                        Đi một vòng chùa, ghé từng quầy — mỗi quầy một thầy phụ trách.
+            {profileMode && (
+                <div className="profile-notice glass-card">
+                    Hồ sơ mệnh được dùng chung cho lá số, phân tích, vận hạn, xem ngày, duyên số,
+                    tử vi, gieo quẻ và các mục tra cứu khác. Khách vãng lai lưu trên máy này;
+                    người đã đăng nhập được đồng bộ vào tài khoản.
+                </div>
+            )}
+
+            {!profileMode && (
+                <Link to="/chua" className="chua-entry-card glass-card">
+                    <span className="chua-entry-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 13 L16 6 L28 13" />
+                            <path d="M7 13 Q16 17 25 13" />
+                            <path d="M9 20 H23 V27 H9 Z" />
+                            <path d="M14 27 V21 Q16 19 18 21 V27" />
+                            <path d="M4 27 H28" />
+                        </svg>
                     </span>
-                </span>
-                <span className="chua-entry-cta">Vào chùa →</span>
-            </Link>
+                    <span className="chua-entry-body">
+                        <span className="chua-entry-title">Vào chùa xem</span>
+                        <span className="chua-entry-desc">
+                            Đi một vòng chùa, ghé từng quầy — mỗi quầy một thầy phụ trách.
+                        </span>
+                    </span>
+                    <span className="chua-entry-cta">Vào chùa →</span>
+                </Link>
+            )}
 
             <form onSubmit={handleSubmit} className="modular-form glass-card">
                 <div className="form-grid">
@@ -161,7 +175,7 @@ const BirthInput = ({ onAnalyze, loading }) => {
                 >
                     {loading ? (
                         <><span className="btn-spinner">⏳</span> ĐANG PHÂN TÍCH LÁ SỐ...</>
-                    ) : 'XEM LÁ SỐ NGAY'}
+                    ) : (profileMode ? 'LƯU HỒ SƠ MỆNH' : 'XEM LÁ SỐ NGAY')}
                 </button>
             </form>
 
