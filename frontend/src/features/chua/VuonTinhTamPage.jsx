@@ -27,7 +27,7 @@ const MusicVideoCard = () => {
 
 const GardenScene = ({ sceneRef, fullscreen }) => (
     <div className="temple-scene vuon-scene" ref={sceneRef}>
-        <TempleBackground src="/video/vuon-tinh-tam-loop.mp4" />
+        <TempleBackground src="/video/vuon-tinh-tam-flow.mp4" />
         <TempleSceneControls fullscreen={fullscreen} />
     </div>
 );

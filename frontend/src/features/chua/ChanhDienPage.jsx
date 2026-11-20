@@ -11,7 +11,7 @@ const ChanhDienPage = () => {
     return (
         <div className="temple-page chanh-dien-page">
             <div className="temple-scene chanh-scene" ref={fullscreen.sceneRef}>
-                <TempleBackground src="/video/chanh-dien-loop.mp4" />
+                <TempleBackground src="/video/chanh-dien-loop-v2.mp4" />
                 <TempleSceneControls fullscreen={fullscreen} />
             </div>
 
