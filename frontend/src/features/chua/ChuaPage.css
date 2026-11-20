@@ -1,0 +1,483 @@
+.chua-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1rem 1rem 110px;
+    box-sizing: border-box;
+}
+
+/* ===== Hero ===== */
+.chua-hero {
+    text-align: center;
+    padding: 1.6rem 1.2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.chua-kicker {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    opacity: 0.9;
+}
+
+.chua-title {
+    margin: 0.35rem 0 0.4rem;
+    font-family: var(--font-accent);
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+}
+
+.chua-subtitle {
+    margin: 0 auto;
+    max-width: 560px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* ===== Quick access ===== */
+.chua-quick {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.4rem;
+    border: 1px dashed rgba(226, 192, 68, 0.28);
+    border-radius: 14px;
+    background: rgba(226, 192, 68, 0.04);
+}
+
+.chua-quick-label {
+    flex: 0 0 auto;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+}
+
+.chua-quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.chua-quick-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+}
+
+.chua-quick-link:hover {
+    border-color: rgba(226, 192, 68, 0.5);
+    color: var(--accent-gold);
+    background: rgba(226, 192, 68, 0.08);
+}
+
+/* ===== Map grid: courtyard in the middle, stalls around ===== */
+.chua-map {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+        "tuvi battu xemngay"
+        "vanhomnay courtyard duyenso"
+        "xinque tuvan tuvan";
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.chua-stall--tuvi { grid-area: tuvi; }
+.chua-stall--battu { grid-area: battu; }
+.chua-stall--xemngay { grid-area: xemngay; }
+.chua-stall--vanhomnay { grid-area: vanhomnay; }
+.chua-stall--duyenso { grid-area: duyenso; }
+.chua-stall--xinque { grid-area: xinque; }
+.chua-stall--tuvan { grid-area: tuvan; }
+
+.chua-stall {
+    --stall-accent: var(--accent-gold);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.chua-stall::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--stall-accent), transparent);
+    opacity: 0.75;
+}
+
+.chua-stall--tuvi { --stall-accent: #c084fc; }
+.chua-stall--battu { --stall-accent: #fbbf24; }
+.chua-stall--xemngay { --stall-accent: #4ade80; }
+.chua-stall--vanhomnay { --stall-accent: #fb923c; }
+.chua-stall--duyenso { --stall-accent: #f472b6; }
+.chua-stall--xinque { --stall-accent: #60a5fa; }
+.chua-stall--tuvan { --stall-accent: #e2c044; }
+
+.chua-stall-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.chua-stall-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+}
+
+.chua-stall-dot {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--stall-accent);
+    box-shadow: 0 0 10px var(--stall-accent);
+}
+
+.chua-stall-desc {
+    margin: 0;
+    font-size: 0.79rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.chua-npc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 0.15rem;
+}
+
+.chua-npc {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.chua-npc-avatar {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-accent);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #10130f;
+    background: radial-gradient(circle at 30% 24%, #f8ecc0 0%, var(--stall-accent) 78%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.35);
+    user-select: none;
+}
+
+.chua-npc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.chua-npc-name {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--stall-accent);
+}
+
+.chua-npc-line {
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.66);
+    font-style: italic;
+}
+
+.chua-stall-btn {
+    margin-top: auto;
+    display: block;
+    padding: 0.55rem 0.8rem;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    background: linear-gradient(135deg, rgba(226, 192, 68, 0.16), rgba(226, 192, 68, 0.04));
+    border: 1px solid rgba(226, 192, 68, 0.35);
+    transition: all 0.25s ease;
+}
+
+.chua-stall-btn:hover {
+    background: linear-gradient(135deg, rgba(226, 192, 68, 0.28), rgba(226, 192, 68, 0.1));
+    border-color: rgba(226, 192, 68, 0.65);
+    box-shadow: 0 6px 18px rgba(226, 192, 68, 0.16);
+}
+
+/* ===== Courtyard ===== */
+.chua-courtyard {
+    grid-area: courtyard;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    min-width: 0;
+}
+
+.chua-yard-svg {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    display: block;
+}
+
+.chua-yard-halo {
+    fill: rgba(226, 192, 68, 0.05);
+    stroke: rgba(226, 192, 68, 0.12);
+    stroke-width: 1;
+}
+
+.chua-yard-ring {
+    fill: none;
+    stroke: rgba(226, 192, 68, 0.28);
+    stroke-width: 1.2;
+    stroke-dasharray: 3 7;
+}
+
+.chua-yard-line {
+    fill: none;
+    stroke: rgba(226, 192, 68, 0.45);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+}
+
+.chua-yard-roof {
+    fill: none;
+    stroke: var(--accent-gold);
+    stroke-width: 3;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.chua-yard-eave {
+    fill: none;
+    stroke: rgba(226, 192, 68, 0.65);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+}
+
+.chua-yard-body {
+    fill: rgba(226, 192, 68, 0.08);
+    stroke: rgba(226, 192, 68, 0.8);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.chua-yard-door {
+    fill: rgba(5, 5, 5, 0.55);
+    stroke: rgba(226, 192, 68, 0.8);
+    stroke-width: 1.6;
+}
+
+.chua-yard-lamp {
+    fill: #fbbf24;
+    stroke: rgba(251, 191, 36, 0.5);
+    stroke-width: 1;
+}
+
+.chua-yard-text {
+    fill: rgba(226, 192, 68, 0.75);
+    font-family: var(--font-accent);
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+/* ===== Footer note ===== */
+.chua-login-note {
+    margin: 1.6rem auto 0;
+    text-align: center;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* ===== Homepage entry card ===== */
+.chua-entry-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.25rem;
+    text-decoration: none;
+    border: 1px solid rgba(226, 192, 68, 0.3);
+    background: linear-gradient(135deg, rgba(226, 192, 68, 0.1), rgba(10, 15, 12, 0.85));
+    position: relative;
+    overflow: hidden;
+}
+
+.chua-entry-card:hover {
+    border-color: rgba(226, 192, 68, 0.6);
+    transform: translateY(-2px);
+}
+
+.chua-entry-icon {
+    flex: 0 0 54px;
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    color: var(--accent-gold);
+    background: rgba(226, 192, 68, 0.12);
+    border: 1px solid rgba(226, 192, 68, 0.32);
+}
+
+.chua-entry-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.chua-entry-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chua-entry-title {
+    display: block;
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--accent-gold);
+    letter-spacing: 0.02em;
+}
+
+.chua-entry-desc {
+    display: block;
+    margin: 0.2rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.chua-entry-cta {
+    flex: 0 0 auto;
+    margin-left: auto;
+    padding: 0.5rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #10130f;
+    background: linear-gradient(135deg, #f6e3a1, var(--accent-gold));
+    box-shadow: 0 4px 14px rgba(226, 192, 68, 0.28);
+    white-space: nowrap;
+}
+
+/* ===== Tablet ===== */
+@media (max-width: 900px) {
+    .chua-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            "courtyard courtyard"
+            "tuvi battu"
+            "xemngay vanhomnay"
+            "duyenso xinque"
+            "tuvan tuvan";
+    }
+
+    .chua-courtyard {
+        padding: 0.25rem;
+    }
+
+    .chua-yard-svg {
+        max-width: 200px;
+    }
+}
+
+/* ===== Phone ===== */
+@media (max-width: 640px) {
+    .chua-page {
+        padding: 0.75rem 0.75rem 100px;
+    }
+
+    .chua-hero {
+        padding: 1.2rem 0.9rem;
+    }
+
+    .chua-map {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "courtyard"
+            "tuvi"
+            "battu"
+            "xemngay"
+            "vanhomnay"
+            "duyenso"
+            "xinque"
+            "tuvan";
+        gap: 0.85rem;
+    }
+
+    .chua-courtyard {
+        min-height: 170px;
+    }
+
+    .chua-yard-svg {
+        max-width: 175px;
+    }
+
+    .chua-quick {
+        padding: 0.7rem 0.8rem;
+    }
+
+    .chua-entry-card {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .chua-entry-body {
+        flex: 1 1 150px;
+    }
+
+    .chua-entry-cta {
+        flex: 1 1 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+}

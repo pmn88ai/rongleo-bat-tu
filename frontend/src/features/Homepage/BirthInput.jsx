@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import QuickDivination from './QuickDivination';
 import DatePicker from './DatePicker';
 import Toast from '../../components/Toast';
@@ -59,6 +60,25 @@ const BirthInput = ({ onAnalyze, loading }) => {
                 <h2 className="brand-title">MỆNH LÝ AI</h2>
                 <p className="brand-tagline">Bát Tự • Tứ Trụ • Luận Giải Chuyên Sâu</p>
             </header>
+
+            <Link to="/chua" className="chua-entry-card glass-card">
+                <span className="chua-entry-icon" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 13 L16 6 L28 13" />
+                        <path d="M7 13 Q16 17 25 13" />
+                        <path d="M9 20 H23 V27 H9 Z" />
+                        <path d="M14 27 V21 Q16 19 18 21 V27" />
+                        <path d="M4 27 H28" />
+                    </svg>
+                </span>
+                <span className="chua-entry-body">
+                    <span className="chua-entry-title">Vào chùa xem</span>
+                    <span className="chua-entry-desc">
+                        Đi một vòng chùa, ghé từng quầy — mỗi quầy một thầy phụ trách.
+                    </span>
+                </span>
+                <span className="chua-entry-cta">Vào chùa →</span>
+            </Link>
 
             <form onSubmit={handleSubmit} className="modular-form glass-card">
                 <div className="form-grid">

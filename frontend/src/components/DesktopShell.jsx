@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 const tabs = [
+    { id: 'chua', path: '/chua', label: 'VÀO CHÙA', icon: '🏮' },
     { id: 'chart', path: '/laso', label: 'LÁ SỐ', icon: '🎨' },
     { id: 'matrix', path: '/phantich', label: 'PHÂN TÍCH', icon: '⚙️' },
     { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },

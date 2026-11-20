@@ -21,6 +21,7 @@ import QuePage from './features/Que/QuePage';
 import WesternPage from './features/WesternAstrology/WesternPage';
 import VanHomNayPage from './features/van_hom_nay/VanHomNayPage';
 import TuViPage from './features/tu_vi/TuViPage';
+import ChuaPage from './features/chua/ChuaPage';
 import PDFExportButton from './components/PDFExportButton';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
@@ -191,6 +192,9 @@ const AppContent = () => {
 
           {/* Tử vi - an sao theo ngày âm + giờ Chi + Can năm */}
           <Route path="/tuvi" element={<TuViPage />} />
+
+          {/* Bản đồ chùa - mặt tiền mới, không cần dữ liệu lá số */}
+          <Route path="/chua" element={<ChuaPage />} />
 
           {/* History page - Standalone */}
           <Route path="/lich-su" element={<HistoryPage />} />
