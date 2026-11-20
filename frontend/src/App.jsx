@@ -20,6 +20,7 @@ import ArticlePage from './features/Articles/ArticlePage';
 import MatchingPage from './features/Matching/MatchingPage';
 import HistoryPage from './features/ConsultationHistory/HistoryPage';
 import QuePage from './features/Que/QuePage';
+import TarotPage from './features/Tarot/TarotPage';
 import WesternPage from './features/WesternAstrology/WesternPage';
 import VanHomNayPage from './features/van_hom_nay/VanHomNayPage';
 import TuViPage from './features/tu_vi/TuViPage';
@@ -241,6 +242,9 @@ const AppContent = () => {
 
             {/* Xin Que page */}
             <Route path="/xinque" element={<QuePage userData={profileParams} />} />
+
+            {/* Tarot - rút bài ngẫu nhiên, khách cũng rút được */}
+            <Route path="/tarot" element={<TarotPage />} />
 
             {/* Western Astrology page - đọc hồ sơ mệnh chung */}
             <Route path="/tuviphuongtay" element={requireProfile(<WesternPage userData={profileParams} />)} />

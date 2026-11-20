@@ -110,6 +110,17 @@ export const ROOMS = [
         desc: 'Gieo quẻ, hỏi một việc đang băn khoăn.'
     },
     {
+        id: 'tarot',
+        path: '/tarot',
+        label: 'TAROT',
+        title: 'Quầy Tarot',
+        icon: '✦',
+        image: '/images/tarot/major_01_magician.jpg',
+        accent: '#c084fc',
+        glow: 'rgba(192, 132, 252, 0.28)',
+        desc: 'Rút 1 lá hoặc trải 3 lá Quá khứ — Hiện tại — Tương lai.'
+    },
+    {
         id: 'tuviphuongtay',
         path: '/tuviphuongtay',
         label: 'TỬ VI TÂY',
