@@ -1,65 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
+import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
+import useTempleFullscreen from './useTempleFullscreen';
+import { YOUTUBE_EMBED_SRC } from '../../context/MusicPlayerContext';
 import './TempleScene.css';
 
-const MUSIC_VIDEO_SOURCE = (import.meta.env.VITE_MUSIC_VIDEO_URL || '').trim();
+const MusicVideoCard = () => (
+    <section className="temple-card glass-card music-video-card">
+        <h2>Video nhạc của Leo</h2>
+        <div className="music-video-frame">
+            <iframe
+                src={YOUTUBE_EMBED_SRC}
+                title="Nhạc piano + tiếng nước chảy — RongLeo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+            />
+        </div>
+    </section>
+);
 
-const toYouTubeEmbed = (url) => {
-    try {
-        const parsed = new URL(url);
-        if (parsed.hostname.includes('youtu.be')) {
-            return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`;
-        }
-        if (parsed.hostname.includes('youtube.com')) {
-            const id = parsed.searchParams.get('v');
-            if (id) return `https://www.youtube.com/embed/${id}`;
-            if (parsed.pathname.startsWith('/embed/')) return url;
-        }
-    } catch (e) {
-        return null;
-    }
-    return null;
-};
-
-const MusicVideoCard = () => {
-    const isYouTube = /youtu\.?be/.test(MUSIC_VIDEO_SOURCE);
-    const embedUrl = isYouTube ? toYouTubeEmbed(MUSIC_VIDEO_SOURCE) : null;
-
-    return (
-        <section className="temple-card glass-card music-video-card">
-            <h2>Video nhạc của Leo</h2>
-
-            {MUSIC_VIDEO_SOURCE ? (
-                isYouTube && embedUrl ? (
-                    <div className="music-video-frame">
-                        <iframe
-                            src={embedUrl}
-                            title="Video nhạc piano của Leo"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                    </div>
-                ) : (
-                    <div className="music-video-frame">
-                        <video src={MUSIC_VIDEO_SOURCE} controls playsInline preload="metadata" />
-                    </div>
-                )
-            ) : (
-                <div className="music-video-placeholder">
-                    <span className="music-video-note">🎹</span>
-                    <p>
-                        Khung phát video piano đã sẵn. Leo chỉ cần đưa <strong>link YouTube</strong> hoặc
-                        <strong> file video local</strong> để cấu hình, không cần sửa giao diện.
-                    </p>
-                </div>
-            )}
-        </section>
-    );
-};
-
-const GardenScene = () => (
-    <div className="temple-scene vuon-scene">
+const GardenScene = ({ sceneRef, fullscreen }) => (
+    <div className="temple-scene vuon-scene" ref={sceneRef}>
         <TempleBackground src="/video/vuon-tinh-tam.mp4" />
         <div className="vuon-sky" />
         <div className="vuon-sun" />
@@ -138,15 +101,20 @@ const GardenScene = () => (
         <span className="vuon-firefly firefly-2" />
         <span className="vuon-firefly firefly-3" />
         <span className="vuon-firefly firefly-4" />
+        <TempleSceneControls fullscreen={fullscreen} />
     </div>
 );
 
 const VuonTinhTamPage = () => {
+    const fullscreen = useTempleFullscreen();
+
     return (
         <div className="temple-page vuon-tinh-tam-page">
-            <GardenScene />
+            <GardenScene sceneRef={fullscreen.sceneRef} fullscreen={fullscreen} />
 
             <div className="temple-content">
+                <TempleFullscreenButton onClick={fullscreen.enter} />
+
                 <header className="temple-hero glass-card">
                     <span className="temple-kicker">RongLeo • Vườn tĩnh tâm</span>
                     <h1 className="temple-title">Vườn Tịnh Tâm</h1>

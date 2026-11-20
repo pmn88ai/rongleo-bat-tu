@@ -132,6 +132,95 @@
     color: var(--text-secondary);
 }
 
+/* ===== Fullscreen / cinema controls ===== */
+.temple-fs-btn {
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid rgba(226, 192, 68, 0.45);
+    background: rgba(8, 12, 12, 0.68);
+    color: var(--accent-gold);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.temple-fs-btn:hover {
+    background: rgba(226, 192, 68, 0.2);
+    border-color: rgba(226, 192, 68, 0.75);
+}
+
+.temple-fs-controls {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 40;
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.temple-fs-control {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(226, 192, 68, 0.5);
+    background: rgba(8, 12, 14, 0.8);
+    color: var(--accent-gold);
+    font-size: 0.95rem;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.temple-fs-control:hover {
+    background: rgba(226, 192, 68, 0.2);
+    border-color: rgba(226, 192, 68, 0.8);
+}
+
+.temple-fs-control.is-playing {
+    border-color: rgba(226, 192, 68, 0.85);
+    animation: temple-fs-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes temple-fs-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(226, 192, 68, 0.35); }
+    50% { box-shadow: 0 0 0 8px rgba(226, 192, 68, 0); }
+}
+
+body.temple-fullscreen-active {
+    overflow: hidden;
+}
+
+body.temple-fullscreen-active .action-bar,
+body.temple-fullscreen-active .main-nav-tabs,
+body.temple-fullscreen-active .mobile-top-fixed,
+body.temple-fullscreen-active .mobile-bottom-nav,
+body.temple-fullscreen-active .vhn-fab,
+body.temple-fullscreen-active .tuv-fab,
+body.temple-fullscreen-active .music-fab,
+body.temple-fullscreen-active .music-bar,
+body.temple-fullscreen-active .music-player-missing,
+body.temple-fullscreen-active .error-toast,
+body.temple-fullscreen-active .temple-content {
+    display: none !important;
+}
+
+body.temple-fullscreen-active .temple-scene {
+    z-index: 2147483000;
+}
+
+
 /* ===== Chánh điện ===== */
 .chanh-scene {
     background:
@@ -558,6 +647,22 @@
 
     .temple-link {
         justify-content: center;
+    }
+
+    .temple-fs-btn {
+        padding: 0.42rem 0.75rem;
+        font-size: 0.72rem;
+    }
+
+    .temple-fs-controls {
+        top: 10px;
+        right: 10px;
+        gap: 8px;
+    }
+
+    .temple-fs-control {
+        width: 42px;
+        height: 42px;
     }
 
     /* Ẩn bottom nav ở 2 không gian tĩnh tâm để nền rộng hơn */

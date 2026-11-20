@@ -29,7 +29,7 @@ const MusicPlayer = () => {
     if (!available) {
         return (
             <div className="music-player-missing" role="status">
-                Không tìm thấy file nhạc /audio/thien.mp3
+                Không tải được nhạc YouTube. Kiểm tra kết nối mạng.
             </div>
         );
     }

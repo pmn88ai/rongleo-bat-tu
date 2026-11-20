@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
+import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
+import useTempleFullscreen from './useTempleFullscreen';
 import './TempleScene.css';
 
 const BuddhaSilhouette = () => (
@@ -57,9 +59,11 @@ const IncenseSmoke = () => (
 );
 
 const ChanhDienPage = () => {
+    const fullscreen = useTempleFullscreen();
+
     return (
         <div className="temple-page chanh-dien-page">
-            <div className="temple-scene chanh-scene" aria-hidden="true">
+            <div className="temple-scene chanh-scene" ref={fullscreen.sceneRef}>
                 <TempleBackground src="/video/chanh-dien.mp4" />
                 <div className="chanh-radiance" />
                 <div className="chanh-beams">
@@ -73,9 +77,12 @@ const ChanhDienPage = () => {
                 <div className="chanh-lotus">
                     <span /><span /><span /><span /><span />
                 </div>
+                <TempleSceneControls fullscreen={fullscreen} />
             </div>
 
             <div className="temple-content">
+                <TempleFullscreenButton onClick={fullscreen.enter} />
+
                 <header className="temple-hero glass-card">
                     <span className="temple-kicker">RongLeo • Không gian tĩnh lặng</span>
                     <h1 className="temple-title">Chánh Điện</h1>
