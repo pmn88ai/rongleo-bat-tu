@@ -274,7 +274,7 @@ function getWealthInterpretation(shishen, score = 0) {
             : { status: 'Tiết kiệm', desc: 'Nên chi tiêu tiết kiệm, tích trữ cho thời điểm tốt hơn.' };
     }
     const pool = score >= 0 ? data.good : data.bad;
-    return pool[Math.floor(Math.random() * pool.length)];
+    return pool[0];
 }
 
 module.exports = { WEALTH_INTERPRETATIONS, getWealthInterpretation };

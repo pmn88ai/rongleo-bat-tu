@@ -26,9 +26,9 @@ function analyzeLuanDong(ctx, luanTinhResult) {
     const kyThans = (ctx.nguHanhResult && ctx.nguHanhResult.dung_than && ctx.nguHanhResult.dung_than.ky_than)
         ? ctx.nguHanhResult.dung_than.ky_than : [];
 
-    // DM Strength
-    const strengthStr = (ctx.nguHanhResult && ctx.nguHanhResult.scores && ctx.nguHanhResult.scores.suc_manh)
-        ? ctx.nguHanhResult.scores.suc_manh.kl_cuong_nhuoc : "Trung hòa";
+    // DM Strength — đọc đúng field thật do analyzeNguHanh() trả (nhan_dinh.cuong_do).
+    const strengthStr = (ctx.nguHanhResult && ctx.nguHanhResult.nhan_dinh && ctx.nguHanhResult.nhan_dinh.cuong_do)
+        ? ctx.nguHanhResult.nhan_dinh.cuong_do : "chưa xác định được";
     const isStrong = strengthStr.includes("Vượng") || strengthStr.includes("Mạnh");
     const isWeak = strengthStr.includes("Nhược") || strengthStr.includes("Yếu");
 
@@ -40,8 +40,7 @@ function analyzeLuanDong(ctx, luanTinhResult) {
 
     return {
         dai_van: daiVanAnalysis,
-        luu_nien: luuNienAnalysis,
-        intro: getRandomIntro()
+        luu_nien: luuNienAnalysis
     };
 }
 
@@ -57,7 +56,7 @@ function analyzeDaiVanV4(ctx, flow, dayGan, dungThans, kyThans, isStrong, isWeak
     const variables = [
         `Giai đoạn: **${flow.start} - ${flow.end}** (Tuổi âm: ${flow.startAge}-${flow.endAge}).`,
         `Đại vận: **${gan} ${zhi}** (${ganzhi.getNapAm(gan, zhi)}).`,
-        `Thế cục: ${isStrong ? 'Thân Vượng' : (isWeak ? 'Thân Nhược' : 'Trung Hòa')} nhập vận **${ganElem}**.`,
+        `Thế cục: ${isStrong ? 'Thân Vượng' : (isWeak ? 'Thân Nhược' : 'chưa xác định được')} nhập vận **${ganElem}**.`,
     ];
 
     // 2. HỘI TỤ
@@ -211,11 +210,6 @@ function mapGodName(code) {
         'Kiêu': 'Thiên Ấn'
     };
     return map[code] || code;
-}
-
-function getRandomIntro() {
-    const list = LUAN_DONG_LIB.intro_sentences;
-    return list[Math.floor(Math.random() * list.length)];
 }
 
 function checkZhiInteractionsV4(targetZhi, chartZhis) {

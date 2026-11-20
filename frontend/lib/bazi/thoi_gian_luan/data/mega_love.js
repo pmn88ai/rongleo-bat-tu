@@ -278,7 +278,7 @@ function getLoveInterpretation(shishen, isFemale, score = 0) {
             : { status: 'Cần quan tâm', desc: 'Nên chủ động tạo bất ngờ để hâm nóng tình cảm.' };
     }
     const pool = score >= 0 ? data.good : data.bad;
-    return pool[Math.floor(Math.random() * pool.length)];
+    return pool[0];
 }
 
 module.exports = { LOVE_MALE, LOVE_FEMALE, getLoveInterpretation };

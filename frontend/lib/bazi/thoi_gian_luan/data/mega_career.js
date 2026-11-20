@@ -267,7 +267,8 @@ const CAREER_INTERPRETATIONS = {
 };
 
 /**
- * Get random career interpretation based on shishen and score
+ * Get career interpretation based on shishen and score
+ * (deterministic — luôn chọn câu đầu tiên của nhóm điều kiện)
  */
 function getCareerInterpretation(shishen, score = 0) {
     const data = CAREER_INTERPRETATIONS[shishen];
@@ -278,8 +279,7 @@ function getCareerInterpretation(shishen, score = 0) {
     }
 
     const pool = score >= 0 ? data.good : data.bad;
-    const index = Math.floor(Math.random() * pool.length);
-    return pool[index];
+    return pool[0];
 }
 
 module.exports = {

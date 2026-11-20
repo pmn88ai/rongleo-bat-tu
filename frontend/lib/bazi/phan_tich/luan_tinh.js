@@ -32,9 +32,7 @@ function analyzeLuanTinh(ctx) {
             ganVN: ganzhi.ganToVN(dayGan),
             element: dmElement
         },
-        strength: (ctx.scores && ctx.scores.suc_manh)
-            ? (ctx.scores.suc_manh.kl_cuong_nhuoc || (ctx.scores.suc_manh.la_nhuoc ? "Thân Nhược" : "Thân Vượng"))
-            : "Trung hòa",
+        strength: getStrengthLabel(ctx.nguHanhResult),
         dominant_god: getDominantGod(ctx, dayGan),
         favorable_elements: ganzhi.getFavorable(dmElement),
         unfavorable_elements: ganzhi.getUnfavorable(dmElement),
@@ -124,12 +122,12 @@ function analyzePersonalityRich(ctx, dayGan, dayZhi, monthZhi, nguHanh) {
     const dayGanCode = removeDiacritics(dayGanVN);
     const fullPillar = `${dayGanVN} ${dayZhiVN}`;
 
-    const strength = (nguHanh.scores && nguHanh.scores.suc_manh && nguHanh.scores.suc_manh.kl_cuong_nhuoc)
-        ? nguHanh.scores.suc_manh.kl_cuong_nhuoc : "Trung hòa";
+    // analyzeNguHanh() trả cường độ tại nhan_dinh.cuong_do (không có .scores).
+    const strength = getStrengthLabel(nguHanh);
     const isStrong = strength.includes("Vượng") || strength.includes("Mạnh");
     const isWeak = strength.includes("Nhược") || strength.includes("Yếu");
-    const generalKey = isStrong ? 'than_vuong' : (isWeak ? 'than_nhuoc' : 'trung_hoa');
-    const generalData = LUAN_TINH_LIB.tong_quan[generalKey] || {};
+    const generalKey = isStrong ? 'than_vuong' : (isWeak ? 'than_nhuoc' : null);
+    const generalData = generalKey ? (LUAN_TINH_LIB.tong_quan[generalKey] || {}) : {};
 
     // Personalization from context
     const xungHo = ctx.xungHo || { menh: 'mệnh chủ', vo_chong: 'bạn đời' };
@@ -139,7 +137,7 @@ function analyzePersonalityRich(ctx, dayGan, dayZhi, monthZhi, nguHanh) {
     // 1. BIẾN SỐ
     const variables = [
         `${xungHo.menh ? xungHo.menh.charAt(0).toUpperCase() + xungHo.menh.slice(1) : 'Mệnh chủ'} có Nhật chủ: **${dayGanVN}** (${ganzhi.GAN_YIN_YANG[dayGanVN] || "Âm/Dương"}).`,
-        `Thân thế: **${strength}** (${generalData.keyword || ''}).`,
+        generalData.keyword ? `Thân thế: **${strength}** (${generalData.keyword}).` : `Thân thế: **${strength}**.`,
         `Trụ ngày: **${fullPillar}** - ${ganzhi.getNapAm(dayGan, dayZhi)}.`,
         `Cấu trúc: ${getDominantGod(ctx, dayGan)} cách.`,
         tuoi ? `Tuổi hiện tại: **${tuoi}** (${giaiDoan}).` : ''
@@ -174,8 +172,8 @@ function analyzePersonalityRich(ctx, dayGan, dayZhi, monthZhi, nguHanh) {
     }
 
     // 3. LUẬN GIẢI
-    let conclusion = `<b>I. KHÍ CHẤT TỔNG QUAN:</b><br/>${generalData.intro}<br/><br/>`;
-    conclusion += `<b>II. CHIẾN LƯỢC CÂN BẰNG:</b><br/>${generalData.balance_advice}`;
+    let conclusion = `<b>I. KHÍ CHẤT TỔNG QUAN:</b><br/>${generalData.intro || 'chưa đủ căn cứ (chưa xác định được mức vượng/nhược theo quy tắc tủ)'}<br/><br/>`;
+    conclusion += `<b>II. CHIẾN LƯỢC CÂN BẰNG:</b><br/>${generalData.balance_advice || 'chưa đủ căn cứ'}`;
 
     if (pillarData && pillarData.advice) {
         conclusion += `<br/><br/>💡 <b>Lời khuyên riêng cho ${fullPillar}:</b> ${pillarData.advice}`;
@@ -186,7 +184,7 @@ function analyzePersonalityRich(ctx, dayGan, dayZhi, monthZhi, nguHanh) {
     if (healthInfo) {
         conclusion += `<br/><br/><b>IV. CẢNH BÁO SỨC KHỎE:</b><br/>${healthInfo}`;
     } else {
-        conclusion += `<br/><br/><b>IV. CẢNH BÁO SỨC KHỎE:</b> Ngũ hành tương đối cân bằng, chú ý duy trì lối sống lành mạnh.`;
+        conclusion += `<br/><br/><b>IV. CẢNH BÁO SỨC KHỎE:</b> chưa đủ căn cứ (chưa có dữ liệu ngũ hành để luận sức khỏe).`;
     }
 
     return { variables, convergence, conclusion };
@@ -239,9 +237,12 @@ function analyzeCareerRich(ctx, dayGan, monthZhi, nguHanh) {
         conclusion += `- <b>Vai trò phù hợp:</b> ${usefulCareer.role}<br/>`;
     }
 
-    const strength = (nguHanh.scores && nguHanh.scores.suc_manh && nguHanh.scores.suc_manh.kl_cuong_nhuoc) || "";
+    const strength = getStrengthLabel(nguHanh);
     const isStrong = strength.includes("Vượng") || strength.includes("Mạnh");
-    const orientation = isStrong ? LUAN_TINH_LIB.nghe_nghiep.orientation.strong : LUAN_TINH_LIB.nghe_nghiep.orientation.weak;
+    const isWeak = strength.includes("Nhược") || strength.includes("Yếu");
+    const orientation = isStrong
+        ? LUAN_TINH_LIB.nghe_nghiep.orientation.strong
+        : (isWeak ? LUAN_TINH_LIB.nghe_nghiep.orientation.weak : 'chưa đủ căn cứ (chưa xác định được mức vượng/nhược theo quy tắc tủ)');
 
     conclusion += `<br/><b>Chiến lược phát triển:</b> ${orientation}`;
 
@@ -298,20 +299,28 @@ function analyzeMarriageRich(ctx, dayGan, dayZhi, nguHanh) {
 // --- HELPER FUNCTIONS ---
 
 function getHealthAnalysis(nguHanh) {
-    if (!nguHanh.scores || !nguHanh.scores.ngu_hanh) return "";
+    const nhanDinh = nguHanh && nguHanh.nhan_dinh;
+    const diemTho = nhanDinh && nhanDinh.diem_tho;
+    if (!diemTho || Object.keys(diemTho).length === 0) return "";
 
+    const kyThans = (nguHanh.ky_than && nguHanh.ky_than.ngu_hanh) || [];
+    if (kyThans.length === 0) return "";
+
+    // Không đặt ngưỡng sức khỏe: chỉ dùng hành Kỵ thần đã chốt theo quy tắc tủ.
+    const keyByElement = { 'Kim': 'Kim', 'Mộc': 'Moc', 'Hỏa': 'Hoa', 'Thổ': 'Tho', 'Thủy': 'Thuy' };
     let text = "";
-    Object.entries(nguHanh.scores.ngu_hanh).forEach(([el, score]) => {
-        // Thresholds: defined roughly. Say < 10 is Weak, > 40 is Excess (Normalize to 100? Assuming % scores or relative)
-        // If score is derived properly. Let's assume standard range ~20% is balanced.
-        // < 10% is Weak. > 35% is Excess.
-        if (score < 10 && LUAN_TINH_LIB.suc_khoe[el]) {
-            text += `- <b>Hành ${el} suy yếu (${score}%):</b> ${LUAN_TINH_LIB.suc_khoe[el].weak}<br/>`;
-        } else if (score > 40 && LUAN_TINH_LIB.suc_khoe[el]) {
-            text += `- <b>Hành ${el} quá vượng (${score}%):</b> ${LUAN_TINH_LIB.suc_khoe[el].excess}<br/>`;
-        }
+    const cuongDo = nhanDinh.cuong_do;
+    if (cuongDo && !cuongDo.includes('chưa xác định')) {
+        text += `Cường độ Nhật chủ: <b>${cuongDo}</b>.<br/>`;
+    }
+    kyThans.forEach((el) => {
+        const data = LUAN_TINH_LIB.suc_khoe[keyByElement[el]];
+        if (!data || !data.weak) return;
+        const care = data.weak.split('. ').find(s => s.startsWith('Nên'));
+        if (care) text += `- <b>Hành ${el} (kỵ thần):</b> ${care}<br/>`;
     });
-    return text || "Các hành tương đối cân bằng, sức khỏe ổn định.";
+    if (!text) return "";
+    return text + "<i>Đây chỉ là gợi ý chăm sóc theo huyền học, không phải chẩn đoán bệnh. Nếu có triệu chứng bất thường, hãy đi khám bác sĩ.</i>";
 }
 
 function getWealthPattern(ctx, dayGan, isStrong, wealthCount) {
@@ -320,14 +329,20 @@ function getWealthPattern(ctx, dayGan, isStrong, wealthCount) {
     return "Tài lộc đến từ sự tích lũy bền bỉ.";
 }
 
+function getStrengthLabel(nguHanh) {
+    const label = nguHanh && nguHanh.nhan_dinh && nguHanh.nhan_dinh.cuong_do;
+    return label || 'chưa xác định được';
+}
+
 function getDominantGod(ctx, dayGan) {
     const monthZhiGan = ganzhi.getZhiMainGan(ctx.zhis[1]);
-    return ganzhi.getThapThan(dayGan, monthZhiGan) || "Tỷ Kiên";
+    const shortName = ganzhi.getThapThan(dayGan, monthZhiGan);
+    return shortName ? ganzhi.toGodFullName(shortName) : 'chưa xác định được';
 }
 
 function getGodCode(godName) {
     const map = { 'Thực Thần': 'Thuc_Than', 'Thương Quan': 'Thuong_Quan', 'Chính Tài': 'Chinh_Tai', 'Thiên Tài': 'Thien_Tai', 'Chính Quan': 'Chinh_Quan', 'Thất Sát': 'That_Sat', 'Chính Ấn': 'Chinh_An', 'Thiên Ấn': 'Thien_An', 'Tỷ Kiên': 'Ty_Kien', 'Kiếp Tài': 'Kiep_Tai' };
-    return map[godName] || 'Thuc_Than';
+    return map[godName] || 'chưa xác định được';
 }
 
 function removeDiacritics(str) {
@@ -346,7 +361,11 @@ function getElementRelationSimple(e1, e2) {
 
 function countGods(ctx, dayGan, targets) {
     let c = 0;
-    ctx.gans.forEach((g, i) => { if (i !== 2 && targets.includes(ganzhi.getThapThan(dayGan, g))) c++; });
+    ctx.gans.forEach((g, i) => {
+        if (i === 2) return;
+        const fullName = ganzhi.toGodFullName(ganzhi.getThapThan(dayGan, g));
+        if (targets.includes(fullName)) c++;
+    });
     return c;
 }
 
@@ -359,4 +378,4 @@ function isZhiClash(z1, z2) {
 
 function isStrongMarriage(ctx) { return false; } // Placeholder
 
-module.exports = { analyzeLuanTinh };
+module.exports = { analyzeLuanTinh, countGods, getDominantGod, getGodCode, getStrengthLabel };

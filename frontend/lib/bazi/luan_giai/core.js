@@ -18,7 +18,6 @@ const { TIEN_VAN_VUONG, TRUNG_VAN_VUONG, HAU_VAN_VUONG } = require('./data/fortu
 const phanTich = require('../phan_tich');
 const shishen = require('../shishen');
 const ganzhi = require('../ganzhi');
-const { createSeededRandom } = require('../../utils/random');
 
 function _extractKeyLines(results, keywords = ['•', '**', ':']) {
     if (!results || !Array.isArray(results)) return [];
@@ -61,14 +60,15 @@ function analyzeLuanGiai(ctx) {
     const stemName = (stemInfo.name && stemInfo.name[0]) || ganzhi.ganToVN(me);
     const symbol = (stemInfo.symbol && stemInfo.symbol[0]) || '';
 
-    const rng = createSeededRandom(`${ctx.solar.getYear()}-${ctx.solar.getMonth()}-${ctx.solar.getDay()}-${genderKey}`);
-    const traitsList = stemInfo[isFemale ? 'traits_female' : 'traits_male'] || stemInfo.traits || [];
-    const trait = rng.pick(traitsList) || '';
+    // Bỏ chọn câu ngẫu nhiên: không còn câu nào suy ra trực tiếp từ lá số.
+    const strengthLabel = ctx.nguHanhResult && ctx.nguHanhResult.nhan_dinh
+        ? ctx.nguHanhResult.nhan_dinh.cuong_do
+        : 'chưa xác định được';
 
     const overviewContent = [
         `Nhật chủ (Can ngày): **${stemName}** (${symbol}).`,
-        `Đặc điểm chủ đạo: ${trait}`,
-        `Sức mạnh bản mệnh: ${ctx.scores.suc_manh.la_nhuoc ? 'Thân Nhược' : 'Thân Vượng'} (Điểm: ${ctx.scores.suc_manh.diem_manh}/${ctx.scores.suc_manh.tong_diem})`,
+        `Đặc điểm chủ đạo: chưa đủ căn cứ.`,
+        `Sức mạnh bản mệnh: ${strengthLabel} (Điểm thô: ${ctx.scores.suc_manh.diem_manh}/${ctx.scores.suc_manh.tong_diem} — chưa chốt)`,
         `Hành chủ đạo: ${meElement}`
     ];
 
@@ -126,30 +126,10 @@ function analyzeLuanGiai(ctx) {
 
     // Day Branch Description
     familyContent.push(`Trụ Ngày (Cung Phu Thê) tọa chi **${ganzhi.zhiToVN(dayZhi)}** (${branchInfo.animal}).`);
-    if (branchInfo.relationships) {
-        familyContent.push(`**Đặc điểm**: ${rng.pick(branchInfo.relationships)}`);
-    }
-
-    // Spouse Relationship
-    const spouseData = SPOUSE_RELATIONSHIPS[genderKey] || {};
-    // Determine marriage earliness/lateness logic - simplistic for now, or random variance
-    const marriageType = rng.pick(['early_marriage', 'late_marriage', 'happy_marriage']);
-    if (spouseData[marriageType]) {
-        familyContent.push(`**Hôn nhân**: ${rng.pick(spouseData[marriageType])}`);
-    }
-
-    // Parents
-    if (FATHER_RELATIONSHIPS.positive) {
-        // Randomly pick a quality for variety or base on stars if implemented later
-        const fQuality = rng.pick(['positive', 'balanced']);
-        familyContent.push(`**Cha**: ${rng.pick(FATHER_RELATIONSHIPS[fQuality])}`);
-    }
-
-    // Children
-    if (CHILDREN_RELATIONSHIPS.filial_children) {
-        const cQuality = rng.pick(['filial_children', 'many_children', 'challenging_children']);
-        familyContent.push(`**Con cái**: ${rng.pick(CHILDREN_RELATIONSHIPS[cQuality])}`);
-    }
+    familyContent.push(`**Đặc điểm**: chưa đủ căn cứ.`);
+    familyContent.push(`**Hôn nhân**: chưa đủ căn cứ.`);
+    familyContent.push(`**Cha**: chưa đủ căn cứ.`);
+    familyContent.push(`**Con cái**: chưa đủ căn cứ.`);
 
     const hhpResult = analysis.hinh_hai_pha;
     if (hhpResult && hhpResult.length > 0) {
@@ -167,27 +147,11 @@ function analyzeLuanGiai(ctx) {
     const healthDetail = HEALTH_BY_ELEMENT[meElement] || {};
     const fsAdvice = FENGSHUI_ADVICE_BY_ELEMENT[meElement] || [];
 
-    // Health by Element
-    if (healthDetail.organs) {
-        healthContent.push(`**Cơ quan yếu điểm**: ${rng.pick(healthDetail.organs)}`);
-    }
-    if (healthDetail.diseases) {
-        healthContent.push(`**Đề phòng bệnh**: ${rng.pick(healthDetail.diseases)}`);
-    }
-    if (healthDetail.prevention) {
-        healthContent.push(`**Lời khuyên phòng bệnh**: ${rng.pick(healthDetail.prevention)}`);
-    }
-
-    // Health by Season (Month)
-    const month = ctx.solar.getMonth(); // 1-12
-    let seasonKey = 'winter';
-    if (month >= 3 && month <= 5) seasonKey = 'spring';
-    else if (month >= 6 && month <= 8) seasonKey = 'summer';
-    else if (month >= 9 && month <= 11) seasonKey = 'autumn';
-
-    if (HEALTH_BY_SEASON[seasonKey]) {
-        healthContent.push(`**Theo mùa sinh**: ${rng.pick(HEALTH_BY_SEASON[seasonKey])}`);
-    }
+    // Health by Element / Season: bỏ chọn ngẫu nhiên, chưa đủ căn cứ.
+    healthContent.push(`**Cơ quan yếu điểm**: chưa đủ căn cứ.`);
+    healthContent.push(`**Đề phòng bệnh**: chưa đủ căn cứ.`);
+    healthContent.push(`**Lời khuyên phòng bệnh**: chưa đủ căn cứ.`);
+    healthContent.push(`**Theo mùa sinh**: chưa đủ căn cứ.`);
 
     const bdResult = analysis.benh_duoc;
     if (bdResult) {
@@ -239,10 +203,7 @@ function analyzeLuanGiai(ctx) {
 
     // Pattern detection
     const patternInfo = PATTERN_DATA[ctx.ge];
-    patternContent.push("**Cách cục**: " + (patternInfo ? (patternInfo.name[0] || ctx.ge) : "Cơ bản") + ".");
-    if (patternInfo && patternInfo.overview) {
-        patternContent.push(rng.pick(patternInfo.overview));
-    }
+    patternContent.push("**Cách cục**: " + (patternInfo ? (patternInfo.name[0] || ctx.ge) : "chưa xác định được") + ".");
 
     sections.push({
         title: "Cách Cục và Năng Lượng",
@@ -256,15 +217,11 @@ function analyzeLuanGiai(ctx) {
     const elementEvents = LIFE_EVENTS_BY_ELEMENT[meElement]?.events || [];
 
     ageRanges.forEach(range => {
-        const events = LIFE_EVENTS_BY_AGE[range];
-        if (events) {
-            const desc = rng.pick(events.general) || '';
-            eventContent.push(`**Tuổi ${range}**: ${desc}`);
-        }
+        eventContent.push(`**Tuổi ${range}**: chưa đủ căn cứ.`);
     });
 
     if (elementEvents.length > 0) {
-        eventContent.push(`**Lưu ý chung**: ${rng.pick(elementEvents)}`);
+        eventContent.push(`**Lưu ý chung**: chưa đủ căn cứ.`);
     }
 
     sections.push({
@@ -275,8 +232,8 @@ function analyzeLuanGiai(ctx) {
 
     // 9. LỜI KHUYÊN TỔNG HỢP
     const sumContent = [];
-    sumContent.push(`**Vận trình**: ${rng.pick(TRUNG_VAN_VUONG)}`);
-    sumContent.push(`**Châm ngôn**: "${rng.pick(SOCIAL_ADVICE)}"`);
+    sumContent.push(`**Vận trình**: chưa đủ căn cứ.`);
+    sumContent.push(`**Châm ngôn**: chưa đủ căn cứ.`);
 
     sections.push({
         title: "Lời Khuyên Tổng Hợp",

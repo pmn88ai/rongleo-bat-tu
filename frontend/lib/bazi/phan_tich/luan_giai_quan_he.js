@@ -267,10 +267,10 @@ function generatePart6(ctx, res) {
     const predictions = [];
 
     if (hasXung) {
-        // Mix different domains
+        // Mix different domains (deterministic, bỏ random 50%).
         predictions.push(pick(DICTIONARY.PART_6.CAREER));
         predictions.push(pick(DICTIONARY.PART_6.LOVE));
-        if (Math.random() > 0.5) predictions.push(pick(DICTIONARY.PART_6.HEALTH));
+        predictions.push(pick(DICTIONARY.PART_6.HEALTH));
     } else {
         predictions.push("Cuộc sống bình ổn, ít sóng gió lớn.");
     }

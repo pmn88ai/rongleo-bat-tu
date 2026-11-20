@@ -12,8 +12,9 @@ class BaZiCalculator {
         this.year = options.year;
         this.month = options.month;
         this.day = options.day;
-        this.hour = options.hour || 12;
-        this.minute = options.minute || 0;
+        // Giữ nguyên hour = 0 (giờ Tý). Chỉ mặc định 12 khi không truyền.
+        this.hour = (options.hour === undefined || options.hour === null) ? 12 : options.hour;
+        this.minute = (options.minute === undefined || options.minute === null) ? 0 : options.minute;
         this.isFemale = options.isFemale || false;
         this.isSolar = options.isSolar !== false; // default true
 
@@ -33,7 +34,9 @@ class BaZiCalculator {
         if (this.isSolar) {
             solar = Solar.fromYmdHms(this.year, this.month, this.day, this.hour, this.minute, 0);
         } else {
-            const lunar = Lunar.fromYmd(this.year, this.month, this.day);
+            // Giữ cả giờ/phút khi vào bằng âm lịch (bản cũ Lunar.fromYmd làm mất giờ,
+            // trụ giờ luôn rơi về Tý/00:00).
+            const lunar = Lunar.fromYmdHms(this.year, this.month, this.day, this.hour, this.minute, 0);
             solar = lunar.getSolar();
         }
 
@@ -221,11 +224,15 @@ class BaZiCalculator {
             }
         }
 
+        // Đây chỉ là điểm thô để hiển thị. Không dùng các ngưỡng/trọng số này
+        // làm căn cứ chốt vượng/nhược hay dụng thần (xem phan_tich/ngu_hanh.js).
         return {
             suc_manh: {
                 diem_manh: strongScore,
                 tong_diem: totalScore,
-                la_nhuoc: isWeak
+                la_nhuoc: isWeak,
+                chua_chot: true,
+                ghi_chu: 'Điểm thô, chưa chốt'
             },
             ngu_hanh_vn: this.elements,
             nhiet_do: this._calculateTemperature()
@@ -351,16 +358,20 @@ class BaZiCalculator {
         }
 
 
-        // Calculate weak/strong (can_yeu)
-        const isWeak = this.scores?.suc_manh?.la_nhuoc;
-        const canYeu = isWeak === true ? 'Yếu' : isWeak === false ? 'Mạnh' : 'Trung bình';
+        // Không chốt vượng/nhược từ điểm thô (quy tắc tủ chưa có căn cứ số).
+        const isWeak = this.scores?.suc_manh?.la_nhuoc || null;
+        const canYeu = 'chưa xác định được';
+        const lunarMonthRaw = lunar.getMonth();
+        const lunarMonthLabel = lunarMonthRaw < 0
+            ? `${Math.abs(lunarMonthRaw)} nhuận`
+            : String(lunarMonthRaw);
 
         return {
             basicInfo: {
                 ten: '',
                 gioi_tinh: this.isFemale ? 'Nữ' : 'Nam',
                 ngay_duong_lich: `Năm ${solar.getYear()} tháng ${solar.getMonth()} ngày ${solar.getDay()}`,
-                ngay_am_lich: `Năm ${lunar.getYear()} tháng ${lunar.getMonth()} ngày ${lunar.getDay()}`,
+                ngay_am_lich: `Năm ${lunar.getYear()} tháng ${lunarMonthLabel} ngày ${lunar.getDay()}`,
                 gio_sinh: String(this.hour),
                 gio_chi: ganzhi.zhiToVN(this.zhis[3]),
                 tiet_khi: lunar.getJieQi() || '',
@@ -368,7 +379,8 @@ class BaZiCalculator {
                 thai_nguyen: thaiNguyen,
                 than_cung: thanCung,
                 nhap_van: nhapVan,
-                can_yeu: canYeu
+                can_yeu: canYeu,
+                can_yeu_ghi_chu: 'Điểm thô, chưa chốt'
             },
             pillars: this.pillars,
             elements: this.elements,

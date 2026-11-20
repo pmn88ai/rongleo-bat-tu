@@ -14,8 +14,8 @@ const { createSeededRandom } = require('../../utils/random');
  * Solve a specialized question using combinatorial generation and Bazi facts.
  */
 async function solveQuestion(ctx, questionId) {
-    // Create a stable RNG for this user-question pair
-    const seed = ctx.me + (ctx.name || '') + questionId + new Date().getHours();
+    // Create a stable RNG for this user-question pair (không phụ thuộc giờ chạy).
+    const seed = ctx.me + (ctx.name || '') + questionId;
     const rng = createSeededRandom(seed);
 
     // 1. Find the question in the 800-question database
