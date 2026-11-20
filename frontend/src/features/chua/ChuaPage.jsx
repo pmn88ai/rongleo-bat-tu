@@ -115,7 +115,7 @@ const ChuaPage = () => {
             <div className="chua-scene-bg" ref={fullscreen.sceneRef}>
                 <video
                     className="chua-scene-video"
-                    src="/video/cong-chua-loop.mp4"
+                    src="/video/cong-chua-smoke.mp4"
                     poster="/images/chua/nen-cong-chua.jpg"
                     autoPlay
                     loop
