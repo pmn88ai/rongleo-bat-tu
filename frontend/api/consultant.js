@@ -5,6 +5,7 @@ const BaZiCalculator = require('../lib/bazi/calculator');
 const { formatOutput } = require('../lib/bazi/output');
 const { calculateDaiVan } = require('../lib/bazi/dayun');
 const { buildTuViPromptContext } = require('../lib/bazi/tu_vi_summary');
+const { buildNguHanhTuTruBlock } = require('../lib/bazi/ngu_hanh_table');
 const { solveQuestion } = require('../lib/bazi/questions/engine');
 const { THEMES, QUESTIONS } = require('../lib/bazi/questions/data');
 const groqService = require('../lib/services/groq.service');
@@ -139,6 +140,7 @@ async function handleComprehensive(req, res) {
     const [yearP, monthP, dayP, hourP] = [chiTietTru[0]||{}, chiTietTru[1]||{}, chiTietTru[2]||{}, chiTietTru[3]||{}];
 
     const pillarStr = (p) => (p.can && p.chi) ? `${p.can} ${p.chi} (Nạp Âm: ${p.nap_am||''})` : 'Chưa có';
+    const nguHanhTuTruStr = buildNguHanhTuTruBlock([yearP, monthP, dayP, hourP]);
     const daiVan = chartData.dai_van || [];
     const daiVanStr = daiVan.slice(0,5).map(d => `- Tuổi ${d.tuoi_bat_dau||'?'}+: ${d.can_chi||''} (năm ${d.nam||''})`).join('\n') || '- Chưa có dữ liệu';
 
@@ -167,6 +169,7 @@ TỨ TRỤ:
 - Tháng: ${pillarStr(monthP)}
 - Ngày: ${pillarStr(dayP)} ← NHẬT CHỦ
 - Giờ: ${pillarStr(hourP)}
+${nguHanhTuTruStr}
 NHẬT CHỦ: ${dayP.can||'?'} (${dayP.hanh_can||'?'})
 CƯỜNG NHƯỢC: ${chartData.phan_tich?.can_bang_ngu_hanh?.nhan_dinh?.cuong_do||'Cần phân tích'}
 DỤNG THẦN: ${(chartData.phan_tich?.can_bang_ngu_hanh?.dung_than?.ngu_hanh||[]).join(', ')||'Cần phân tích'}

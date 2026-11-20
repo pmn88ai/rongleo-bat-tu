@@ -7,6 +7,8 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-20b';
 
+const { buildNguHanhTuTruBlock } = require('../bazi/ngu_hanh_table');
+
 // ─── Low-level call ────────────────────────────────────────────────────────────
 
 async function callGroq(prompt, { systemPrompt = null, maxTokens = 2000, temperature = 0.7, jsonMode = false } = {}) {
@@ -209,6 +211,8 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
 
     const pillarsSimple = pillars.map((p, i) => `Trụ ${pillarsLabels[i]}: ${p.can} ${p.chi}`).join(' | ');
 
+    const nguHanhTuTru = buildNguHanhTuTruBlock(pillars);
+
     let luckInfo = '';
     const currentYear = now.getFullYear();
     if (luckCyclesData?.dai_van?.length > 0) {
@@ -267,6 +271,8 @@ ${partnerContext ? `
 
 Bát Tự tóm tắt: ${pillarsSimple}
 ${pillarsDetailedInfo}
+
+${nguHanhTuTru}
 
 Phân tích Cách Cục: ${godInfo}
 Vận hạn hiện tại: ${luckInfo}

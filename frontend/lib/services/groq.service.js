@@ -8,6 +8,8 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-20b';
 
+const { buildNguHanhTuTruBlock } = require('../bazi/ngu_hanh_table');
+
 async function callGroq(prompt, options) {
     options = options || {};
     const systemPrompt = options.systemPrompt || null;
@@ -199,6 +201,8 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
         return 'Trụ ' + labels[i] + ': ' + p.can + ' ' + p.chi;
     }).join(' | ');
 
+    const nguHanhTuTru = buildNguHanhTuTruBlock(pillars);
+
     let luckInfo = '';
     if (luckCyclesData && luckCyclesData.dai_van && luckCyclesData.dai_van.length > 0) {
         const dv = luckCyclesData.dai_van.find(function(d) {
@@ -254,6 +258,7 @@ function buildUserPrompt(baziContext, luckCyclesData, questionText, personaId, p
         '- Mệnh: ' + (basicInfo.menh || 'N/A') + '\n\n' +
         'Bát Tự tóm tắt: ' + pillarsSimple + '\n' +
         pillarsDetail + '\n' +
+        nguHanhTuTru + '\n' +
         'Phân tích Cách Cục:' + godInfo + '\n' +
         'Vận hạn hiện tại:' + luckInfo + '\n' +
         tuViInfo + '\n' +

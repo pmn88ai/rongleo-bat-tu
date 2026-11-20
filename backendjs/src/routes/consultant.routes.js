@@ -10,6 +10,7 @@ const dbService = require('../services/database.service');
 const { formatOutput } = require('../bazi/output');
 const { calculateDaiVan } = require('../bazi/dayun');
 const { buildTuViPromptContext } = require('../bazi/tu_vi_summary');
+const { buildNguHanhTuTruBlock } = require('../bazi/ngu_hanh_table');
 const authRoutes = require('./auth.routes');
 
 // NO-AUTH: lấy userId từ x-user-id header, fallback "anonymous"
@@ -404,6 +405,8 @@ router.post('/comprehensive', aiLimiter, async (req, res) => {
             ? Object.entries(elementScores).map(([k, v]) => `- ${k}: ${v}`).join('\n')
             : '- Chưa có dữ liệu điểm ngũ hành';
 
+        const nguHanhTuTruStr = buildNguHanhTuTruBlock([yearPillar, monthPillar, dayPillar, hourPillar]);
+
         const shiShenStr = Object.entries(shiShen)
             .filter(([k, v]) => v)
             .map(([k, v]) => `- ${k}: ${v}`).join('\n') || '- Thập thần đang được tính toán';
@@ -470,6 +473,8 @@ TỨ TRỤ (Năm-Tháng-Ngày-Giờ):
 - Tháng: ${formatPillarFromObj(monthPillar)} (Nạp Âm: ${monthPillar.nap_am || ''})
 - Ngày: ${formatPillarFromObj(dayPillar)} (Nạp Âm: ${dayPillar.nap_am || ''}) ← NHẬT CHỦ
 - Giờ: ${formatPillarFromObj(hourPillar)} (Nạp Âm: ${hourPillar.nap_am || ''})
+
+${nguHanhTuTruStr}
 
 NHẬT CHỦ: ${dayMaster} (Hành ${dayMasterElement})
 CƯỜNG NHƯỢC: ${dayMasterStrength}
