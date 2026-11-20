@@ -108,6 +108,25 @@ const STALLS = [
     }
 ];
 
+const SPACES = [
+    {
+        id: 'chanhdien',
+        title: 'Chánh Điện',
+        path: '/chanh-dien',
+        short: 'Chánh Điện',
+        icon: '🛕',
+        desc: 'Không gian Phật, nhang khói và nhạc thiền — lắng lòng trước khi hỏi.'
+    },
+    {
+        id: 'vuontinhtam',
+        title: 'Vườn Tịnh Tâm',
+        path: '/vuon-tinh-tam',
+        short: 'Vườn Tịnh Tâm',
+        icon: '🍃',
+        desc: 'Suối, vườn đá, cây lá và khung video nhạc piano của Leo.'
+    }
+];
+
 const CourtyardMark = () => (
     <svg
         className="chua-yard-svg"
@@ -145,9 +164,27 @@ const ChuaPage = () => {
                 </p>
             </header>
 
+            <div className="chua-spaces">
+                {SPACES.map(space => (
+                    <Link key={space.id} to={space.path} className={`chua-space chua-space--${space.id}`}>
+                        <span className="chua-space-icon" aria-hidden="true">{space.icon}</span>
+                        <span className="chua-space-body">
+                            <span className="chua-space-title">{space.title}</span>
+                            <span className="chua-space-desc">{space.desc}</span>
+                        </span>
+                        <span className="chua-space-cta">Vào →</span>
+                    </Link>
+                ))}
+            </div>
+
             <nav className="chua-quick" aria-label="Xem nhanh">
                 <span className="chua-quick-label">Xem nhanh</span>
                 <div className="chua-quick-links">
+                    {SPACES.map(space => (
+                        <Link key={space.id} to={space.path} className="chua-quick-link">
+                            {space.short}
+                        </Link>
+                    ))}
                     {STALLS.map(stall => (
                         <Link key={stall.id} to={stall.path} className="chua-quick-link">
                             {stall.short}
@@ -194,7 +231,7 @@ const ChuaPage = () => {
             </div>
 
             <p className="chua-login-note">
-                Đăng nhập để lưu hồ sơ, lần sau khỏi gõ lại — sắp có.
+                Đăng nhập ở góc trên để lưu hồ sơ — lần sau vào quầy không phải gõ lại ngày giờ sinh.
             </p>
         </div>
     );

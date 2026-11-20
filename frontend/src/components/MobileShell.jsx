@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import AccountButton from './AccountButton';
 
-// Header navigation items (4 items)
+// Header navigation items
 const headerTabs = [
+  { id: 'chanhdien', path: '/chanh-dien', label: 'CHÁNH ĐIỆN', icon: '🛕' },
+  { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', icon: '🍃' },
   { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },
   { id: 'matching', path: '/duyenso', label: 'DUYÊN SỐ', icon: '🎎' },
   { id: 'cycles', path: '/vanhan', label: 'VẬN HẠN', icon: '📈' },
@@ -39,11 +42,16 @@ const BrandBar = () => {
 
   if (isHomePage) {
     return (
-      <div style={{ position: 'fixed', top: '12px', left: '12px', zIndex: 200 }}>
-        <a href="https://rongleo-land.vercel.app/" target="_blank" rel="noopener noreferrer" style={LAND_LINK_STYLE}>
-          ← RongLeo Land
-        </a>
-      </div>
+      <>
+        <div style={{ position: 'fixed', top: '12px', left: '12px', zIndex: 200 }}>
+          <a href="https://rongleo-land.vercel.app/" target="_blank" rel="noopener noreferrer" style={LAND_LINK_STYLE}>
+            ← RongLeo Land
+          </a>
+        </div>
+        <div style={{ position: 'fixed', top: '12px', right: '12px', zIndex: 200 }}>
+          <AccountButton />
+        </div>
+      </>
     );
   }
 
@@ -60,7 +68,7 @@ const BrandBar = () => {
       <h1 className="mobile-mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         MỆNH LÝ AI
       </h1>
-      <div style={{ width: '80px' }} />
+      <AccountButton />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import QuickDivination from './QuickDivination';
 import DatePicker from './DatePicker';
 import Toast from '../../components/Toast';
@@ -7,9 +7,12 @@ import RecentCustomers from '../../components/RecentCustomers';
 import SuggestedQuestions from '../../components/SuggestedQuestions';
 import SampleShowcase from '../../components/SampleShowcase';
 import ArticlesSection from '../../components/ArticlesSection';
+import { useAuth } from '../../context/AuthContext';
 
 
 const BirthInput = ({ onAnalyze, loading }) => {
+    const navigate = useNavigate();
+    const { savedProfile } = useAuth();
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [toast, setToast] = useState(null);
 
@@ -17,6 +20,18 @@ const BirthInput = ({ onAnalyze, loading }) => {
         const savedForm = sessionStorage.getItem('homepage_form_data');
         if (savedForm) {
             try { return JSON.parse(savedForm); } catch (e) {}
+        }
+        if (savedProfile && savedProfile.year) {
+            return {
+                name: savedProfile.name || '',
+                gender: savedProfile.gender || 'Nam',
+                year: savedProfile.year,
+                month: savedProfile.month,
+                day: savedProfile.day,
+                hour: savedProfile.hour ?? 0,
+                minute: savedProfile.minute ?? 0,
+                calendar: savedProfile.calendar || 'solar'
+            };
         }
         return { name: '', gender: 'Nam', year: 1990, month: 6, day: 15, hour: 10, minute: 0, calendar: 'solar' };
     });

@@ -22,6 +22,8 @@ import WesternPage from './features/WesternAstrology/WesternPage';
 import VanHomNayPage from './features/van_hom_nay/VanHomNayPage';
 import TuViPage from './features/tu_vi/TuViPage';
 import ChuaPage from './features/chua/ChuaPage';
+import ChanhDienPage from './features/chua/ChanhDienPage';
+import VuonTinhTamPage from './features/chua/VuonTinhTamPage';
 import PDFExportButton from './components/PDFExportButton';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
@@ -29,15 +31,33 @@ import MobileShell from './components/MobileShell';
 import DesktopShell from './components/DesktopShell';
 import useWindowSize from './hooks/useWindowSize';
 import { useBaziApi } from './hooks/useBaziApi';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { MusicPlayerProvider } from './context/MusicPlayerContext';
+import MusicPlayer from './components/MusicPlayer';
 
 // Input Page Component
 const InputPage = ({ onAnalyze, loading }) => {
   const navigate = useNavigate();
+  const { isAuthenticated, updateProfile } = useAuth();
 
   const handleAnalyze = async (params) => {
     const result = await onAnalyze(params);
     if (result) {
+      // Người đã đăng nhập: lưu hồ sơ để các quầy tự điền lần sau
+      if (isAuthenticated && params.year && params.month && params.day) {
+        updateProfile({
+          name: params.name || '',
+          baziData: {
+            year: parseInt(params.year),
+            month: parseInt(params.month),
+            day: parseInt(params.day),
+            hour: parseInt(params.hour) || 0,
+            minute: parseInt(params.minute) || 0,
+            gender: params.gender || 'Nam',
+            calendar: params.calendar || 'solar'
+          }
+        }).catch(() => {});
+      }
       // Navigate to chart page, preserving the query params updated by useBaziApi
       navigate({
         pathname: '/laso',
@@ -93,9 +113,13 @@ const LoadingOverlay = () => (
 // Main App Component
 const AppContent = () => {
   const { data, inputParams, loading, error, analyze, clearData } = useBaziApi();
+  const { savedProfile } = useAuth();
   const { isMobile } = useWindowSize();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const hasSavedProfile = !!(savedProfile && savedProfile.year && savedProfile.month && savedProfile.day);
+  const effectiveUserData = inputParams || (hasSavedProfile ? savedProfile : null);
 
   // If we have data and we're on home page, redirect to chart preserving params
   // But skip if there's a pending question from suggestions
@@ -117,19 +141,21 @@ const AppContent = () => {
   const isRecovering = !hasData && searchParams.get('year') && searchParams.get('month') && searchParams.get('day');
 
   // Render content based on route
-  const renderPageContent = (PageComponent, props = {}) => {
+  const renderPageContent = (PageComponent, props = {}, options = {}) => {
     if (loading || isRecovering) {
       return <LoadingOverlay />;
     }
     // Allow consultant page if there's pending question from suggestion click
     const hasPendingQuestion = localStorage.getItem('pending_question');
-    if (!hasData && !hasPendingQuestion) {
+    const canUseProfile = options.allowProfile && hasSavedProfile;
+    if (!hasData && !hasPendingQuestion && !canUseProfile) {
       return <Navigate to="/" replace />;
     }
     return <PageComponent {...props} />;
   };
 
   const Shell = isMobile ? MobileShell : DesktopShell;
+  const isTempleRoute = location.pathname === '/chanh-dien' || location.pathname === '/vuon-tinh-tam';
 
   // Admin page renders standalone without Shell
   if (location.pathname.startsWith('/admin')) {
@@ -150,13 +176,13 @@ const AppContent = () => {
         />
         <div className="bazi-bg"></div>
 
-        {location.pathname !== '/van-hom-nay' && (
+        {!isTempleRoute && location.pathname !== '/van-hom-nay' && (
           <Link to="/van-hom-nay" className="vhn-fab" title="Vận hôm nay — miễn phí">
             ☀️ VẬN HÔM NAY
           </Link>
         )}
 
-        {location.pathname !== '/tuvi' && (
+        {!isTempleRoute && location.pathname !== '/tuvi' && (
           <Link to="/tuvi" className="tuv-fab" title="Tử vi — an sao">
             🔮 TỬ VI
           </Link>
@@ -172,9 +198,9 @@ const AppContent = () => {
 
           {/* Analysis pages */}
           <Route path="/phantich" element={renderPageContent(MatrixAnalysis, { data })} />
-          <Route path="/xemngay" element={renderPageContent(PersonalizedDate, { data, userData: inputParams })} />
-          <Route path="/chonngay" element={renderPageContent(AuspiciousDatePicker, { userData: inputParams })} />
-          <Route path="/tuvan" element={renderPageContent(ConsultantPage, { userData: inputParams })} />
+          <Route path="/xemngay" element={renderPageContent(PersonalizedDate, { data, userData: effectiveUserData }, { allowProfile: true })} />
+          <Route path="/chonngay" element={renderPageContent(AuspiciousDatePicker, { userData: effectiveUserData }, { allowProfile: true })} />
+          <Route path="/tuvan" element={renderPageContent(ConsultantPage, { userData: effectiveUserData }, { allowProfile: true })} />
           <Route path="/vanhan" element={renderPageContent(LuckCycles, { data })} />
           <Route path="/dientich" element={renderPageContent(ClassicTexts, { data })} />
 
@@ -182,7 +208,7 @@ const AppContent = () => {
           <Route path="/duyenso" element={<MatchingPage userData={inputParams} />} />
 
           {/* Xin Que page */}
-          <Route path="/xinque" element={renderPageContent(QuePage, { userData: inputParams })} />
+          <Route path="/xinque" element={renderPageContent(QuePage, { userData: effectiveUserData }, { allowProfile: true })} />
 
           {/* Western Astrology page - renders standalone with its own fallback UI */}
           <Route path="/tuviphuongtay" element={<WesternPage userData={inputParams} />} />
@@ -195,6 +221,10 @@ const AppContent = () => {
 
           {/* Bản đồ chùa - mặt tiền mới, không cần dữ liệu lá số */}
           <Route path="/chua" element={<ChuaPage />} />
+
+          {/* Không gian tĩnh tâm - không cần dữ liệu lá số */}
+          <Route path="/chanh-dien" element={<ChanhDienPage />} />
+          <Route path="/vuon-tinh-tam" element={<VuonTinhTamPage />} />
 
           {/* History page - Standalone */}
           <Route path="/lich-su" element={<HistoryPage />} />
@@ -211,6 +241,8 @@ const AppContent = () => {
             ⚠️ Lỗi: {error}
           </div>
         )}
+
+        <MusicPlayer />
       </Shell>
     </HelmetProvider>
   );
@@ -220,9 +252,11 @@ const AppContent = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <MusicPlayerProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </MusicPlayerProvider>
     </AuthProvider>
   );
 };

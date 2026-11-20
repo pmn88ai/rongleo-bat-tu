@@ -1,0 +1,96 @@
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useMusicPlayer } from '../context/MusicPlayerContext';
+import './MusicPlayer.css';
+
+const formatTime = (seconds) => {
+    if (!Number.isFinite(seconds) || seconds <= 0) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
+};
+
+const MusicPlayer = () => {
+    const location = useLocation();
+    const {
+        title, isPlaying, duration, currentTime, volume, expanded,
+        setExpanded, toggle, seek, setVolume, available, pause
+    } = useMusicPlayer();
+
+    const isTempleRoute = location.pathname === '/chanh-dien' || location.pathname === '/vuon-tinh-tam';
+
+    useEffect(() => {
+        if (!isTempleRoute && isPlaying) pause();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.pathname]);
+
+    if (!isTempleRoute) return null;
+
+    if (!available) {
+        return (
+            <div className="music-player-missing" role="status">
+                Không tìm thấy file nhạc /audio/thien.mp3
+            </div>
+        );
+    }
+
+    if (!expanded) {
+        return (
+            <button
+                className={`music-fab ${isPlaying ? 'is-playing' : ''}`}
+                onClick={() => {
+                    if (!isPlaying) toggle();
+                    setExpanded(true);
+                }}
+                title="Mở thanh nhạc"
+                aria-label="Mở thanh nhạc"
+            >
+                <span className="music-fab-icon">{isPlaying ? '❚❚' : '▶'}</span>
+            </button>
+        );
+    }
+
+    return (
+        <div className="music-bar" role="region" aria-label="Thanh nhạc thiền">
+            <button className="music-play-btn" onClick={toggle} aria-label={isPlaying ? 'Tạm dừng' : 'Phát'}>
+                {isPlaying ? '❚❚' : '▶'}
+            </button>
+
+            <div className="music-bar-main">
+                <div className="music-bar-top">
+                    <span className="music-bar-title">{title}</span>
+                    <span className="music-bar-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                </div>
+                <input
+                    className="music-progress"
+                    type="range"
+                    min="0"
+                    max={duration || 1}
+                    step="0.1"
+                    value={Math.min(currentTime, duration || 1)}
+                    onChange={(e) => seek(parseFloat(e.target.value))}
+                    aria-label="Tiến trình bài nhạc"
+                />
+            </div>
+
+            <div className="music-volume">
+                <span aria-hidden="true">🔊</span>
+                <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={(e) => setVolume(parseFloat(e.target.value))}
+                    aria-label="Âm lượng"
+                />
+            </div>
+
+            <button className="music-collapse-btn" onClick={() => setExpanded(false)} aria-label="Thu nhỏ thanh nhạc">
+                ✕
+            </button>
+        </div>
+    );
+};
+
+export default MusicPlayer;

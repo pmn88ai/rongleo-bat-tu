@@ -1,8 +1,11 @@
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import AccountButton from './AccountButton';
 
 const tabs = [
     { id: 'chua', path: '/chua', label: 'VÀO CHÙA', icon: '🏮' },
+    { id: 'chanhdien', path: '/chanh-dien', label: 'CHÁNH ĐIỆN', icon: '🛕' },
+    { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', icon: '🍃' },
     { id: 'chart', path: '/laso', label: 'LÁ SỐ', icon: '🎨' },
     { id: 'matrix', path: '/phantich', label: 'PHÂN TÍCH', icon: '⚙️' },
     { id: 'date', path: '/xemngay', label: 'XEM NGÀY', icon: '📅' },
@@ -54,9 +57,14 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
         <div className="desktop-shell">
             <div className="app-container">
                 {isHomePage ? (
-                    <div style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 200 }}>
-                        <LandButton />
-                    </div>
+                    <>
+                        <div style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 200 }}>
+                            <LandButton />
+                        </div>
+                        <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 200 }}>
+                            <AccountButton />
+                        </div>
+                    </>
                 ) : (
                     <>
                         <div className="action-bar glass-card">
@@ -66,7 +74,8 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
                                     MỆNH LÝ AI
                                 </h1>
                             </div>
-                            <div className="header-right">
+                            <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <AccountButton />
                                 {hasData && (
                                     <button className="premium-button small" onClick={handleClearData}>
                                         XEM LÁ SỐ KHÁC

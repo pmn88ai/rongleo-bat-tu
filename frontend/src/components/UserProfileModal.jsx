@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
-import { API_CONFIG } from '../config/api';
 
 const UserProfileModal = ({ isOpen, onClose }) => {
-    const { user, token, refreshUser } = useAuth();
+    const { user, updateProfile, logout } = useAuth();
     const [formData, setFormData] = useState({
         name: user?.name || '',
         year: user?.bazi_data?.year || 1990,
@@ -27,34 +26,21 @@ const UserProfileModal = ({ isOpen, onClose }) => {
         setSaving(true);
         setMessage(null);
         try {
-            const res = await fetch(`${API_CONFIG.AUTH}/profile`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    name: formData.name,
-                    baziData: {
-                        year: parseInt(formData.year),
-                        month: parseInt(formData.month),
-                        day: parseInt(formData.day),
-                        hour: parseInt(formData.hour),
-                        gender: formData.gender,
-                        calendar: 'solar'
-                    }
-                })
+            await updateProfile({
+                name: formData.name,
+                baziData: {
+                    year: parseInt(formData.year),
+                    month: parseInt(formData.month),
+                    day: parseInt(formData.day),
+                    hour: parseInt(formData.hour),
+                    gender: formData.gender,
+                    calendar: 'solar'
+                }
             });
-            const data = await res.json();
-            if (res.ok) {
-                setMessage({ type: 'success', text: 'Cập nhật thành công!' });
-                refreshUser();
-                setTimeout(onClose, 1500);
-            } else {
-                setMessage({ type: 'error', text: data.error || 'Có lỗi xảy ra' });
-            }
+            setMessage({ type: 'success', text: 'Cập nhật thành công!' });
+            setTimeout(onClose, 1500);
         } catch (err) {
-            setMessage({ type: 'error', text: 'Không thể kết nối server' });
+            setMessage({ type: 'error', text: err.message || 'Không thể lưu hồ sơ' });
         } finally {
             setSaving(false);
         }
@@ -151,6 +137,13 @@ const UserProfileModal = ({ isOpen, onClose }) => {
                 )}
 
                 <div className="profile-actions">
+                    <button
+                        className="secondary-button"
+                        onClick={async () => { await logout(); onClose(); }}
+                        style={{ marginRight: 'auto' }}
+                    >
+                        Đăng xuất
+                    </button>
                     <button className="secondary-button" onClick={onClose}>Hủy</button>
                     <button className="premium-button" onClick={handleSave} disabled={saving}>
                         {saving ? 'Đang lưu...' : 'Lưu thay đổi'}
