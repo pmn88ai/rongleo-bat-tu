@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
 import { getUserId } from '../../utils/getUserId';
 import QueCard from './components/QueCard';
 import GuaSymbol from './components/GuaSymbol';
@@ -8,6 +9,13 @@ import QueShareCard from './components/QueShareCard';
 import './QuePage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
+
+// Mỗi ô kỳ đi đúng endpoint kỳ của nó (backendjs + bản serverless frontend/api/que).
+const PERIOD_ENDPOINTS = {
+    daily: '/api/que/daily',
+    monthly: '/api/que/monthly',
+    yearly: '/api/que/yearly'
+};
 
 
 const TOPICS = [
@@ -51,27 +59,30 @@ const QuePage = ({ userData }) => {
     const hasUserData = userData && userData.year && userData.month && userData.day;
 
     const handleRequest = useCallback(async (type) => {
+        if (!hasUserData) {
+            setError('Chưa có hồ sơ mệnh — vui lòng điền hồ sơ trước khi xin quẻ ngày/tháng/năm.');
+            return;
+        }
+
         setLoading(prev => ({ ...prev, [type]: true }));
         setError(null);
         setSelectedGua(null); // Clear previous result while loading new one
 
         try {
-            const params = new URLSearchParams({ topic: selectedTopic, type });
-            if (hasUserData) {
-                params.set('year', userData.year);
-                params.set('month', userData.month);
-                params.set('day', userData.day);
-                params.set('hour', userData.hour || 12);
-                params.set('minute', userData.minute || 0);
-                params.set('gender', userData.gender || 'Nam');
-            }
+            const params = new URLSearchParams({ topic: selectedTopic });
+            params.set('year', userData.year);
+            params.set('month', userData.month);
+            params.set('day', userData.day);
+            params.set('hour', userData.hour || 12);
+            params.set('minute', userData.minute || 0);
+            params.set('gender', userData.gender || 'Nam');
 
             const headers = {
                 'Content-Type': 'application/json',
                 'x-user-id': getUserId()
             };
 
-            const response = await fetch(`${API_BASE}/api/que/quick-random?${params.toString()}`, {
+            const response = await fetch(`${API_BASE}${PERIOD_ENDPOINTS[type]}?${params.toString()}`, {
                 method: 'GET',
                 headers: headers
             });
@@ -104,6 +115,11 @@ const QuePage = ({ userData }) => {
     }, []);
 
     const handleReroll = useCallback(async (type) => {
+        if (!hasUserData) {
+            setError('Chưa có hồ sơ mệnh — vui lòng điền hồ sơ trước khi xin quẻ ngày/tháng/năm.');
+            return;
+        }
+
         // Clear existing data for this type
         setData(prev => ({ ...prev, [type]: null }));
         setLoading(prev => ({ ...prev, [type]: true }));
@@ -111,22 +127,20 @@ const QuePage = ({ userData }) => {
         setSelectedGua(null);
 
         try {
-            const params = new URLSearchParams({ topic: selectedTopic, type });
-            if (hasUserData) {
-                params.set('year', userData.year);
-                params.set('month', userData.month);
-                params.set('day', userData.day);
-                params.set('hour', userData.hour || 12);
-                params.set('minute', userData.minute || 0);
-                params.set('gender', userData.gender || 'Nam');
-            }
+            const params = new URLSearchParams({ topic: selectedTopic, forceNew: 'true' });
+            params.set('year', userData.year);
+            params.set('month', userData.month);
+            params.set('day', userData.day);
+            params.set('hour', userData.hour || 12);
+            params.set('minute', userData.minute || 0);
+            params.set('gender', userData.gender || 'Nam');
 
             const headers = {
                 'Content-Type': 'application/json',
                 'x-user-id': getUserId()
             };
 
-            const response = await fetch(`${API_BASE}/api/que/quick-random?${params.toString()}`, {
+            const response = await fetch(`${API_BASE}${PERIOD_ENDPOINTS[type]}?${params.toString()}`, {
                 method: 'GET',
                 headers
             });
@@ -151,6 +165,12 @@ const QuePage = ({ userData }) => {
     const today = useMemo(() => new Date(), []);
     const todayStr = useMemo(() => today.toLocaleDateString('vi-VN', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    }), [today]);
+
+    const periodLabels = useMemo(() => ({
+        daily: `Hôm nay ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`,
+        monthly: `Tháng ${today.getMonth() + 1}/${today.getFullYear()}`,
+        yearly: `Năm ${today.getFullYear()}`
     }), [today]);
 
     const getQualityClass = (quality) => {
@@ -192,7 +212,11 @@ const QuePage = ({ userData }) => {
                     {!hasUserData && (
                         <div className="glass-card" style={{ textAlign: 'center', padding: '1rem', marginBottom: '1rem' }}>
                             <p style={{ color: 'rgba(255,255,255,0.7)', margin: 0 }}>
-                                📋 Chưa có hồ sơ mệnh nên quẻ chỉ tính theo giờ gieo — điền hồ sơ để tính theo mệnh.
+                                📋 Chưa có hồ sơ mệnh nên 3 ô Quẻ Ngày/Tháng/Năm chưa gieo được — vui lòng{' '}
+                                <Link to="/ho-so-menh" style={{ color: '#f5c96b', textDecoration: 'underline' }}>
+                                    điền hồ sơ mệnh
+                                </Link>{' '}
+                                để tính quẻ theo kỳ.
                             </p>
                         </div>
                     )}
@@ -224,9 +248,10 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={isAnyLoading}
+                            disabled={!hasUserData || isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
+                            periodLabel={periodLabels.daily}
                         />
 
                         <QueCard
@@ -238,9 +263,10 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={isAnyLoading}
+                            disabled={!hasUserData || isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
+                            periodLabel={periodLabels.monthly}
                         />
 
                         <QueCard
@@ -252,9 +278,10 @@ const QuePage = ({ userData }) => {
                             onRequest={handleRequest}
                             onSelect={handleSelectGua}
                             onReroll={handleReroll}
-                            disabled={isAnyLoading}
+                            disabled={!hasUserData || isAnyLoading}
                             isGuest={false}
                             topic={selectedTopic}
+                            periodLabel={periodLabels.yearly}
                         />
                     </div>
 

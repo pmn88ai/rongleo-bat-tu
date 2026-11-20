@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import GuaSymbol from './GuaSymbol';
 
-const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loading, disabled, isGuest, topic }) => {
+const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loading, disabled, isGuest, topic, periodLabel }) => {
     const hasData = !!data && !data.error;
 
     const handleClick = useCallback(() => {
@@ -28,6 +28,9 @@ const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loadi
                     <div className="card-content">
                         <div className="card-icon">{icon}</div>
                         <h3 className="card-title">{title}</h3>
+                        {periodLabel && (
+                            <p className="card-period">{periodLabel}</p>
+                        )}
                         {loading ? (
                             <div className="card-status status-loading">
                                 <div className="divination-3d-scene">
@@ -66,7 +69,7 @@ const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loadi
                     {hasData && (
                         <div className="result-content">
                             <div className="result-header">
-                                <span className="result-period">{title}</span>
+                                <span className="result-period">{data.displayPeriod || periodLabel || title}</span>
                                 {topic && topic !== 'Chung' && (
                                     <span className="topic-badge">🎯 {topic}</span>
                                 )}
