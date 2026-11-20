@@ -19,14 +19,6 @@
     display: block;
 }
 
-.chua-scene-veil {
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(180deg, rgba(3, 7, 5, 0.62) 0%, rgba(3, 7, 5, 0.4) 35%, rgba(3, 7, 5, 0.72) 100%),
-        radial-gradient(circle at 50% 38%, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.5) 100%);
-}
-
 .chua-page {
     position: relative;
     z-index: 1;

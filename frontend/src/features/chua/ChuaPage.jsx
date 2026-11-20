@@ -125,7 +125,6 @@ const ChuaPage = () => {
                     aria-hidden="true"
                     tabIndex={-1}
                 />
-                <div className="chua-scene-veil" aria-hidden="true" />
                 <TempleSceneControls fullscreen={fullscreen} />
             </div>
 
