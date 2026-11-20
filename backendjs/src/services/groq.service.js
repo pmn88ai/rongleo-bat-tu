@@ -1,11 +1,11 @@
 /**
  * Groq AI Service — replaces OpenRouter
- * Model: llama3-70b-8192
+ * Model: openai/gpt-oss-20b
  * Drop-in replacement: same method signatures as openrouter.service.js
  */
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama3-70b-8192';
+const GROQ_MODEL = 'openai/gpt-oss-20b';
 
 // ─── Low-level call ────────────────────────────────────────────────────────────
 
