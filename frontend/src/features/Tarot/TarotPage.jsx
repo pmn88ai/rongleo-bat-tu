@@ -79,6 +79,7 @@ const CardVisual = ({ item, index, compact = false }) => {
 
 const MeaningBlock = ({ item }) => {
     const { card, reversed } = item;
+    const simpleMeaning = reversed ? card.giaiThichNguoc : card.giaiThichXuoi;
     return (
         <article className="tarot-result">
             <header className="tarot-result-header">
@@ -91,6 +92,11 @@ const MeaningBlock = ({ item }) => {
                     {reversed ? 'Chiều ngược' : 'Chiều xuôi'}
                 </span>
             </header>
+
+            <div className={`tarot-simple ${reversed ? 'is-reversed' : 'is-upright'}`}>
+                <span className="tarot-simple-label">Hiểu đơn giản là:</span>
+                <p>{simpleMeaning}</p>
+            </div>
 
             <div className={`tarot-meaning-block ${reversed ? 'is-dimmed' : 'is-active'}`}>
                 <span className="tarot-meaning-label">
@@ -109,10 +115,13 @@ const MeaningBlock = ({ item }) => {
             </div>
 
             {card.extra && (
-                <div className="tarot-meaning-block tarot-meaning-extra">
-                    <span className="tarot-meaning-label">Ý nghĩa bổ sung (§4 Waite)</span>
-                    <p>{card.extra}</p>
-                </div>
+                <details className="tarot-extra-details">
+                    <summary className="tarot-extra-summary">Đọc thêm — dành cho người rành bài</summary>
+                    <div className="tarot-meaning-block tarot-meaning-extra">
+                        <span className="tarot-meaning-label">Ý nghĩa bổ sung (§4 Waite)</span>
+                        <p>{card.extra}</p>
+                    </div>
+                </details>
             )}
         </article>
     );
@@ -235,8 +244,9 @@ const TarotPage = () => {
                     </div>
 
                     <p className="tarot-disclaimer glass-card">
-                        Nghĩa xuôi/ngược lấy từ A.E. Waite, <em>The Pictorial Key to the Tarot</em> (1910, Public Domain).
-                        Trang chỉ hiển thị nghĩa gốc, chưa gọi AI luận giải.
+                        Phần “Hiểu đơn giản là” chỉ diễn lại bằng lời thường cho dễ hiểu, không thêm nghĩa mới.
+                        Nghĩa gốc lấy từ A.E. Waite, <em>The Pictorial Key to the Tarot</em> (1910, Public Domain).
+                        Trang chưa gọi AI luận giải.
                     </p>
                 </section>
             )}
