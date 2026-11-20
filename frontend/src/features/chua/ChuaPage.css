@@ -271,7 +271,7 @@ body.temple-fullscreen-active .chua-scene-bg {
     transform: translate(-50%, 0);
 }
 
-.chua-pin--battu .chua-pin-tip {
+.chua-pin--tracuu .chua-pin-tip {
     left: auto;
     right: -8px;
     transform: translate(0, 4px);
@@ -279,8 +279,8 @@ body.temple-fullscreen-active .chua-scene-bg {
     text-align: right;
 }
 
-.chua-pin--battu:hover .chua-pin-tip,
-.chua-pin--battu:focus-visible .chua-pin-tip {
+.chua-pin--tracuu:hover .chua-pin-tip,
+.chua-pin--tracuu:focus-visible .chua-pin-tip {
     transform: translate(0, 0);
 }
 

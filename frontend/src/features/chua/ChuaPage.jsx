@@ -29,61 +29,6 @@ const PLACES = [
         map: { x: 50, y: 13 }
     },
     {
-        id: 'battu',
-        title: 'Điện Bát Tự',
-        path: '/',
-        short: 'Bát Tự',
-        teacher: 'Thầy Can Chi',
-        image: '/images/chua/dien-bat-tu.jpg',
-        desc: 'Nhập ngày giờ sinh để xem lá số Tứ Trụ.',
-        accent: '#fbbf24',
-        map: { x: 87, y: 50 }
-    },
-    {
-        id: 'xemngay',
-        title: 'Quầy Xem Ngày',
-        path: '/xemngay',
-        short: 'Xem Ngày',
-        teacher: 'Thầy Hoàng Đạo',
-        image: '/images/chua/quay-xem-ngay.jpg',
-        desc: 'Chọn ngày tốt cho việc lớn, việc nhỏ.',
-        accent: '#4ade80',
-        map: { x: 31, y: 67 }
-    },
-    {
-        id: 'vanhomnay',
-        title: 'Quầy Vận Hôm Nay',
-        path: '/van-hom-nay',
-        short: 'Vận Hôm Nay',
-        teacher: 'Thầy Thời Vận',
-        image: '/images/chua/quay-van-hom-nay.jpg',
-        desc: 'Xem vận may, việc nên và nên tránh trong ngày.',
-        accent: '#fb923c',
-        map: { x: 36, y: 84 }
-    },
-    {
-        id: 'duyenso',
-        title: 'Quầy Tình Duyên',
-        path: '/duyenso',
-        short: 'Tình Duyên',
-        teacher: 'Thầy Duyên Khởi',
-        image: '/images/chua/quay-tinh-duyen.jpg',
-        desc: 'So duyên hai người, xem hợp hay không hợp.',
-        accent: '#f472b6',
-        map: { x: 64, y: 84 }
-    },
-    {
-        id: 'xinque',
-        title: 'Quầy Xin Quẻ',
-        path: '/xinque',
-        short: 'Xin Quẻ',
-        teacher: 'Thầy Quẻ Cát',
-        image: '/images/chua/quay-xin-que.jpg',
-        desc: 'Gieo quẻ, hỏi một việc đang băn khoăn.',
-        accent: '#60a5fa',
-        map: { x: 71, y: 66 }
-    },
-    {
         id: 'tangkinhcac',
         title: 'Tàng Kinh Các',
         path: '/dientich',
@@ -95,15 +40,15 @@ const PLACES = [
         map: { x: 14, y: 46 }
     },
     {
-        id: 'tuvan',
-        title: 'Phòng Hỏi Thầy',
-        path: '/tuvan',
-        short: 'Hỏi Thầy',
-        teacher: 'Thầy Huyền Cơ Bát Tự + Thầy Mệnh Mèo GenZ',
-        image: '/images/chua/phong-hoi-thay.jpg',
-        desc: 'Đặt câu hỏi riêng, được hai thầy luận giải.',
-        accent: '#e2c044',
-        map: { x: 50, y: 89 }
+        id: 'tracuu',
+        title: 'Tra Cứu',
+        path: '/tra-cuu',
+        short: 'Tra cứu',
+        teacher: 'Quầy tra cứu tổng hợp',
+        image: '/images/chua/quay-xem-ngay.jpg',
+        desc: 'Lá số, phân tích, vận hạn, xem ngày, thần số, tình duyên, xin quẻ, tarot và hỏi thầy — gom chung một quầy.',
+        accent: '#fbbf24',
+        map: { x: 87, y: 50 }
     }
 ];
 
