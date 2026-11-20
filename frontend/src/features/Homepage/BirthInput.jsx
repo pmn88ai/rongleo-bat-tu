@@ -161,18 +161,18 @@ const BirthInput = ({ onAnalyze, loading, profileMode = false }) => {
                     <div className="input-group tooltip-wrapper full-width">
                         <label>Giờ sinh</label>
                         <select name="hour" value={formData.hour} onChange={handleChange} className="glass-input">
-                            <option value={0}>Tý (子) • 23:00 - 01:00</option>
-                            <option value={1}>Sửu (丑) • 01:00 - 03:00</option>
-                            <option value={3}>Dần (寅) • 03:00 - 05:00</option>
-                            <option value={5}>Mão (卯) • 05:00 - 07:00</option>
-                            <option value={7}>Thìn (辰) • 07:00 - 09:00</option>
-                            <option value={9}>Tỵ (巳) • 09:00 - 11:00</option>
-                            <option value={11}>Ngọ (午) • 11:00 - 13:00</option>
-                            <option value={13}>Mùi (未) • 13:00 - 15:00</option>
-                            <option value={15}>Thân (申) • 15:00 - 17:00</option>
-                            <option value={17}>Dậu (酉) • 17:00 - 19:00</option>
-                            <option value={19}>Tuất (戌) • 19:00 - 21:00</option>
-                            <option value={21}>Hợi (亥) • 21:00 - 23:00</option>
+                            <option value={0}>Tý (子) • 23:00 - 00:59</option>
+                            <option value={1}>Sửu (丑) • 01:00 - 02:59</option>
+                            <option value={3}>Dần (寅) • 03:00 - 04:59</option>
+                            <option value={5}>Mão (卯) • 05:00 - 06:59</option>
+                            <option value={7}>Thìn (辰) • 07:00 - 08:59</option>
+                            <option value={9}>Tỵ (巳) • 09:00 - 10:59</option>
+                            <option value={11}>Ngọ (午) • 11:00 - 12:59</option>
+                            <option value={13}>Mùi (未) • 13:00 - 14:59</option>
+                            <option value={15}>Thân (申) • 15:00 - 16:59</option>
+                            <option value={17}>Dậu (酉) • 17:00 - 18:59</option>
+                            <option value={19}>Tuất (戌) • 19:00 - 20:59</option>
+                            <option value={21}>Hợi (亥) • 21:00 - 22:59</option>
                         </select>
                     </div>
                 </div>

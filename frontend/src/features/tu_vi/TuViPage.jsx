@@ -6,18 +6,18 @@ import './TuViPage.css';
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 const GIO_CHI_OPTIONS = [
-    { value: 'Tý', label: 'Tý (子) • 23:00 - 01:00' },
-    { value: 'Sửu', label: 'Sửu (丑) • 01:00 - 03:00' },
-    { value: 'Dần', label: 'Dần (寅) • 03:00 - 05:00' },
-    { value: 'Mão', label: 'Mão (卯) • 05:00 - 07:00' },
-    { value: 'Thìn', label: 'Thìn (辰) • 07:00 - 09:00' },
-    { value: 'Tỵ', label: 'Tỵ (巳) • 09:00 - 11:00' },
-    { value: 'Ngọ', label: 'Ngọ (午) • 11:00 - 13:00' },
-    { value: 'Mùi', label: 'Mùi (未) • 13:00 - 15:00' },
-    { value: 'Thân', label: 'Thân (申) • 15:00 - 17:00' },
-    { value: 'Dậu', label: 'Dậu (酉) • 17:00 - 19:00' },
-    { value: 'Tuất', label: 'Tuất (戌) • 19:00 - 21:00' },
-    { value: 'Hợi', label: 'Hợi (亥) • 21:00 - 23:00' }
+    { value: 'Tý', label: 'Tý (子) • 23:00 - 00:59' },
+    { value: 'Sửu', label: 'Sửu (丑) • 01:00 - 02:59' },
+    { value: 'Dần', label: 'Dần (寅) • 03:00 - 04:59' },
+    { value: 'Mão', label: 'Mão (卯) • 05:00 - 06:59' },
+    { value: 'Thìn', label: 'Thìn (辰) • 07:00 - 08:59' },
+    { value: 'Tỵ', label: 'Tỵ (巳) • 09:00 - 10:59' },
+    { value: 'Ngọ', label: 'Ngọ (午) • 11:00 - 12:59' },
+    { value: 'Mùi', label: 'Mùi (未) • 13:00 - 14:59' },
+    { value: 'Thân', label: 'Thân (申) • 15:00 - 16:59' },
+    { value: 'Dậu', label: 'Dậu (酉) • 17:00 - 18:59' },
+    { value: 'Tuất', label: 'Tuất (戌) • 19:00 - 20:59' },
+    { value: 'Hợi', label: 'Hợi (亥) • 21:00 - 22:59' }
 ];
 
 const GAN_CN_TO_VN = {

@@ -7,18 +7,18 @@ import './VanHomNayPage.css';
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 const HOUR_OPTIONS = [
-    { value: 0, label: 'Tý (子) • 23:00 - 01:00' },
-    { value: 1, label: 'Sửu (丑) • 01:00 - 03:00' },
-    { value: 3, label: 'Dần (寅) • 03:00 - 05:00' },
-    { value: 5, label: 'Mão (卯) • 05:00 - 07:00' },
-    { value: 7, label: 'Thìn (辰) • 07:00 - 09:00' },
-    { value: 9, label: 'Tỵ (巳) • 09:00 - 11:00' },
-    { value: 11, label: 'Ngọ (午) • 11:00 - 13:00' },
-    { value: 13, label: 'Mùi (未) • 13:00 - 15:00' },
-    { value: 15, label: 'Thân (申) • 15:00 - 17:00' },
-    { value: 17, label: 'Dậu (酉) • 17:00 - 19:00' },
-    { value: 19, label: 'Tuất (戌) • 19:00 - 21:00' },
-    { value: 21, label: 'Hợi (亥) • 21:00 - 23:00' }
+    { value: 0, label: 'Tý (子) • 23:00 - 00:59' },
+    { value: 1, label: 'Sửu (丑) • 01:00 - 02:59' },
+    { value: 3, label: 'Dần (寅) • 03:00 - 04:59' },
+    { value: 5, label: 'Mão (卯) • 05:00 - 06:59' },
+    { value: 7, label: 'Thìn (辰) • 07:00 - 08:59' },
+    { value: 9, label: 'Tỵ (巳) • 09:00 - 10:59' },
+    { value: 11, label: 'Ngọ (午) • 11:00 - 12:59' },
+    { value: 13, label: 'Mùi (未) • 13:00 - 14:59' },
+    { value: 15, label: 'Thân (申) • 15:00 - 16:59' },
+    { value: 17, label: 'Dậu (酉) • 17:00 - 18:59' },
+    { value: 19, label: 'Tuất (戌) • 19:00 - 20:59' },
+    { value: 21, label: 'Hợi (亥) • 21:00 - 22:59' }
 ];
 
 const LEVEL_CLASS = {
