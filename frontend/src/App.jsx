@@ -12,8 +12,8 @@ import ChartDetails from './features/BaziChart/ChartDetails';
 import LuckCycles from './features/LuckCycles/LuckCycles';
 import MatrixAnalysis from './features/Interpretation/MatrixAnalysis';
 import ClassicTexts from './features/Interpretation/ClassicTexts';
-import PersonalizedDate from './features/DateSelection/PersonalizedDate';
-import AuspiciousDatePicker from './features/DateSelection/AuspiciousDatePicker';
+import XemNgayPage from './features/DateSelection/XemNgayPage';
+import ThanSoHocPage from './features/numerology/ThanSoHocPage';
 import ConsultantPage from './features/Consultant/ConsultantPage';
 import AdminPage from './features/Admin/AdminPage';
 import ArticlePage from './features/Articles/ArticlePage';
@@ -231,8 +231,9 @@ const AppContent = () => {
 
             {/* Analysis pages */}
             <Route path="/phantich" element={renderDataPage(MatrixAnalysis, { data })} />
-            <Route path="/xemngay" element={requireProfile(<PersonalizedDate data={data} userData={profileParams} />)} />
-            <Route path="/chonngay" element={requireProfile(<AuspiciousDatePicker userData={profileParams} />)} />
+            <Route path="/xemngay" element={requireProfile(<XemNgayPage data={data} userData={profileParams} />)} />
+            <Route path="/chonngay" element={<Navigate to="/xemngay?mode=find" replace />} />
+            <Route path="/than-so-hoc" element={requireProfile(<ThanSoHocPage />)} />
             <Route path="/tuvan" element={requireProfile(<ConsultantPage userData={profileParams} />)} />
             <Route path="/vanhan" element={renderDataPage(LuckCycles, { data })} />
             <Route path="/dientich" element={renderDataPage(ClassicTexts, { data })} />

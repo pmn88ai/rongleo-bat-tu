@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
-import AuspiciousDatePicker from './AuspiciousDatePicker';
 
 /**
  * CustomerInfoHeader - Reusable info header for personalized pages
@@ -213,13 +212,13 @@ const PersonalizedDate = ({ data, userData }) => {
                 <div className="explorer-header">
                     <h4><span className="icon">🔭</span> Khám Phá Vận Hạn</h4>
                     <div className="explorer-mode-tabs">
-                        {['year', 'month', 'day', 'calendar'].map(m => (
+                        {['year', 'month', 'day'].map(m => (
                             <button
                                 key={m}
                                 className={`mode-tab-btn ${mode === m ? 'active' : ''}`}
                                 onClick={() => setMode(m)}
                             >
-                                {m === 'year' ? 'Năm' : m === 'month' ? 'Tháng' : m === 'day' ? 'Ngày' : '📅 Lịch'}
+                                {m === 'year' ? 'Năm' : m === 'month' ? 'Tháng' : 'Ngày'}
                             </button>
                         ))}
                     </div>
@@ -277,48 +276,44 @@ const PersonalizedDate = ({ data, userData }) => {
                 )}
             </div>
 
-            {/* 3. Results area - Show calendar or analysis */}
-            {mode === 'calendar' ? (
-                <AuspiciousDatePicker userData={userData} hideTitle={true} />
-            ) : (
-                <div className="analysis-container">
-                    {loading ? (
-                        <div className="loading-state glass-card">
-                            <div className="spinner-medium"></div>
-                            <p>Đang đọc ma trận thời gian...</p>
-                        </div>
-                    ) : error ? (
-                        <div className="error-state glass-card">
-                            <p>⚠️ {error}</p>
-                        </div>
-                    ) : sections.length > 0 ? (
-                        <div className="sections-grid">
-                            {sections.map((section, idx) => (
-                                <div key={idx} className={`analysis-section-card glass-card ${idx === 0 ? 'highlight-section' : ''}`}>
-                                    <div className="section-header">
-                                        <span className="section-icon">{section.icon}</span>
-                                        <h3>{section.title}</h3>
-                                    </div>
-                                    <div className="section-body">
-                                        {idx === 0 ? renderEvaluationGrid(section.content) : (
-                                            <div className="generic-list">
-                                                {section.content.map((line, i) => (
-                                                    <p key={i} className="list-item">{parseRichText(line)}</p>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+            {/* 3. Results area */}
+            <div className="analysis-container">
+                {loading ? (
+                    <div className="loading-state glass-card">
+                        <div className="spinner-medium"></div>
+                        <p>Đang đọc ma trận thời gian...</p>
+                    </div>
+                ) : error ? (
+                    <div className="error-state glass-card">
+                        <p>⚠️ {error}</p>
+                    </div>
+                ) : sections.length > 0 ? (
+                    <div className="sections-grid">
+                        {sections.map((section, idx) => (
+                            <div key={idx} className={`analysis-section-card glass-card ${idx === 0 ? 'highlight-section' : ''}`}>
+                                <div className="section-header">
+                                    <span className="section-icon">{section.icon}</span>
+                                    <h3>{section.title}</h3>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="empty-state glass-card">
-                            <div className="empty-icon">🔮</div>
-                            <p>Chọn mốc thời gian và nhấn Phân Tích để bắt đầu.</p>
-                        </div>
-                    )}
-                </div>
-            )}
+                                <div className="section-body">
+                                    {idx === 0 ? renderEvaluationGrid(section.content) : (
+                                        <div className="generic-list">
+                                            {section.content.map((line, i) => (
+                                                <p key={i} className="list-item">{parseRichText(line)}</p>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="empty-state glass-card">
+                        <div className="empty-icon">🔮</div>
+                        <p>Chọn mốc thời gian và nhấn Phân Tích để bắt đầu.</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

@@ -1,0 +1,88 @@
+.xemngay-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.xemngay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+}
+
+.xemngay-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.xemngay-title {
+    margin: 0;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    color: var(--accent-gold, #e2c044);
+}
+
+.xemngay-subtitle {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary, #b9b4a8);
+}
+
+.xemngay-mode-switch {
+    display: inline-flex;
+    gap: 0.35rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(226, 192, 68, 0.28);
+}
+
+.xemngay-mode-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-secondary, #b9b4a8);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.xemngay-mode-btn:hover {
+    color: var(--text-primary, #f5efe0);
+}
+
+.xemngay-mode-btn.active {
+    background: var(--accent-gold, #e2c044);
+    color: #1a1608;
+    box-shadow: 0 0 14px var(--accent-gold-glow, rgba(226, 192, 68, 0.35));
+}
+
+.xemngay-body {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 640px) {
+    .xemngay-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .xemngay-mode-switch {
+        justify-content: center;
+    }
+
+    .xemngay-mode-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

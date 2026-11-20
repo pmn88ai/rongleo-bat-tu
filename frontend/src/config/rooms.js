@@ -25,7 +25,7 @@ export const ROOMS = [
         id: 'phantich',
         path: '/phantich',
         label: 'PHÂN TÍCH',
-        title: 'Điện Tử Vi',
+        title: 'Điện Tính Cách',
         icon: '⚙️',
         image: '/images/chua/dien-tu-vi.jpg',
         accent: '#c084fc',
@@ -44,17 +44,6 @@ export const ROOMS = [
         desc: 'Xem đại vận, lưu niên và các mốc thời vận.'
     },
     {
-        id: 'dientich',
-        path: '/dientich',
-        label: 'ĐIỂN TÍCH',
-        title: 'Sân Chùa',
-        icon: '📜',
-        image: '/images/chua/ban-do-chua.jpg',
-        accent: '#94a3b8',
-        glow: 'rgba(148, 163, 184, 0.28)',
-        desc: 'Điển tích cổ học, lời dạy và kinh nghiệm luận mệnh.'
-    },
-    {
         id: 'xemngay',
         path: '/xemngay',
         label: 'XEM NGÀY',
@@ -63,18 +52,18 @@ export const ROOMS = [
         image: '/images/chua/quay-xem-ngay.jpg',
         accent: '#4ade80',
         glow: 'rgba(74, 222, 128, 0.28)',
-        desc: 'Chọn ngày tốt cho việc lớn, việc nhỏ theo mệnh chủ.'
+        desc: 'Hai chế độ: Kiểm ngày (xem tốt/xấu một ngày) và Tìm ngày tốt (lọc ngày lành, giờ tốt).'
     },
     {
-        id: 'chonngay',
-        path: '/chonngay',
-        label: 'CHỌN NGÀY',
-        title: 'Chánh Điện',
-        icon: '🗓️',
+        id: 'than-so-hoc',
+        path: '/than-so-hoc',
+        label: 'THẦN SỐ HỌC',
+        title: 'Điện Thần Số',
+        icon: '🔢',
         image: '/images/chua/chanh-dien.jpg',
-        accent: '#34d399',
-        glow: 'rgba(52, 211, 153, 0.28)',
-        desc: 'Lọc ngày lành, giờ tốt và việc nên làm.'
+        accent: '#f59e0b',
+        glow: 'rgba(245, 158, 11, 0.28)',
+        desc: 'Số đường đời, sứ mệnh, linh hồn, nhân cách theo hệ Pythagore.'
     },
     {
         id: 'tuvan',

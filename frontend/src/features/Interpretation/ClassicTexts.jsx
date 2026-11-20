@@ -126,7 +126,7 @@ const ClassicTexts = ({ data }) => {
             {/* Header */}
             <div className="wisdom-header glass-card">
                 <div className="wisdom-title-group">
-                    <h2 className="wisdom-main-title">📚 ĐIỂN TỊCH CỔ ĐIỂN</h2>
+                    <h2 className="wisdom-main-title">📚 TÀNG KINH CÁC — ĐIỂN TỊCH CỔ ĐIỂN</h2>
                     <p className="wisdom-subtitle">Tri thức mệnh lý từ các bộ sách kinh điển nghìn năm</p>
                 </div>
                 <div className="wisdom-stats">

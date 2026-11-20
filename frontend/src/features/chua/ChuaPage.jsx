@@ -84,6 +84,17 @@ const PLACES = [
         map: { x: 71, y: 66 }
     },
     {
+        id: 'tangkinhcac',
+        title: 'Tàng Kinh Các',
+        path: '/dientich',
+        short: 'Tàng Kinh Các',
+        teacher: 'Kho điển tịch cổ',
+        image: '/images/chua/ban-do-chua.jpg',
+        desc: 'Lầu kinh lưu giữ điển tích cổ học, lời dạy và kinh nghiệm luận mệnh.',
+        accent: '#14b8a6',
+        map: { x: 14, y: 46 }
+    },
+    {
         id: 'tuvan',
         title: 'Phòng Hỏi Thầy',
         path: '/tuvan',

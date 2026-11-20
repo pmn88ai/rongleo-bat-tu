@@ -445,6 +445,40 @@ router.get('/luan-giai', async (req, res) => {
 });
 
 /**
+ * GET /api/than-so-hoc - Thần số học Pythagore (tính toán + nghĩa tĩnh, không gọi AI)
+ */
+router.get('/than-so-hoc', (req, res) => {
+    try {
+        const { name, year, month, day, current_year } = req.query;
+
+        if (!name || !String(name).trim()) {
+            return res.status(400).json({ error: 'Thiếu họ tên để tính thần số học' });
+        }
+        if (!year || !month || !day) {
+            return res.status(400).json({ error: 'Thiếu ngày, tháng, năm sinh' });
+        }
+
+        const { computeNumerology } = require('../bazi/than_so');
+        const { describeNumbers } = require('../bazi/than_so_meaning');
+
+        const numerology = computeNumerology({
+            name: String(name),
+            day: parseInt(day),
+            month: parseInt(month),
+            year: parseInt(year),
+            currentYear: current_year ? parseInt(current_year) : new Date().getFullYear()
+        });
+
+        res.json({
+            ...numerology,
+            cac_so: describeNumbers(numerology.cac_so)
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * POST /api/matching - Compatibility Analysis between two people
  * Body: {
  *   person1: { year, month, day, hour, gender, name },
