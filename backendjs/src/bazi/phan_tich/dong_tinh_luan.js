@@ -4,7 +4,6 @@
 
 const ganzhi = require('../ganzhi');
 const { calculateDaiVan, getCurrentDaiVan } = require('../dayun');
-const { createSeededRandom } = require('../../utils/random');
 
 
 function analyzeDongTinhLuan(ctx) {
@@ -37,8 +36,6 @@ function analyzeDongTinhLuan(ctx) {
 
     results.push(`\n[VẬN KHÍ HIỆN TẠI: ${ganzhi.ganToVN(yGan)}${ganzhi.zhiToVN(yZhi)}]`);
 
-    const rng = createSeededRandom(`${ctx.solar.getYear()}-${ctx.solar.getMonth()}-${ctx.solar.getDay()}-${yGan}${yZhi}`);
-
     // 1. THIÊN ĐỘNG ĐỊA TĨNH
     results.push("\n[1. THIÊN ĐỘNG ĐỊA TĨNH]");
     if (gans.includes(yGan)) {
@@ -65,13 +62,13 @@ function analyzeDongTinhLuan(ctx) {
             `• **Vận Dược**: **${ganzhi.ganToVN(yGan)}** mang theo hành ${yEl} - chính xác là hành bạn đang cần. Đây là giai đoạn vàng để phát triển.`,
             `• **Cát Vận**: Đại vận này mang đến hành ${yEl} cần thiết. Như người khát gặp nước, mọi nỗ lực sẽ được đền đáp xứng đáng.`,
         ];
-        results.push(rng.pick(activationVariants));
+        results.push(activationVariants[0]);
     } else {
         const defaultVariants = [
             `• **Trạng Thái**: Vận khí ${ganzhi.ganToVN(yGan)} chưa kích hoạt Dụng thần tối ưu. Đây là giai đoạn tích lũy, chuẩn bị cho vận tốt hơn.`,
             `• **Chuẩn Bị**: Đại vận hiện tại mang tính trung lập. Nên tập trung củng cố sức khỏe và các mối quan hệ.`,
         ];
-        results.push(rng.pick(defaultVariants));
+        results.push(defaultVariants[0]);
     }
 
     // 3. XUNG HÌNH BIẾN ĐỘNG

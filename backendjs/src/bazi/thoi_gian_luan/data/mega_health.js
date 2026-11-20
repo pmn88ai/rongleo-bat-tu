@@ -159,18 +159,18 @@ function getHealthInterpretation(shishen, hasXung = false) {
     const data = HEALTH_INTERPRETATIONS[shishen];
 
     if (hasXung) {
-        // 50% chance to use xung-specific, 50% general xung warning
-        if (data && data.hasXung && Math.random() > 0.5) {
-            return data.hasXung[Math.floor(Math.random() * data.hasXung.length)];
+        // Deterministic: ưu tiên nhóm xung theo Thập Thần, nếu không có thì cảnh báo chung.
+        if (data && data.hasXung) {
+            return data.hasXung[0];
         }
-        return XUNG_GENERAL[Math.floor(Math.random() * XUNG_GENERAL.length)];
+        return XUNG_GENERAL[0];
     }
 
     if (!data) {
         return { status: 'Ổn định', desc: 'Sức khỏe bình thường, duy trì lối sống lành mạnh. Uống đủ nước, ngủ đủ giấc, vận động đều đặn.' };
     }
 
-    return data.normal[Math.floor(Math.random() * data.normal.length)];
+    return data.normal[0];
 }
 
 module.exports = { HEALTH_INTERPRETATIONS, XUNG_GENERAL, getHealthInterpretation };

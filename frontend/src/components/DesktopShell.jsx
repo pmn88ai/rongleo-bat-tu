@@ -42,7 +42,7 @@ const LAND_BTN_STYLE = {
 
 const LandButton = ({ style = {} }) => (
     <a
-        href="https://rongleo-land.vercel.app/"
+        href="https://rongleo.com"
         target="_blank"
         rel="noopener noreferrer"
         style={{ ...LAND_BTN_STYLE, ...style }}
@@ -50,7 +50,7 @@ const LandButton = ({ style = {} }) => (
         onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 15px rgba(14,165,233,0.4)'; }}
         onClick={e => e.stopPropagation()}
     >
-        ← RongLeo Land
+        Trang chủ rongleo
     </a>
 );
 

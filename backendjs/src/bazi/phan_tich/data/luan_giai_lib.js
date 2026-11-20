@@ -56,8 +56,8 @@ function permute(componentsArray, limit = 500) {
         }
 
         const currentBank = componentsArray[depth];
-        // Pick random 5 items from generic banks to avoid explosion, or iterate all if small
-        const itemsToUse = currentBank.length > 20 ? currentBank.sort(() => 0.5 - Math.random()).slice(0, 10) : currentBank;
+        // Lấy 10 mục đầu cố định (bỏ xáo trộn ngẫu nhiên) để kết quả ổn định.
+        const itemsToUse = currentBank.length > 20 ? currentBank.slice(0, 10) : currentBank;
 
         for (const item of itemsToUse) {
             generate(currentString + " " + item, depth + 1);
@@ -249,21 +249,22 @@ const DICTIONARY_FINAL = {
 
 /**
  * Main Mix Function
+ * Chọn câu đầu tiên của mỗi nhóm để kết quả không đổi giữa các lần gọi.
  */
 function mix(...arrays) {
     const parts = arrays.map(arr => {
         if (!arr || arr.length === 0) return "";
-        return arr[Math.floor(Math.random() * arr.length)];
+        return arr[0];
     });
     return parts.filter(p => p).join(" ");
 }
 
 /**
- * Random Picker
+ * Deterministic Picker (bỏ chọn ngẫu nhiên)
  */
 function pick(arr) {
     if (!arr || arr.length === 0) return "";
-    return arr[Math.floor(Math.random() * arr.length)];
+    return arr[0];
 }
 
 module.exports = { DICTIONARY: DICTIONARY_FINAL, mix, pick };

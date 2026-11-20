@@ -17,8 +17,10 @@ const BirthInput = ({ onAnalyze, loading, profileMode = false }) => {
     const [toast, setToast] = useState(null);
 
     const [formData, setFormData] = useState(() => {
+        const defaultForm = { name: '', gender: 'Nam', year: 1990, month: 6, day: 15, hour: 10, minute: 0, calendar: 'solar' };
+        let initial;
         if (profile && profile.year) {
-            return {
+            initial = {
                 name: profile.name || '',
                 gender: profile.gender || 'Nam',
                 year: profile.year,
@@ -28,12 +30,19 @@ const BirthInput = ({ onAnalyze, loading, profileMode = false }) => {
                 minute: profile.minute ?? 0,
                 calendar: profile.calendar || 'solar'
             };
+        } else if (profileMode) {
+            // Chưa có hồ sơ: dùng mặc định hiện tại, không lấy form của trang chủ.
+            initial = { ...defaultForm };
+        } else {
+            const savedForm = sessionStorage.getItem('homepage_form_data');
+            if (savedForm) {
+                try { initial = JSON.parse(savedForm); } catch (e) {}
+            }
+            if (!initial) initial = { ...defaultForm };
         }
-        const savedForm = sessionStorage.getItem('homepage_form_data');
-        if (savedForm) {
-            try { return JSON.parse(savedForm); } catch (e) {}
-        }
-        return { name: '', gender: 'Nam', year: 1990, month: 6, day: 15, hour: 10, minute: 0, calendar: 'solar' };
+        // Trang Hồ sơ mệnh luôn mở với tên trống; các trường khác giữ từ hồ sơ đã lưu.
+        if (profileMode) initial = { ...initial, name: '' };
+        return initial;
     });
 
     useEffect(() => {

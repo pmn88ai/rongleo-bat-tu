@@ -452,7 +452,7 @@ describe('giờ Tý boundary', () => {
         console.log(`  [INFO] 23:00 hourZhi = ${ctx23.zhis[3]}, 00:00 hourZhi = ${ctx0.zhis[3]}`);
         console.log(`  [INFO] 23:00 hour pillar = ${getPillarVN(ctx23, 3)}, 00:00 hour pillar = ${getPillarVN(ctx0, 3)}`);
         // If engine treats 0:00 as Tý, this passes; if not, document but don't fail
-        // Current engine behavior: 23:00 → Canh Tý, 00:00 → Giáp Ngọ
+        // Current engine behavior (F1): 23:00 → Canh Tý, 00:00 → Mậu Tý (both Tý hour)
         // This is a KNOWN LIMITATION: 0:00 may not map to Tý hour in lunar-javascript
     });
 });
@@ -726,10 +726,8 @@ describe('edge case summary', () => {
 
         // Known limitations documentation
         console.log(`  KNOWN LIMITATIONS:`);
-        console.log(`  1. Hour 0 mapping: Traditional BaZi maps 00:00 to Tý hour,`);
-        console.log(`     but lunar-javascript may map it differently. Engine show:`);
-        console.log(`     23:00 → Tý (Canh Tý), 00:00 → Ngọ (Giáp Ngọ)`);
-        console.log(`     → May indicate hour-offset difference vs. traditional.`);
+        console.log(`  1. Hour 0 mapping: engine maps 00:00 to Tý hour (F1, 19/11/2026).`);
+        console.log(`     Engine sample: 23:00 → Canh Tý, 00:00 → Mậu Tý.`);
         console.log(`  2. Invalid dates throw from lunar-javascript (not engine).`);
         console.log(`     This is acceptable — invalid dates SHOULD fail.`);
         console.log(`  3. Negative years are accepted (lunar-javascript allows it).`);

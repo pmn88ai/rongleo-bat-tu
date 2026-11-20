@@ -429,9 +429,8 @@ function buildRelationshipAspects(chart1, chart2, person1Data, person2Data, scor
 function calculateAspectScore(scores, aspectType) {
     const baseScore = (scores.element.score + scores.ganzhi.score + scores.shishen.score + scores.star.score) / 100 * 100;
 
-    // Add some variation based on aspect type
-    const variation = Math.floor(Math.random() * 15) - 7;
-    return Math.min(100, Math.max(20, Math.round(baseScore + variation)));
+    // Bỏ dao động ngẫu nhiên: cùng một lá số phải ra cùng điểm.
+    return Math.min(100, Math.max(20, Math.round(baseScore)));
 }
 
 /**

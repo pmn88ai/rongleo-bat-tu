@@ -13,6 +13,7 @@ const assert = require('node:assert/strict');
 
 const { analyzeNguHanh } = require('../src/bazi/phan_tich/ngu_hanh');
 const { determineCach } = require('../src/bazi/geju');
+const { calculateDaiVan } = require('../src/bazi/dayun');
 const {
     analyzeLuanTinh,
     countGods,
@@ -151,5 +152,39 @@ describe('F5 — Tòng Sát theo hành khắc Nhật Chủ', () => {
         const result = analyzeNguHanh(ctx);
         assert.equal(result.nhan_dinh.ngoai_cach, false);
         assert.notEqual(result.nhan_dinh.cach_cuc, 'Tòng Sát Cách');
+    });
+});
+
+// ─── F9: Âm lịch giữ giờ + năm khởi Đại Vận ────────────────────────────────
+
+describe('F9 — âm lịch giữ giờ và năm khởi vận', () => {
+    it('vào bằng âm lịch vẫn giữ đúng trụ giờ', { skip: SKIP_NO_DEPS }, () => {
+        const ctx = createCalculator({
+            year: 2023, month: -2, day: 1, hour: 7, minute: 0, isFemale: false, isSolar: false
+        }).calculate();
+        assert.equal(ctx.solar.toYmd(), '2023-03-22');
+        assert.equal(ctx.zhis[3], '辰');
+        assert.equal(ctx.basicInfo.gio_chi, 'Thìn');
+    });
+
+    it('tháng nhuận âm lịch (tháng âm = -2) quy đổi đúng và giữ giờ', { skip: SKIP_NO_DEPS }, () => {
+        const ctx = createCalculator({
+            year: 2023, month: -2, day: 1, hour: 7, minute: 0, isFemale: false, isSolar: false
+        }).calculate();
+        assert.equal(ctx.solar.toYmd(), '2023-03-22');
+        assert.equal(ctx.basicInfo.ngay_am_lich, 'Năm 2023 tháng 2 nhuận ngày 1');
+        assert.equal(ctx.pillars[1].can, 'Ất');
+        assert.equal(ctx.pillars[1].chi, 'Mão');
+    });
+
+    it('năm khởi Đại Vận khớp nhập vận (không lùi 1–2 năm)', { skip: SKIP_NO_DEPS }, () => {
+        const ctx = createCalculator({
+            year: 1893, month: 12, day: 26, hour: 7, minute: 0, isFemale: false
+        }).calculate();
+        const dv = calculateDaiVan(ctx);
+        assert.equal(ctx.basicInfo.nhap_van, 'Tháng 4/1900');
+        assert.equal(dv[0].nam, 1900);
+        assert.equal(dv[1].nam, 1910);
+        assert.equal(dv[0].can_chi, 'Quý Hợi');
     });
 });

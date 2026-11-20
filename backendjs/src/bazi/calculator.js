@@ -34,7 +34,9 @@ class BaZiCalculator {
         if (this.isSolar) {
             solar = Solar.fromYmdHms(this.year, this.month, this.day, this.hour, this.minute, 0);
         } else {
-            const lunar = Lunar.fromYmd(this.year, this.month, this.day);
+            // Giữ cả giờ/phút khi vào bằng âm lịch (bản cũ Lunar.fromYmd làm mất giờ,
+            // trụ giờ luôn rơi về Tý/00:00).
+            const lunar = Lunar.fromYmdHms(this.year, this.month, this.day, this.hour, this.minute, 0);
             solar = lunar.getSolar();
         }
 
@@ -359,13 +361,17 @@ class BaZiCalculator {
         // Không chốt vượng/nhược từ điểm thô (quy tắc tủ chưa có căn cứ số).
         const isWeak = this.scores?.suc_manh?.la_nhuoc || null;
         const canYeu = 'chưa xác định được';
+        const lunarMonthRaw = lunar.getMonth();
+        const lunarMonthLabel = lunarMonthRaw < 0
+            ? `${Math.abs(lunarMonthRaw)} nhuận`
+            : String(lunarMonthRaw);
 
         return {
             basicInfo: {
                 ten: '',
                 gioi_tinh: this.isFemale ? 'Nữ' : 'Nam',
                 ngay_duong_lich: `Năm ${solar.getYear()} tháng ${solar.getMonth()} ngày ${solar.getDay()}`,
-                ngay_am_lich: `Năm ${lunar.getYear()} tháng ${lunar.getMonth()} ngày ${lunar.getDay()}`,
+                ngay_am_lich: `Năm ${lunar.getYear()} tháng ${lunarMonthLabel} ngày ${lunar.getDay()}`,
                 gio_sinh: String(this.hour),
                 gio_chi: ganzhi.zhiToVN(this.zhis[3]),
                 tiet_khi: lunar.getJieQi() || '',

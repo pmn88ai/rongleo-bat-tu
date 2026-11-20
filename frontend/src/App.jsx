@@ -42,11 +42,14 @@ import { getRoomByPath } from './config/rooms';
 const ProfilePage = ({ onAnalyze, loading }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { saveProfile } = useMenhProfile();
+  const { profile, saveProfile } = useMenhProfile();
   const next = searchParams.get('next') || '/tra-cuu';
 
   const handleSave = async (params) => {
-    const saved = saveProfile(params);
+    // Tên để trống trên form thì giữ nguyên tên cũ trong hồ sơ đã lưu.
+    const name = typeof params.name === 'string' ? params.name.trim() : '';
+    const payload = name ? { ...params, name } : { ...params, name: profile?.name || '' };
+    const saved = saveProfile(payload);
     if (!saved) return;
     navigate(next, { replace: true });
   };

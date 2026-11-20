@@ -56,7 +56,6 @@ const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loadi
                             <div className="card-status status-available">
                                 <span className="pulse-icon">👆</span>
                                 <span>Chạm để xin quẻ</span>
-                                <span className="credit-cost">💎 10 linh thạch</span>
                             </div>
                         )}
                     </div>
@@ -107,7 +106,7 @@ const QueCard = ({ title, type, icon, data, onRequest, onSelect, onReroll, loadi
                                 <button
                                     className="reroll-btn"
                                     onClick={(e) => { e.stopPropagation(); onReroll(type); }}
-                                    title="Xin quẻ mới (tốn 10 linh thạch)"
+                                    title="Xin quẻ mới"
                                 >
                                     🔄 Xin lại
                                 </button>

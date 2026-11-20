@@ -40,8 +40,7 @@ function analyzeLuanDong(ctx, luanTinhResult) {
 
     return {
         dai_van: daiVanAnalysis,
-        luu_nien: luuNienAnalysis,
-        intro: getRandomIntro()
+        luu_nien: luuNienAnalysis
     };
 }
 
@@ -211,11 +210,6 @@ function mapGodName(code) {
         'Kiêu': 'Thiên Ấn'
     };
     return map[code] || code;
-}
-
-function getRandomIntro() {
-    const list = LUAN_DONG_LIB.intro_sentences;
-    return list[Math.floor(Math.random() * list.length)];
 }
 
 function checkZhiInteractionsV4(targetZhi, chartZhis) {

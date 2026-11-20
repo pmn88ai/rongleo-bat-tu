@@ -62,8 +62,8 @@ const BrandBar = () => {
     return (
       <>
         <div style={{ position: 'fixed', top: '12px', left: '12px', zIndex: 200 }}>
-          <a href="https://rongleo-land.vercel.app/" target="_blank" rel="noopener noreferrer" style={LAND_LINK_STYLE}>
-            ← RongLeo Land
+          <a href="https://rongleo.com" target="_blank" rel="noopener noreferrer" style={LAND_LINK_STYLE}>
+            Trang chủ rongleo
           </a>
         </div>
         <div style={{ position: 'fixed', top: '12px', right: '12px', zIndex: 200 }}>
@@ -76,12 +76,12 @@ const BrandBar = () => {
   return (
     <div className="mobile-brand-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
       <a
-        href="https://rongleo-land.vercel.app/"
+        href="https://rongleo.com"
         target="_blank"
         rel="noopener noreferrer"
         style={LAND_LINK_STYLE}
       >
-        ← RongLeo Land
+        Trang chủ rongleo
       </a>
       <h1 className="mobile-mini-brand" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         MỆNH LÝ AI

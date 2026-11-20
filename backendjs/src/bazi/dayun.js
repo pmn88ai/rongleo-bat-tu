@@ -50,6 +50,11 @@ function calculateDaiVan(ctx) {
     const startAgeObj = calculateStartAge(ctx.solar, ctx.lunar, isForward);
     const startAgeVal = startAgeObj.years; // Fix: Extract integer years
 
+    // Năm khởi vận phải cộng cả phần tháng (3 ngày = 1 năm, 1 ngày = 4 tháng).
+    // Bản cũ dùng birthYear + years - 1 nên lệch 1–2 năm so với nhập vận.
+    const startMonthIndex = (birthMonth - 1) + startAgeObj.months;
+    const firstStartYear = birthYear + startAgeObj.years + Math.floor(startMonthIndex / 12);
+
     // ========== DAYUN SEQUENCE (EXACT MATCH WITH PYTHON) ==========
     const monthGanIdx = ganzhi.GANS.indexOf(monthGan);
     const monthZhiIdx = ganzhi.ZHIS.indexOf(monthZhi);
@@ -68,7 +73,7 @@ function calculateDaiVan(ctx) {
         const zhiVN = ganzhi.zhiToVN(zhi);
 
         const ageStart = startAgeVal + (i - 1) * 10;
-        const startYear = birthYear + ageStart - 1;
+        const startYear = firstStartYear + (i - 1) * 10;
         const endYear = startYear + 9;
 
         const thapThanVan = ganzhi.getThapThan(dayMaster, gan);
