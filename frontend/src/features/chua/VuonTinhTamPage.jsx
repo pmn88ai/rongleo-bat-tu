@@ -3,23 +3,27 @@ import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
-import { YOUTUBE_EMBED_SRC } from '../../context/MusicPlayerContext';
+import { useMusicPlayer } from '../../context/MusicPlayerContext';
 import './TempleScene.css';
 
-const MusicVideoCard = () => (
-    <section className="temple-card glass-card music-video-card">
-        <h2>Video nhạc của Leo</h2>
-        <div className="music-video-frame">
-            <iframe
-                src={YOUTUBE_EMBED_SRC}
-                title="Nhạc piano + tiếng nước chảy — RongLeo"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                loading="lazy"
-            />
-        </div>
-    </section>
-);
+const MusicVideoCard = () => {
+    const { embedSrc, currentTrack } = useMusicPlayer();
+
+    return (
+        <section className="temple-card glass-card music-video-card">
+            <h2>Video nhạc của Leo</h2>
+            <div className="music-video-frame">
+                <iframe
+                    src={embedSrc}
+                    title={currentTrack.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    loading="lazy"
+                />
+            </div>
+        </section>
+    );
+};
 
 const GardenScene = ({ sceneRef, fullscreen }) => (
     <div className="temple-scene vuon-scene" ref={sceneRef}>

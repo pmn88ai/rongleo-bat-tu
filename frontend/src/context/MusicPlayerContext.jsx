@@ -3,18 +3,22 @@
  * Một trình phát YouTube duy nhất sống ở cấp app, nên chuyển giữa Chánh điện và
  * Vườn tịnh tâm không bị dừng hay phát lại từ đầu. Nhạc chạy qua YouTube
  * (không tốn băng thông của mình) và được điều khiển từ thanh nhạc.
+ *
+ * Danh sách nhạc nằm DUY NHẤT ở mảng TRACKS bên dưới. Thêm bài mới = thêm 1 dòng
+ * { id: '<YouTube video id>', title: '<tên hiển thị>' } vào TRACKS.
  */
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 
 const MusicPlayerContext = createContext(null);
 
-export const YOUTUBE_VIDEO_ID = 'jKoznZSMX6s';
-export const YOUTUBE_EMBED_SRC = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&playsinline=1`;
+export const TRACKS = [
+    { id: 'jKoznZSMX6s', title: 'Nhạc piano + tiếng nước chảy 2 tiếng' }
+];
 
-const TRACK = {
-    title: 'Nhạc piano + tiếng nước chảy — RongLeo',
-    src: YOUTUBE_EMBED_SRC
-};
+const DEFAULT_TRACK = TRACKS[0];
+
+const embedSrcFor = (track) =>
+    `https://www.youtube.com/embed/${track.id}?rel=0&playsinline=1`;
 
 const YT_API_SRC = 'https://www.youtube.com/iframe_api';
 let ytApiPromise = null;
@@ -58,6 +62,11 @@ export const MusicPlayerProvider = ({ children }) => {
     const mountedRef = useRef(true);
     const tickRef = useRef(null);
 
+    const currentTrackRef = useRef(DEFAULT_TRACK);
+    const pendingTrackRef = useRef(null);
+    const previousTrackRef = useRef(null);
+    const previousWasPlayingRef = useRef(false);
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
@@ -65,6 +74,8 @@ export const MusicPlayerProvider = ({ children }) => {
     const [expanded, setExpanded] = useState(false);
     const [available, setAvailable] = useState(true);
     const [ready, setReady] = useState(false);
+    const [currentTrackId, setCurrentTrackId] = useState(DEFAULT_TRACK.id);
+    const [trackError, setTrackError] = useState(null);
 
     useEffect(() => {
         mountedRef.current = true;
@@ -83,6 +94,8 @@ export const MusicPlayerProvider = ({ children }) => {
             }
             initPromiseRef.current = null;
             pendingPlayRef.current = false;
+            pendingTrackRef.current = null;
+            previousTrackRef.current = null;
         };
     }, []);
 
@@ -103,6 +116,8 @@ export const MusicPlayerProvider = ({ children }) => {
     const createPlayer = useCallback(() => {
         if (initPromiseRef.current) return initPromiseRef.current;
 
+        const startTrack = currentTrackRef.current;
+
         initPromiseRef.current = loadYouTubeApi()
             .then((YT) => new Promise((resolve, reject) => {
                 if (!mountedRef.current) {
@@ -117,13 +132,13 @@ export const MusicPlayerProvider = ({ children }) => {
                 hostRef.current = host;
 
                 const player = new YT.Player(host, {
-                    videoId: YOUTUBE_VIDEO_ID,
+                    videoId: startTrack.id,
                     playerVars: {
                         autoplay: 0,
                         controls: 0,
                         disablekb: 1,
                         loop: 1,
-                        playlist: YOUTUBE_VIDEO_ID,
+                        playlist: startTrack.id,
                         playsinline: 1,
                         rel: 0
                     },
@@ -133,6 +148,7 @@ export const MusicPlayerProvider = ({ children }) => {
                             readyRef.current = true;
                             setReady(true);
                             event.target.setVolume(Math.round(volumeRef.current * 100));
+                            if (typeof event.target.setLoop === 'function') event.target.setLoop(true);
                             const d = event.target.getDuration();
                             if (Number.isFinite(d) && d > 0) setDuration(d);
                             resolve(event.target);
@@ -143,6 +159,8 @@ export const MusicPlayerProvider = ({ children }) => {
                         },
                         onStateChange: (event) => {
                             if (event.data === YT.PlayerState.PLAYING) {
+                                pendingTrackRef.current = null;
+                                previousTrackRef.current = null;
                                 setIsPlaying(true);
                                 const d = event.target.getDuration();
                                 if (Number.isFinite(d) && d > 0) setDuration(d);
@@ -151,6 +169,25 @@ export const MusicPlayerProvider = ({ children }) => {
                             }
                         },
                         onError: () => {
+                            const failedTrack = pendingTrackRef.current;
+                            const previousTrack = previousTrackRef.current;
+                            pendingTrackRef.current = null;
+                            previousTrackRef.current = null;
+
+                            if (failedTrack && previousTrack) {
+                                currentTrackRef.current = previousTrack;
+                                setCurrentTrackId(previousTrack.id);
+                                setTrackError(`Không phát được "${failedTrack.title}". Vẫn giữ bài đang phát.`);
+                                const p = playerRef.current;
+                                if (p && typeof p.loadVideoById === 'function') {
+                                    p.loadVideoById(previousTrack.id);
+                                    if (previousWasPlayingRef.current && typeof p.playVideo === 'function') {
+                                        p.playVideo();
+                                    }
+                                }
+                                return;
+                            }
+
                             setAvailable(false);
                             reject(new Error('YouTube player error'));
                         }
@@ -204,6 +241,34 @@ export const MusicPlayerProvider = ({ children }) => {
         play();
     }, [pause, play]);
 
+    const selectTrack = useCallback((trackId) => {
+        const nextTrack = TRACKS.find((track) => track.id === trackId);
+        if (!nextTrack) return;
+        if (nextTrack.id === currentTrackRef.current.id) return;
+
+        const previousTrack = currentTrackRef.current;
+        const player = playerRef.current;
+
+        setTrackError(null);
+        setDuration(0);
+        setCurrentTime(0);
+        currentTrackRef.current = nextTrack;
+        setCurrentTrackId(nextTrack.id);
+
+        if (!readyRef.current || !player || typeof player.loadVideoById !== 'function') {
+            pendingPlayRef.current = true;
+            if (!initPromiseRef.current) createPlayer().catch(() => { /* handled via available state */ });
+            return;
+        }
+
+        pendingTrackRef.current = nextTrack;
+        previousTrackRef.current = previousTrack;
+        previousWasPlayingRef.current = typeof player.getPlayerState === 'function' && player.getPlayerState() === 1;
+
+        player.loadVideoById(nextTrack.id);
+        if (typeof player.playVideo === 'function') player.playVideo();
+    }, [createPlayer]);
+
     const seek = useCallback((seconds) => {
         const next = Math.max(0, seconds);
         const player = playerRef.current;
@@ -223,10 +288,18 @@ export const MusicPlayerProvider = ({ children }) => {
         }
     }, []);
 
+    const currentTrack = TRACKS.find((track) => track.id === currentTrackId) || DEFAULT_TRACK;
+
     return (
         <MusicPlayerContext.Provider value={{
-            title: TRACK.title,
-            src: TRACK.src,
+            title: currentTrack.title,
+            src: embedSrcFor(currentTrack),
+            embedSrc: embedSrcFor(currentTrack),
+            currentTrack,
+            currentTrackId,
+            tracks: TRACKS,
+            selectTrack,
+            trackError,
             available,
             ready,
             isPlaying,

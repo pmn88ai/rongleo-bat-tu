@@ -13,7 +13,8 @@ const formatTime = (seconds) => {
 const MusicPlayer = () => {
     const location = useLocation();
     const {
-        title, isPlaying, duration, currentTime, volume, expanded,
+        tracks, currentTrackId, selectTrack, trackError,
+        isPlaying, duration, currentTime, volume, expanded,
         setExpanded, toggle, seek, setVolume, available, pause
     } = useMusicPlayer();
 
@@ -58,7 +59,17 @@ const MusicPlayer = () => {
 
             <div className="music-bar-main">
                 <div className="music-bar-top">
-                    <span className="music-bar-title">{title}</span>
+                    <select
+                        className="music-track-select"
+                        value={currentTrackId}
+                        onChange={(e) => selectTrack(e.target.value)}
+                        title="Chọn bài nhạc"
+                        aria-label="Chọn bài nhạc"
+                    >
+                        {tracks.map((track) => (
+                            <option key={track.id} value={track.id}>{track.title}</option>
+                        ))}
+                    </select>
                     <span className="music-bar-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
                 </div>
                 <input
@@ -71,6 +82,9 @@ const MusicPlayer = () => {
                     onChange={(e) => seek(parseFloat(e.target.value))}
                     aria-label="Tiến trình bài nhạc"
                 />
+                {trackError && (
+                    <span className="music-track-error" role="status">{trackError}</span>
+                )}
             </div>
 
             <div className="music-volume">
