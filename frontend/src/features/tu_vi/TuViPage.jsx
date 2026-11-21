@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Solar, Lunar } from 'lunar-javascript';
 import { useMenhProfile } from '../../context/MenhProfileContext';
+import NpcMemory from '../chua/NpcMemory';
 import './TuViPage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -235,6 +236,8 @@ const TuViPage = () => {
                     Đây chỉ là phép tính an sao, không phải luận giải.
                 </p>
             </header>
+
+            <NpcMemory npcId="tinh_tu" />
 
             <form className="tuv-form glass-card" onSubmit={handleSubmit}>
                 <div className="tuv-convert">

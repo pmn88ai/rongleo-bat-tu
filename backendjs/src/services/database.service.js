@@ -513,7 +513,7 @@ class DatabaseService {
      */
     async getUserHistory(userId, limit = 20) {
         const rows = await this.all(`
-            SELECT id, question_id, question_text, answer, use_ai, credits_used, created_at, persona, follow_ups, person1_data, person2_data, metadata
+            SELECT id, theme_id, question_id, question_text, answer, use_ai, credits_used, created_at, persona, follow_ups, person1_data, person2_data, metadata
             FROM consultations
             WHERE user_id = ?
             ORDER BY created_at DESC

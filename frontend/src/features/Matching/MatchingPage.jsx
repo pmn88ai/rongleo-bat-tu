@@ -4,6 +4,7 @@ import { apiClient } from '../../services/apiClient';
 import Toast from '../../components/Toast';
 import TypewriterEffect from '../Consultant/TypewriterEffect';
 import ConsultationHistoryContainer from '../ConsultationHistory/ConsultationHistoryContainer';
+import NpcMemory from '../chua/NpcMemory';
 import './MatchingPage.css';
 
 /**
@@ -425,6 +426,8 @@ const MatchingPage = ({ userData }) => {
                         📜
                     </button>
             </div>
+
+            <NpcMemory npcId="duyen_khoi" />
 
             {/* Input Section or Loading Progress */}
             {loadingAI ? (

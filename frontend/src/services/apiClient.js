@@ -1,12 +1,9 @@
-import { getUserId } from '../utils/getUserId';
+import { getAuthHeaders } from '../utils/getUserId';
 
 const BASE_URL = '/api';
 
-// Headers chuẩn cho mọi request - luôn đính kèm x-user-id
-const getHeaders = () => ({
-    'Content-Type': 'application/json',
-    'x-user-id': getUserId()
-});
+// Headers chuẩn cho mọi request - đính kèm x-user-id + Bearer token nếu đã đăng nhập
+const getHeaders = () => getAuthHeaders();
 
 export const apiClient = {
     get: async (endpoint, params = {}) => {

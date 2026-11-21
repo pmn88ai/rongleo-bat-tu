@@ -2,6 +2,7 @@ import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PersonalizedDate from './PersonalizedDate';
 import AuspiciousDatePicker from './AuspiciousDatePicker';
+import NpcMemory from '../chua/NpcMemory';
 import './XemNgayPage.css';
 
 const MODES = [
@@ -51,6 +52,8 @@ const XemNgayPage = ({ data, userData }) => {
                     ))}
                 </div>
             </header>
+
+            <NpcMemory npcId="hoang_dao" />
 
             <div className="xemngay-body">
                 {mode === 'find' ? (

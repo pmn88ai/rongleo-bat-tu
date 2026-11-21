@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HistoryCard from './HistoryCard';
 import HistoryDetailView from './HistoryDetailView';
 import { API_CONFIG } from '../../config/api';
-import { getUserId } from '../../utils/getUserId';
+import { getAuthHeaders } from '../../utils/getUserId';
 import './ConsultationHistory.css';
 
 const ConsultationHistoryContainer = ({ onBack, embedded = false }) => {
@@ -21,10 +21,7 @@ const ConsultationHistoryContainer = ({ onBack, embedded = false }) => {
         setLoading(true);
         try {
             const response = await fetch(`${API_BASE}/my-history?limit=30`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-user-id': getUserId()
-                }
+                headers: getAuthHeaders()
             });
             const data = await response.json();
             if (data.history) {

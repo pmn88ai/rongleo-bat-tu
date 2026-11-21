@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
+import NpcMemory from './NpcMemory';
 import { useMusicPlayer } from '../../context/MusicPlayerContext';
 import './TempleScene.css';
 
@@ -50,6 +51,8 @@ const VuonTinhTamPage = () => {
                         nghe đàn rồi hãy hỏi điều mình đang băn khoăn.
                     </p>
                 </header>
+
+                <NpcMemory npcId="chua" />
 
                 <MusicVideoCard />
 

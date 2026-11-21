@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
+import NpcMemory from './NpcMemory';
 import './ChuaPage.css';
 import './TempleScene.css';
 
@@ -85,6 +86,8 @@ const ChuaPage = () => {
                         Đi một vòng sân chùa, ghé từng quầy — mỗi quầy có một thầy phụ trách.
                     </p>
                 </header>
+
+                <NpcMemory npcId="chua" showGuestInvite={false} />
 
                 <nav className="chua-quick" aria-label="Xem nhanh">
                     <span className="chua-quick-label">Xem nhanh</span>

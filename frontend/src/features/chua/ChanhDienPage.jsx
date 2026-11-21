@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
+import NpcMemory from './NpcMemory';
 import './TempleScene.css';
 
 const ChanhDienPage = () => {
@@ -26,6 +27,8 @@ const ChanhDienPage = () => {
                         để lòng mình lắng lại.
                     </p>
                 </header>
+
+                <NpcMemory npcId="chua" />
 
                 <section className="temple-card glass-card">
                     <h2>Nghe nhạc thiền</h2>

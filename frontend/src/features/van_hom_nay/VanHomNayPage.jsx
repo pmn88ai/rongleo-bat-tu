@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from '../Homepage/DatePicker';
 import VanHomNayShareCard from './VanHomNayShareCard';
 import { useMenhProfile } from '../../context/MenhProfileContext';
+import NpcMemory from '../chua/NpcMemory';
 import './VanHomNayPage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -154,6 +155,8 @@ const VanHomNayPage = () => {
                     Nhập ngày sinh để xem can chi hôm nay và ngày cá nhân của bạn — miễn phí, không cần đăng nhập.
                 </p>
             </header>
+
+            <NpcMemory npcId="thoi_van" />
 
             <form className="vhn-form glass-card" onSubmit={handleSubmit}>
                 <div className="vhn-form-grid">

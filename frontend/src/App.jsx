@@ -29,6 +29,7 @@ import ChanhDienPage from './features/chua/ChanhDienPage';
 import VuonTinhTamPage from './features/chua/VuonTinhTamPage';
 import ImageExportButton from './components/ImageExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
+import NpcMemory from './features/chua/NpcMemory';
 import MobileShell from './components/MobileShell';
 import DesktopShell from './components/DesktopShell';
 import useWindowSize from './hooks/useWindowSize';
@@ -64,6 +65,8 @@ const ChartPage = ({ data, isMobile }) => {
 
   return (
     <div className="tab-pane fade-in chart-page">
+      <NpcMemory npcId="can_chi" />
+
       <div className="chart-actions-bar">
         <div style={{ display: 'flex', gap: '8px' }}>
           {!isMobile && (

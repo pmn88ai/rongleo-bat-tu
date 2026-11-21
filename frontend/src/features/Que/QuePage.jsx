@@ -6,6 +6,7 @@ import QueCard from './components/QueCard';
 import GuaSymbol from './components/GuaSymbol';
 import QueTimeline from './components/QueTimeline';
 import QueShareCard from './components/QueShareCard';
+import NpcMemory from '../chua/NpcMemory';
 import './QuePage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -201,6 +202,8 @@ const QuePage = ({ userData }) => {
                         {todayStr}
                     </p>
                 </div>
+
+                <NpcMemory npcId="que_cat" />
 
                 <div className="calculate-view fade-in">
                     {error && (

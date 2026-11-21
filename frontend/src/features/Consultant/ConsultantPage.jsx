@@ -7,6 +7,7 @@ import { getUserId } from '../../utils/getUserId';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { formatDateTime } from '../../utils/dateUtils';
 import ConsultationHistoryContainer from '../ConsultationHistory/ConsultationHistoryContainer';
+import NpcMemory from '../chua/NpcMemory';
 
 const ConsultantPage = ({ userData }) => {
     const navigate = useNavigate();
@@ -213,6 +214,8 @@ const ConsultantPage = ({ userData }) => {
                     </button>
                 </div>
             </div>
+
+            {step <= 2 && <NpcMemory npcId={selectedPersona} />}
 
             {step === 1 && (
                 <div className="consult-welcome-intro fade-in">

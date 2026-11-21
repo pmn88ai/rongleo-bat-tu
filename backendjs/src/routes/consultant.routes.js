@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const { THEMES, QUESTIONS } = require('../bazi/questions/data');
 const { solveQuestion } = require('../bazi/questions/engine');
@@ -13,8 +14,23 @@ const { buildTuViPromptContext } = require('../bazi/tu_vi_summary');
 const { buildNguHanhTuTruBlock } = require('../bazi/ngu_hanh_table');
 const authRoutes = require('./auth.routes');
 
-// NO-AUTH: lấy userId từ x-user-id header, fallback "anonymous"
-const getUserId = (req) => req.headers['x-user-id'] || 'anonymous';
+// NO-AUTH fallback: lấy userId từ x-user-id header, fallback "anonymous".
+// Nếu có Bearer token hợp lệ thì luôn ưu tiên id trong token để không đọc/ghi nhầm user.
+const JWT_SECRET = process.env.JWT_SECRET || 'rongleo-dev-secret-change-me';
+const getUserId = (req) => {
+    const header = req.headers.authorization || '';
+    if (header.startsWith('Bearer ')) {
+        try {
+            const payload = jwt.verify(header.slice(7), JWT_SECRET);
+            if (payload && payload.id !== undefined && payload.id !== null) {
+                return payload.id;
+            }
+        } catch (e) {
+            // Token hỏng/hết hạn -> rơi về x-user-id như khách
+        }
+    }
+    return req.headers['x-user-id'] || 'anonymous';
+};
 
 // Gender parser — exact match, no truthy/falsy tricks
 // "Nam" → false, "Nữ" → true, default → false
