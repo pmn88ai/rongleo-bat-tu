@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TAROT_CARDS } from '../../data/tarotCards';
+import PrintResultButton from '../../components/PrintResultButton';
 import './TarotPage.css';
 
 const MODES = [
@@ -219,7 +220,10 @@ const TarotPage = () => {
                     </p>
                 </section>
             ) : (
-                <section id="tarot-results" className="tarot-results" aria-live="polite">
+                <section id="tarot-results" className="tarot-results print-area" aria-live="polite">
+                    <div className="tarot-print-bar print-hide">
+                        <PrintResultButton />
+                    </div>
                     {question.trim() && (
                         <p className="tarot-question-echo glass-card">
                             Câu hỏi: <em>“{question.trim()}”</em>

@@ -12,6 +12,30 @@ const STATIC_CATEGORIES = [
     { id: 'ung-dung',  name: 'Ứng dụng thực tế',     slug: 'ung-dung' },
 ];
 
+const CATEGORY_IMAGES = {
+    'khai-niem': '/images/articles/bazi_concept.png',
+    'can-chi': '/images/articles/bazi_canchi.png',
+    'ngu-hanh': '/images/articles/bazi_elements.png',
+    'cach-luan': '/images/articles/bazi_interpretation.png',
+    'ung-dung': '/images/articles/bazi_practical.png',
+};
+
+const CATEGORY_NAME_TO_SLUG = {
+    'Khái niệm cơ bản': 'khai-niem',
+    'Cách luận giải': 'cach-luan',
+    'Ngũ Hành': 'ngu-hanh',
+    'Thiên Can - Địa Chi': 'can-chi',
+    'Ứng dụng thực tế': 'ung-dung',
+};
+
+const getArticleImage = (article) => {
+    if (article?.thumbnail) return article.thumbnail;
+    const slug = article?.category_slug
+        || CATEGORY_NAME_TO_SLUG[article?.category_name]
+        || article?.category;
+    return CATEGORY_IMAGES[slug] || CATEGORY_IMAGES['khai-niem'];
+};
+
 const ArticlesSection = () => {
     const [articles, setArticles] = useState([]);
     const [activeCategory, setActiveCategory] = useState('all');
@@ -108,13 +132,7 @@ const ArticlesSection = () => {
                 {featuredArticle && (
                     <div className="article-main" onClick={() => handleArticleClick(featuredArticle.slug)}>
                         <div className="article-main-image">
-                            {featuredArticle.thumbnail ? (
-                                <img src={featuredArticle.thumbnail} alt={featuredArticle.title} />
-                            ) : (
-                                <div className="article-placeholder-image">
-                                    <span>🔮</span>
-                                </div>
-                            )}
+                            <img src={getArticleImage(featuredArticle)} alt={featuredArticle.title} />
                             {featuredArticle.category_name && (
                                 <span className="article-category-badge">{featuredArticle.category_name}</span>
                             )}
@@ -139,11 +157,7 @@ const ArticlesSection = () => {
                             onClick={() => handleArticleClick(article.slug)}
                         >
                             <div className="article-sidebar-image">
-                                {article.thumbnail ? (
-                                    <img src={article.thumbnail} alt={article.title} />
-                                ) : (
-                                    <div className="article-placeholder-small">📜</div>
-                                )}
+                                <img src={getArticleImage(article)} alt={article.title} />
                             </div>
                             <div className="article-sidebar-body">
                                 <h4 className="article-sidebar-title">{article.title}</h4>

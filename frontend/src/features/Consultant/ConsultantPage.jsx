@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { formatDateTime } from '../../utils/dateUtils';
 import ConsultationHistoryContainer from '../ConsultationHistory/ConsultationHistoryContainer';
 import NpcMemory from '../chua/NpcMemory';
+import PrintResultButton from '../../components/PrintResultButton';
 
 const ConsultantPage = ({ userData }) => {
     const navigate = useNavigate();
@@ -290,8 +291,13 @@ const ConsultantPage = ({ userData }) => {
             )}
 
             {step === 3 && (
-                <div className="answer-area glass-card" ref={answerRef}>
+                <div className={`answer-area glass-card ${answer ? 'print-area' : ''}`} ref={answerRef}>
                     <div className="asked-question"><strong>Câu hỏi:</strong> {selectedQuestion?.text}</div>
+                    {answer && !loading && (
+                        <div className="result-print-bar print-hide">
+                            <PrintResultButton />
+                        </div>
+                    )}
                     <div className="answer-content">
                         {loading ? (
                             <div className="ai-loading-progress">
@@ -317,7 +323,7 @@ const ConsultantPage = ({ userData }) => {
                                     </div>
                                 ))}
                                 {followUps.length > 0 && (
-                                    <div className="follow-up-section fade-in">
+                                    <div className="follow-up-section fade-in print-hide">
                                         <h4 className="follow-up-title pink-gradient-text">Gợi ý từ {currentPersona.name}:</h4>
                                         <div className="follow-up-items">
                                             {followUps.map((q, qidx) => (
@@ -326,14 +332,14 @@ const ConsultantPage = ({ userData }) => {
                                         </div>
                                     </div>
                                 )}
-                                <div className="custom-question-inline fade-in">
+                                <div className="custom-question-inline fade-in print-hide">
                                     <h4 className="custom-inline-title">💬 Hoặc hỏi câu hỏi của riêng bạn:</h4>
                                     <div className="custom-inline-form">
                                         <textarea className="custom-inline-textarea" placeholder={`Nhập câu hỏi bạn muốn hỏi ${currentPersona.name}...`} value={customQuestion} onChange={(e) => setCustomQuestion(e.target.value)} rows={2} />
                                         <button className="custom-inline-btn" onClick={handleCustomQuestion} disabled={!customQuestion.trim() || loading}>🙏 Xin Thầy Luận Giải</button>
                                     </div>
                                 </div>
-                                <div className="answer-footer">
+                                <div className="answer-footer print-hide">
                                     <button className="premium-button small" onClick={() => setStep(2)}>HỎI CÂU KHÁC</button>
                                 </div>
                             </div>

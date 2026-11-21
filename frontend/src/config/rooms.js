@@ -6,13 +6,23 @@
 export const TEMPLE_LINKS = [
     { id: 'chua', path: '/chua', label: 'VÀO CHÙA', shortLabel: 'Chùa', icon: '🏮' },
     { id: 'chanhdien', path: '/chanh-dien', label: 'CHÁNH ĐIỆN', shortLabel: 'Chánh Điện', icon: '🛕' },
-    { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', shortLabel: 'Vườn', icon: '🍃' }
+    { id: 'vuontinhtam', path: '/vuon-tinh-tam', label: 'VƯỜN TỊNH TÂM', shortLabel: 'Vườn', icon: '🍃' },
+    { id: 'tangkinhcac', path: '/dientich', label: 'TÀNG KINH CÁC', shortLabel: 'Tàng Kinh', icon: '📚' }
 ];
+
+export const ROOM_GROUPS = [
+    { id: 'la-so-menh', label: 'Lá số & Mệnh', icon: '🎴' },
+    { id: 'van-ngay', label: 'Vận & Ngày', icon: '📅' },
+    { id: 'hoi-que', label: 'Hỏi & Quẻ', icon: '🔮' }
+];
+
+export const getRoomsByGroup = (groupId) => ROOMS.filter((room) => room.group === groupId);
 
 export const ROOMS = [
     {
         id: 'laso',
         path: '/laso',
+        group: 'la-so-menh',
         label: 'LÁ SỐ',
         title: 'Điện Bát Tự',
         icon: '🎨',
@@ -24,6 +34,7 @@ export const ROOMS = [
     {
         id: 'phantich',
         path: '/phantich',
+        group: 'la-so-menh',
         label: 'PHÂN TÍCH',
         title: 'Điện Tính Cách',
         icon: '⚙️',
@@ -35,6 +46,7 @@ export const ROOMS = [
     {
         id: 'vanhan',
         path: '/vanhan',
+        group: 'van-ngay',
         label: 'VẬN HẠN',
         title: 'Quầy Vận Hạn',
         icon: '📈',
@@ -46,6 +58,7 @@ export const ROOMS = [
     {
         id: 'xemngay',
         path: '/xemngay',
+        group: 'van-ngay',
         label: 'XEM NGÀY',
         title: 'Quầy Xem Ngày',
         icon: '📅',
@@ -57,6 +70,7 @@ export const ROOMS = [
     {
         id: 'than-so-hoc',
         path: '/than-so-hoc',
+        group: 'la-so-menh',
         label: 'THẦN SỐ HỌC',
         title: 'Điện Thần Số',
         icon: '🔢',
@@ -68,6 +82,7 @@ export const ROOMS = [
     {
         id: 'tuvan',
         path: '/tuvan',
+        group: 'hoi-que',
         label: 'TƯ VẤN',
         title: 'Phòng Hỏi Thầy',
         icon: '💬',
@@ -79,6 +94,7 @@ export const ROOMS = [
     {
         id: 'duyenso',
         path: '/duyenso',
+        group: 'hoi-que',
         label: 'DUYÊN SỐ',
         title: 'Quầy Tình Duyên',
         icon: '🎎',
@@ -90,6 +106,7 @@ export const ROOMS = [
     {
         id: 'xinque',
         path: '/xinque',
+        group: 'hoi-que',
         label: 'GIEO QUẺ',
         title: 'Quầy Xin Quẻ',
         icon: '🎴',
@@ -101,10 +118,12 @@ export const ROOMS = [
     {
         id: 'tarot',
         path: '/tarot',
+        group: 'hoi-que',
         label: 'TAROT',
         title: 'Quầy Tarot',
         icon: '✦',
         image: '/images/tarot/major_01_magician.jpg',
+        bgPosition: 'center 12%',
         accent: '#c084fc',
         glow: 'rgba(192, 132, 252, 0.28)',
         desc: 'Rút 1 lá hoặc trải 3 lá Quá khứ — Hiện tại — Tương lai.'
@@ -112,6 +131,7 @@ export const ROOMS = [
     {
         id: 'tuviphuongtay',
         path: '/tuviphuongtay',
+        group: 'la-so-menh',
         label: 'TỬ VI TÂY',
         title: 'Vườn Tịnh Tâm',
         icon: '⭐',
@@ -123,6 +143,7 @@ export const ROOMS = [
     {
         id: 'van-hom-nay',
         path: '/van-hom-nay',
+        group: 'van-ngay',
         label: 'VẬN HÔM NAY',
         title: 'Cổng Chùa',
         icon: '☀️',

@@ -1,7 +1,27 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import AccountButton from './AccountButton';
-import { TEMPLE_LINKS, ROOMS } from '../config/rooms';
+import { TEMPLE_LINKS, ROOM_GROUPS, getRoomsByGroup } from '../config/rooms';
+
+const toNavItem = (room) => ({
+  id: room.id,
+  path: room.path,
+  label: room.label,
+  icon: room.icon
+});
+
+const lookupSubgroups = [
+  {
+    id: 'ho-so',
+    label: 'Hồ sơ',
+    items: [{ id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ', icon: '🧭' }]
+  },
+  ...ROOM_GROUPS.map(group => ({
+    id: group.id,
+    label: group.label,
+    items: getRoomsByGroup(group.id).map(toNavItem)
+  }))
+];
 
 // Hai nhóm điều hướng tách bạch trên header: đi dạo chùa và tra cứu.
 const headerGroups = [
@@ -18,15 +38,7 @@ const headerGroups = [
   {
     id: 'lookup',
     label: 'Tra cứu',
-    items: [
-      { id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ', icon: '🧭' },
-      ...ROOMS.map(room => ({
-        id: room.id,
-        path: room.path,
-        label: room.label,
-        icon: room.icon
-      }))
-    ]
+    subgroups: lookupSubgroups
   }
 ];
 
@@ -99,18 +111,40 @@ const HeaderNav = () => {
         {headerGroups.map(group => (
           <div key={group.id} className="header-nav-group">
             <span className="header-nav-group-label">{group.label}</span>
-            <div className="header-nav-group-items">
-              {group.items.map(tab => (
-                <NavLink
-                  key={tab.id}
-                  to={tab.path}
-                  className={({ isActive }) => `header-nav-item ${isActive ? 'active' : ''}`}
-                >
-                  <span className="nav-icon">{tab.icon}</span>
-                  <span className="nav-label">{tab.label}</span>
-                </NavLink>
-              ))}
-            </div>
+            {group.subgroups ? (
+              <div className="header-nav-subgroups">
+                {group.subgroups.map(subgroup => (
+                  <div key={subgroup.id} className="header-nav-subgroup">
+                    <span className="header-nav-subgroup-label">{subgroup.label}</span>
+                    <div className="header-nav-group-items">
+                      {subgroup.items.map(tab => (
+                        <NavLink
+                          key={tab.id}
+                          to={tab.path}
+                          className={({ isActive }) => `header-nav-item ${isActive ? 'active' : ''}`}
+                        >
+                          <span className="nav-icon">{tab.icon}</span>
+                          <span className="nav-label">{tab.label}</span>
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="header-nav-group-items">
+                {group.items.map(tab => (
+                  <NavLink
+                    key={tab.id}
+                    to={tab.path}
+                    className={({ isActive }) => `header-nav-item ${isActive ? 'active' : ''}`}
+                  >
+                    <span className="nav-icon">{tab.icon}</span>
+                    <span className="nav-label">{tab.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </nav>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
+import PrintResultButton from '../../components/PrintResultButton';
 
 /**
  * CustomerInfoHeader - Reusable info header for personalized pages
@@ -288,7 +289,11 @@ const PersonalizedDate = ({ data, userData }) => {
                         <p>⚠️ {error}</p>
                     </div>
                 ) : sections.length > 0 ? (
-                    <div className="sections-grid">
+                    <>
+                    <div className="result-print-bar print-hide">
+                        <PrintResultButton />
+                    </div>
+                    <div className="sections-grid print-area">
                         {sections.map((section, idx) => (
                             <div key={idx} className={`analysis-section-card glass-card ${idx === 0 ? 'highlight-section' : ''}`}>
                                 <div className="section-header">
@@ -307,6 +312,7 @@ const PersonalizedDate = ({ data, userData }) => {
                             </div>
                         ))}
                     </div>
+                    </>
                 ) : (
                     <div className="empty-state glass-card">
                         <div className="empty-icon">🔮</div>

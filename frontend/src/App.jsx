@@ -28,6 +28,7 @@ import ChuaPage from './features/chua/ChuaPage';
 import ChanhDienPage from './features/chua/ChanhDienPage';
 import VuonTinhTamPage from './features/chua/VuonTinhTamPage';
 import ImageExportButton from './components/ImageExportButton';
+import PDFExportButton from './components/PDFExportButton';
 import ComprehensiveInterpretation from './components/ComprehensiveInterpretation';
 import NpcMemory from './features/chua/NpcMemory';
 import MobileShell from './components/MobileShell';
@@ -76,7 +77,7 @@ const ChartPage = ({ data, isMobile }) => {
           )}
         </div>
         <div className="chart-actions-right">
-          {/* {!isMobile && <PDFExportButton data={data} />} */}
+          <PDFExportButton data={data} />
           <ImageExportButton data={data} />
           <ComprehensiveInterpretation data={data} />
         </div>
@@ -194,7 +195,11 @@ const AppContent = () => {
         {room ? (
           <div
             className="room-bg"
-            style={{ backgroundImage: `url(${room.image})`, '--room-accent': room.accent }}
+            style={{
+              backgroundImage: `url(${room.image})`,
+              backgroundPosition: room.bgPosition || 'center',
+              '--room-accent': room.accent
+            }}
             aria-hidden="true"
           />
         ) : (

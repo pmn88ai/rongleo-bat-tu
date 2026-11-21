@@ -1,9 +1,28 @@
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import AccountButton from './AccountButton';
-import { TEMPLE_LINKS, ROOMS } from '../config/rooms';
+import { TEMPLE_LINKS, ROOM_GROUPS, getRoomsByGroup } from '../config/rooms';
 
-// Hai nhóm điều hướng tách bạch: đi dạo chùa và tra cứu.
+const toNavItem = (room) => ({
+    id: room.id,
+    path: room.path,
+    label: room.label,
+    icon: room.icon
+});
+
+const lookupSubgroups = [
+    {
+        id: 'ho-so',
+        label: 'Hồ sơ',
+        items: [{ id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ & TRA CỨU', icon: '🧭' }]
+    },
+    ...ROOM_GROUPS.map(group => ({
+        id: group.id,
+        label: group.label,
+        items: getRoomsByGroup(group.id).map(toNavItem)
+    }))
+];
+
 const navGroups = [
     {
         id: 'temple',
@@ -18,15 +37,7 @@ const navGroups = [
     {
         id: 'lookup',
         label: 'Tra cứu',
-        items: [
-            { id: 'tra-cuu', path: '/tra-cuu', label: 'HỒ SƠ & TRA CỨU', icon: '🧭' },
-            ...ROOMS.map(room => ({
-                id: room.id,
-                path: room.path,
-                label: room.label,
-                icon: room.icon
-            }))
-        ]
+        subgroups: lookupSubgroups
     }
 ];
 
@@ -102,18 +113,40 @@ const DesktopShell = ({ children, hasData, onClearData }) => {
                             {navGroups.map(group => (
                                 <div key={group.id} className="nav-group">
                                     <span className="nav-group-label">{group.label}</span>
-                                    <div className="nav-group-items">
-                                        {group.items.map(tab => (
-                                            <NavLink
-                                                key={tab.id}
-                                                to={tab.path}
-                                                className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
-                                            >
-                                                <span className="tab-icon">{tab.icon}</span>
-                                                <span className="tab-label">{tab.label}</span>
-                                            </NavLink>
-                                        ))}
-                                    </div>
+                                    {group.subgroups ? (
+                                        <div className="nav-group-items nav-group-subgroups">
+                                            {group.subgroups.map(subgroup => (
+                                                <div key={subgroup.id} className="nav-subgroup">
+                                                    <span className="nav-subgroup-label">{subgroup.label}</span>
+                                                    <div className="nav-subgroup-items">
+                                                        {subgroup.items.map(tab => (
+                                                            <NavLink
+                                                                key={tab.id}
+                                                                to={tab.path}
+                                                                className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
+                                                            >
+                                                                <span className="tab-icon">{tab.icon}</span>
+                                                                <span className="tab-label">{tab.label}</span>
+                                                            </NavLink>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="nav-group-items">
+                                            {group.items.map(tab => (
+                                                <NavLink
+                                                    key={tab.id}
+                                                    to={tab.path}
+                                                    className={({ isActive }) => `nav-tab-btn ${isActive ? 'active' : ''}`}
+                                                >
+                                                    <span className="tab-icon">{tab.icon}</span>
+                                                    <span className="tab-label">{tab.label}</span>
+                                                </NavLink>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </nav>

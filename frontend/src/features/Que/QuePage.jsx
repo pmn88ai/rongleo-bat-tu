@@ -6,6 +6,7 @@ import QueCard from './components/QueCard';
 import GuaSymbol from './components/GuaSymbol';
 import QueTimeline from './components/QueTimeline';
 import QueShareCard from './components/QueShareCard';
+import PrintResultButton from '../../components/PrintResultButton';
 import NpcMemory from '../chua/NpcMemory';
 import './QuePage.css';
 
@@ -290,7 +291,7 @@ const QuePage = ({ userData }) => {
 
                     {/* Combined AI Analysis Section */}
                     {selectedGua && !isAnyLoading && (
-                        <div id="que-results-section" className="que-results-container glass-card fade-in">
+                        <div id="que-results-section" className="que-results-container glass-card fade-in print-area">
                             <div className="results-header">
                                 <div className="results-title-group">
                                     <GuaSymbol symbol={selectedGua.symbol} size={40} />
@@ -300,8 +301,9 @@ const QuePage = ({ userData }) => {
                                     </div>
                                 </div>
                                 <div className="results-header-actions">
+                                    <PrintResultButton />
                                     <button
-                                        className="share-btn"
+                                        className="share-btn print-hide"
                                         onClick={async () => {
                                             try {
                                                 const html2canvas = (await import('html2canvas')).default;

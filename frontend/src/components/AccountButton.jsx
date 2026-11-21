@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
@@ -33,11 +34,12 @@ const AccountButton = () => {
                 </button>
             )}
 
-            {showAuth && (
+            {showAuth && createPortal(
                 <AuthModal
                     onClose={() => setShowAuth(false)}
                     onSuccess={() => setShowAuth(false)}
-                />
+                />,
+                document.body
             )}
             <UserProfileModal
                 isOpen={showProfile}

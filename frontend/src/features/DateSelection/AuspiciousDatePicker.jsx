@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../../services/apiClient';
+import PrintResultButton from '../../components/PrintResultButton';
 
 /**
  * AuspiciousDatePicker - Calendar-based component for selecting auspicious dates
@@ -297,10 +298,11 @@ const AuspiciousDatePicker = ({ userData, hideTitle = false }) => {
                         <option key={act.value} value={act.value}>{act.label}</option>
                     ))}
                 </select>
+                <PrintResultButton />
             </div>
 
             {/* Calendar Container */}
-            <div className="calendar-container">
+            <div className="calendar-container print-area">
                 <div className="calendar-header glass-card">
                     <button className="nav-btn" onClick={() => navigateMonth(-1)}>◀</button>
                     <div className="month-year">

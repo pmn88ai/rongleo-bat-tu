@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PrintResultButton from '../../components/PrintResultButton';
 
 const LuckHistogram = ({ cycles, onSelectYear, selectedYear }) => {
     // Flatten all years into a single array for the chart
@@ -309,7 +310,10 @@ const LuckCycles = ({ data }) => {
     ];
 
     return (
-        <section className="luck-cycles-container fade-in">
+        <section className="luck-cycles-container fade-in print-area">
+            <div className="result-print-bar print-hide">
+                <PrintResultButton />
+            </div>
             {/* Natal Chart Overview Header */}
             <div className="natal-chart-overview">
                 <div className="natal-header-strip">
