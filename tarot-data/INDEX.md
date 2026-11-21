@@ -1,0 +1,82 @@
+# Bộ ảnh Tarot RWS — 78 lá
+
+Ảnh: `cards/` (đặt tên thống nhất theo mã lá). Hồ sơ riêng từng lá: `profiles/`.
+
+- `cups_ace` — Át Cốc (Ace of Cups) — 901 KB
+- `cups_02` — Hai Cốc (Two of Cups) — 1111 KB
+- `cups_03` — Ba Cốc (Three of Cups) — 1126 KB
+- `cups_04` — Bốn Cốc (Four of Cups) — 785 KB
+- `cups_05` — Năm Cốc (Five of Cups) — 685 KB
+- `cups_06` — Sáu Cốc (Six of Cups) — 961 KB
+- `cups_07` — Bảy Cốc (Seven of Cups) — 789 KB
+- `cups_08` — Tám Cốc (Eight of Cups) — 810 KB
+- `cups_09` — Chín Cốc (Nine of Cups) — 805 KB
+- `cups_10` — Mười Cốc (Ten of Cups) — 932 KB
+- `cups_page` — Tiểu Đồng Cốc (Page of Cups) — 921 KB
+- `cups_knight` — Hiệp Sĩ Cốc (Knight of Cups) — 886 KB
+- `cups_queen` — Hoàng Hậu Cốc (Queen of Cups) — 846 KB
+- `cups_king` — Vua Cốc (King of Cups) — 882 KB
+- `pentacles_ace` — Át Tiền (Ace of Pentacles) — 843 KB
+- `pentacles_02` — Hai Tiền (Two of Pentacles) — 896 KB
+- `pentacles_03` — Ba Tiền (Three of Pentacles) — 869 KB
+- `pentacles_04` — Bốn Tiền (Four of Pentacles) — 792 KB
+- `pentacles_05` — Năm Tiền (Five of Pentacles) — 878 KB
+- `pentacles_06` — Sáu Tiền (Six of Pentacles) — 851 KB
+- `pentacles_07` — Bảy Tiền (Seven of Pentacles) — 913 KB
+- `pentacles_08` — Tám Tiền (Eight of Pentacles) — 868 KB
+- `pentacles_09` — Chín Tiền (Nine of Pentacles) — 833 KB
+- `pentacles_10` — Mười Tiền (Ten of Pentacles) — 941 KB
+- `pentacles_page` — Tiểu Đồng Tiền (Page of Pentacles) — 749 KB
+- `pentacles_knight` — Hiệp Sĩ Tiền (Knight of Pentacles) — 692 KB
+- `pentacles_queen` — Hoàng Hậu Tiền (Queen of Pentacles) — 1170 KB
+- `pentacles_king` — Vua Tiền (King of Pentacles) — 802 KB
+- `major_00_fool` — Kẻ Khờ (Fool) — 1149 KB
+- `major_01_magician` — Pháp Sư (Magician) — 781 KB
+- `major_02_high_priestess` — Nữ Tư Tế (High Priestess) — 863 KB
+- `major_03_empress` — Nữ Hoàng (Empress) — 926 KB
+- `major_04_emperor` — Hoàng Đế (Emperor) — 916 KB
+- `major_05_hierophant` — Giáo Hoàng (Hierophant) — 879 KB
+- `major_06_lovers` — Người Yêu (Lovers) — 971 KB
+- `major_07_chariot` — Cỗ Xe (Chariot) — 839 KB
+- `major_08_strength` — Sức Mạnh (Strength) — 787 KB
+- `major_09_hermit` — Ẩn Sĩ (Hermit) — 718 KB
+- `major_10_wheel_of_fortune` — Bánh Xe Vận Mệnh (Wheel of Fortune) — 1128 KB
+- `major_11_justice` — Công Lý (Justice) — 872 KB
+- `major_12_hanged_man` — Người Treo Ngược (Hanged Man) — 1112 KB
+- `major_13_death` — Tử Thần (Death) — 900 KB
+- `major_14_temperance` — Tiết Độ (Temperance) — 935 KB
+- `major_15_devil` — Ác Quỷ (Devil) — 760 KB
+- `major_16_tower` — Tòa Tháp (Tower) — 740 KB
+- `major_17_star` — Ngôi Sao (Star) — 832 KB
+- `major_18_moon` — Mặt Trăng (Moon) — 838 KB
+- `major_19_sun` — Mặt Trời (Sun) — 913 KB
+- `major_20_judgement` — Phán Xét (Judgement) — 912 KB
+- `major_21_world` — Thế Giới (World) — 1143 KB
+- `swords_ace` — Át Kiếm (Ace of Swords) — 830 KB
+- `swords_02` — Hai Kiếm (Two of Swords) — 791 KB
+- `swords_03` — Ba Kiếm (Three of Swords) — 708 KB
+- `swords_04` — Bốn Kiếm (Four of Swords) — 834 KB
+- `swords_05` — Năm Kiếm (Five of Swords) — 868 KB
+- `swords_06` — Sáu Kiếm (Six of Swords) — 913 KB
+- `swords_07` — Bảy Kiếm (Seven of Swords) — 775 KB
+- `swords_08` — Tám Kiếm (Eight of Swords) — 873 KB
+- `swords_09` — Chín Kiếm (Nine of Swords) — 770 KB
+- `swords_10` — Mười Kiếm (Ten of Swords) — 713 KB
+- `swords_page` — Tiểu Đồng Kiếm (Page of Swords) — 852 KB
+- `swords_knight` — Hiệp Sĩ Kiếm (Knight of Swords) — 832 KB
+- `swords_queen` — Hoàng Hậu Kiếm (Queen of Swords) — 798 KB
+- `swords_king` — Vua Kiếm (King of Swords) — 910 KB
+- `wands_ace` — Át Gậy (Ace of Wands) — 829 KB
+- `wands_02` — Hai Gậy (Two of Wands) — 827 KB
+- `wands_03` — Ba Gậy (Three of Wands) — 917 KB
+- `wands_04` — Bốn Gậy (Four of Wands) — 778 KB
+- `wands_05` — Năm Gậy (Five of Wands) — 823 KB
+- `wands_06` — Sáu Gậy (Six of Wands) — 857 KB
+- `wands_07` — Bảy Gậy (Seven of Wands) — 744 KB
+- `wands_08` — Tám Gậy (Eight of Wands) — 749 KB
+- `wands_09` — Chín Gậy (Nine of Wands) — 862 KB
+- `wands_10` — Mười Gậy (Ten of Wands) — 802 KB
+- `wands_page` — Tiểu Đồng Gậy (Page of Wands) — 929 KB
+- `wands_knight` — Hiệp Sĩ Gậy (Knight of Wands) — 965 KB
+- `wands_queen` — Hoàng Hậu Gậy (Queen of Wands) — 949 KB
+- `wands_king` — Vua Gậy (King of Wands) — 961 KB
