@@ -1,14 +1,61 @@
 'use strict';
 
-const { withHandler } = require('../_helpers');
-const { Solar } = require('lunar-javascript');
-const BaZiCalculator = require('../../lib/bazi/calculator');
-const ganzhi = require('../../lib/bazi/ganzhi');
-const { calculateHexagram, ELEMENTS } = require('../../lib/bazi/que_data/mapping');
-const { HEXAGRAMS } = require('../../lib/bazi/que_data/gua_64');
-const { INTERPRETATIONS } = require('../../lib/bazi/que_data/interpretations');
+/**
+ * Dispatcher gom 4 endpoint quẻ vào 1 Serverless Function duy nhất để giữ
+ * tổng số function dưới giới hạn 12 của Vercel Hobby.
+ *
+ * URL cũ (giữ nguyên nhờ rewrite trong vercel.json):
+ *   /api/que/daily        -> /api/que?period=daily
+ *   /api/que/monthly      -> /api/que?period=monthly
+ *   /api/que/yearly       -> /api/que?period=yearly
+ *   /api/que/quick-random -> /api/que?period=quick-random
+ *
+ * Response shape (status + JSON) giống hệt 4 file cũ cho cùng input.
+ */
 
-// Map topic string → key trong interpretation.aspects
+const { withHandler } = require('./_helpers');
+const { buildPeriodQue } = require('./que/_period');
+
+const { Solar } = require('lunar-javascript');
+const BaZiCalculator = require('../lib/bazi/calculator');
+const ganzhi = require('../lib/bazi/ganzhi');
+const { calculateHexagram, ELEMENTS } = require('../lib/bazi/que_data/mapping');
+const { HEXAGRAMS } = require('../lib/bazi/que_data/gua_64');
+const { INTERPRETATIONS } = require('../lib/bazi/que_data/interpretations');
+
+const PERIODS = ['daily', 'monthly', 'yearly', 'quick-random'];
+
+// ---------------------------------------------------------------------------
+// Query parsing (fallback khi Vercel/req.query không sẵn hoặc khi test bằng node)
+// ---------------------------------------------------------------------------
+
+const parseQuery = (url) => {
+    const out = {};
+    const qs = (url || '').split('?')[1] || '';
+    if (!qs) return out;
+    qs.split('&').forEach((pair) => {
+        if (!pair) return;
+        const idx = pair.indexOf('=');
+        const rawKey = idx === -1 ? pair : pair.slice(0, idx);
+        const rawVal = idx === -1 ? '' : pair.slice(idx + 1);
+        try {
+            out[decodeURIComponent(rawKey)] = decodeURIComponent(rawVal.replace(/\+/g, ' '));
+        } catch (e) {
+            out[rawKey] = rawVal;
+        }
+    });
+    return out;
+};
+
+const periodFromUrl = (url) => {
+    const match = String(url || '').match(/\/api\/que\/(daily|monthly|yearly|quick-random)(?:[\/?#]|$)/);
+    return match ? match[1] : null;
+};
+
+// ---------------------------------------------------------------------------
+// Logic quick-random (nguyên bản từ api/que/quick-random.js)
+// ---------------------------------------------------------------------------
+
 const TOPIC_MAP = {
     love:        { key: 'love',    label: 'Tình Duyên' },
     wealth:      { key: 'finance', label: 'Tài Lộc' },
@@ -26,7 +73,6 @@ const TOPIC_MAP = {
     'Xuất hành':  { key: 'safety', label: 'Xuất Hành' }
 };
 
-// Topic gốc dùng cho calculateHexagram (TOPIC_NUMBERS trong mapping.js)
 const CALC_TOPIC = {
     love: 'Tình duyên',
     wealth: 'Tài lộc',
@@ -44,7 +90,7 @@ const qualityFromScore = (score) => {
     return 'Tiểu Hung';
 };
 
-const buildBaziContext = (q) => {
+const buildQuickBaziContext = (q) => {
     const calc = new BaZiCalculator({
         year: parseInt(q.year),
         month: parseInt(q.month),
@@ -71,26 +117,22 @@ const buildBaziContext = (q) => {
 };
 
 // GET /api/que/quick-random?topic=...&type=daily|monthly|yearly&[birth params]
-// Gieo quẻ DETERMINISTIC theo giờ gieo (giờ Việt Nam) + Nhật chủ từ hồ sơ mệnh + chủ đề.
-module.exports = withHandler(async function(req, res) {
-    const q = req.query || {};
+const handleQuickRandom = (q, res) => {
     const topicParam = q.topic || '';
     const topicInfo = TOPIC_MAP[topicParam] || { key: 'career', label: 'Tổng Quan' };
     const type = ['daily', 'monthly', 'yearly'].includes(q.type) ? q.type : 'daily';
 
-    // 1. Hồ sơ mệnh (nếu có) — không có thì mapping dùng Nhật chủ mặc định Giáp
     let baziContext = {};
     let hasProfile = false;
     if (q.year && q.month && q.day) {
         try {
-            baziContext = buildBaziContext(q);
+            baziContext = buildQuickBaziContext(q);
             hasProfile = true;
         } catch (err) {
             console.error('[QuickQue] bazi build failed, fallback to cast-time only:', err.message);
         }
     }
 
-    // 2. Can Chi giờ gieo (hiện tại, giờ Việt Nam)
     const vnNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
     const solar = Solar.fromDate(vnNow);
     const lunar = solar.getLunar();
@@ -100,7 +142,6 @@ module.exports = withHandler(async function(req, res) {
         zhi: ZHI_NAMES[hourGanZhi.charAt(1)] || hourGanZhi.charAt(1)
     };
 
-    // 3. Tính quẻ
     const calcTopic = CALC_TOPIC[topicParam] || topicParam || 'Chung';
     const guaResult = calculateHexagram(baziContext, timeInfo, type, calcTopic);
     const hexId = guaResult.hexagramId;
@@ -153,5 +194,30 @@ module.exports = withHandler(async function(req, res) {
         has_profile:    hasProfile,
         disclaimer:     'Quẻ được tính theo giờ gieo (giờ Việt Nam) và Nhật chủ lấy từ hồ sơ mệnh. Cùng người, cùng giờ gieo, cùng chủ đề sẽ cho cùng một quẻ.'
             + (hasProfile ? '' : ' Chưa có hồ sơ mệnh nên quẻ chỉ tính theo giờ gieo — điền hồ sơ để tính theo mệnh.')
+    });
+};
+
+// ---------------------------------------------------------------------------
+// Handler
+// ---------------------------------------------------------------------------
+
+module.exports = withHandler(async function(req, res) {
+    const urlQuery = parseQuery(req.url);
+    const q = Object.assign({}, urlQuery, req.query || {});
+
+    const period = q.period || periodFromUrl(req.url);
+
+    if (period === 'quick-random') {
+        return handleQuickRandom(q, res);
+    }
+
+    if (period === 'daily' || period === 'monthly' || period === 'yearly') {
+        const result = buildPeriodQue(q, period);
+        return res.status(result.status).json(result.body);
+    }
+
+    return res.status(400).json({
+        error: 'Invalid or missing period',
+        allowed: PERIODS
     });
 });

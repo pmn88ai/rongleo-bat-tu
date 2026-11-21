@@ -26,6 +26,10 @@
     { "source": "/api/luan-giai",     "destination": "/api/misc" },
     { "source": "/api/dayun",         "destination": "/api/misc" },
     { "source": "/api/auth/me",       "destination": "/api/misc" },
+    { "source": "/api/que/daily",        "destination": "/api/que?period=daily" },
+    { "source": "/api/que/monthly",      "destination": "/api/que?period=monthly" },
+    { "source": "/api/que/yearly",       "destination": "/api/que?period=yearly" },
+    { "source": "/api/que/quick-random", "destination": "/api/que?period=quick-random" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
