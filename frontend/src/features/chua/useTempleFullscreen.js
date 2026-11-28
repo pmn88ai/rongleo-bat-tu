@@ -41,6 +41,11 @@ const useTempleFullscreen = () => {
     useEffect(() => {
         if (!isFallback) return undefined;
 
+        // Ve dau trang: che do "rap" dung position:fixed nam trong khung
+        // cuon cua app — neu trang dang cuon do thi scene co the bi lech
+        // theo vi tri cuon tren mot so trinh duyet dien thoai.
+        window.scrollTo(0, 0);
+
         const onKeyDown = (event) => {
             if (event.key === 'Escape') setIsFallback(false);
         };

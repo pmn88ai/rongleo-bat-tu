@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
@@ -56,23 +57,31 @@ const PLACES = [
 const ChuaPage = () => {
     const fullscreen = useTempleFullscreen();
 
+    // Khi roi ve che do "rap" (khong co Fullscreen API, thuong gap tren
+    // dien thoai), dua scene thang ra document.body de position:fixed
+    // luon tinh theo viewport — khong bi khung cuon .mobile-content
+    // (overflow-y:auto) co lai lam canh hien nho.
+    const sceneBg = (
+        <div className="chua-scene-bg" ref={fullscreen.sceneRef}>
+            <video
+                className="chua-scene-video"
+                src="/video/cong-chua-smoke.mp4"
+                poster="/images/chua/nen-cong-chua.jpg"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+                tabIndex={-1}
+            />
+            <TempleSceneControls fullscreen={fullscreen} />
+        </div>
+    );
+
     return (
         <>
-            <div className="chua-scene-bg" ref={fullscreen.sceneRef}>
-                <video
-                    className="chua-scene-video"
-                    src="/video/cong-chua-smoke.mp4"
-                    poster="/images/chua/nen-cong-chua.jpg"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="metadata"
-                    aria-hidden="true"
-                    tabIndex={-1}
-                />
-                <TempleSceneControls fullscreen={fullscreen} />
-            </div>
+            {fullscreen.isFallback ? createPortal(sceneBg, document.body) : sceneBg}
 
             <div className="chua-page chua-content fade-in">
                 <div className="chua-fs-slot">

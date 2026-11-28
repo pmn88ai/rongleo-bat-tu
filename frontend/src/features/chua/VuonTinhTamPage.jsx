@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import TempleBackground from './TempleBackground';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
@@ -36,9 +37,15 @@ const GardenScene = ({ sceneRef, fullscreen }) => (
 const VuonTinhTamPage = () => {
     const fullscreen = useTempleFullscreen();
 
+    // Khi roi ve che do "rap" (khong co Fullscreen API, thuong gap tren
+    // dien thoai), dua scene thang ra document.body de position:fixed
+    // luon tinh theo viewport — khong bi khung cuon .mobile-content
+    // (overflow-y:auto) co lai lam canh hien nho.
+    const gardenScene = <GardenScene sceneRef={fullscreen.sceneRef} fullscreen={fullscreen} />;
+
     return (
         <div className="temple-page vuon-tinh-tam-page">
-            <GardenScene sceneRef={fullscreen.sceneRef} fullscreen={fullscreen} />
+            {fullscreen.isFallback ? createPortal(gardenScene, document.body) : gardenScene}
 
             <div className="temple-content">
                 <TempleFullscreenButton onClick={fullscreen.enter} />

@@ -349,6 +349,62 @@ body.temple-fullscreen-active .temple-scene {
     }
 }
 
+/* ===== Fullscreen cung — ep scene + video lap day viewport =====
+   Ly do: tren dien thoai (nhat la iOS Safari / webview trong app),
+   Fullscreen API cho <div> co the khong hoat dong -> roi ve che do
+   "rap" bang CSS (body.temple-fullscreen-active). Khi do scene chi
+   con dua vao position:fixed nam trong .mobile-content (khung cuon,
+   overflow-y:auto + -webkit-overflow-scrolling:touch) nen co the
+   bi co lai theo khung cuon thay vi viewport -> canh hien nho,
+   thua khoang trong ben phai. Cac rule duoi day ep kich thuoc theo
+   don vi viewport (vw/dvh — luon tinh theo viewport, ke ca khi
+   containing block bi lech) cho ca 2 duong: native fullscreen va
+   fallback. */
+.temple-scene:fullscreen,
+.temple-scene:-webkit-full-screen,
+.chua-scene-bg:fullscreen,
+.chua-scene-bg:-webkit-full-screen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+}
+
+.temple-scene:fullscreen .temple-bg-video,
+.temple-scene:-webkit-full-screen .temple-bg-video,
+.chua-scene-bg:fullscreen .chua-scene-video,
+.chua-scene-bg:-webkit-full-screen .chua-scene-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Fallback (khong co Fullscreen API): ep scene theo viewport */
+body.temple-fullscreen-active .temple-scene,
+body.temple-fullscreen-active .chua-scene-bg {
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+}
+
+body.temple-fullscreen-active .temple-bg-video,
+body.temple-fullscreen-active .chua-scene-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .temple-fs-control.is-playing {
         animation: none !important;
