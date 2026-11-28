@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useMusicPlayer } from '../context/MusicPlayerContext';
+import { useMusicPlayer, trackForRoom } from '../context/MusicPlayerContext';
 import './MusicPlayer.css';
 
 const formatTime = (seconds) => {
@@ -23,6 +23,9 @@ const MusicPlayer = () => {
 
     useEffect(() => {
         if (!keepsMusicAlive && isPlaying) pause();
+        // Mỗi gian một bài (Leo 28/11): vào gian nào chọn bài của gian đó; đang phát thì phát tiếp bài mới.
+        const roomTrack = trackForRoom(location.pathname);
+        if (roomTrack && roomTrack.id !== currentTrackId) selectTrack(roomTrack.id, { autoplay: isPlaying });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 
@@ -31,7 +34,7 @@ const MusicPlayer = () => {
     if (!available) {
         return (
             <div className="music-player-missing" role="status">
-                Không tải được nhạc YouTube. Kiểm tra kết nối mạng.
+                Không tải được nhạc. Kiểm tra kết nối mạng.
             </div>
         );
     }

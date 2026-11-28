@@ -1,24 +1,41 @@
 /**
  * MusicPlayerContext
- * Một trình phát YouTube duy nhất sống ở cấp app, nên chuyển giữa Chánh điện và
- * Vườn tịnh tâm không bị dừng hay phát lại từ đầu. Nhạc chạy qua YouTube
- * (không tốn băng thông của mình) và được điều khiển từ thanh nhạc.
+ * Một trình phát duy nhất sống ở cấp app, nên chuyển giữa Chánh điện và
+ * Vườn tịnh tâm không bị dừng hay phát lại từ đầu. Điều khiển từ thanh nhạc.
  *
- * Danh sách nhạc nằm DUY NHẤT ở mảng TRACKS bên dưới. Thêm bài mới = thêm 1 dòng
- * { id: '<YouTube video id>', title: '<tên hiển thị>' } vào TRACKS.
+ * Danh sách nhạc nằm DUY NHẤT ở mảng TRACKS bên dưới. Hai loại bài:
+ *   - kind 'file'    : file nhạc tự host trong /public/audio (HTML5 <audio>, chỉ tải khi bấm phát,
+ *                      trình duyệt tải dần theo đoạn đang nghe — không tải cả file một lần).
+ *   - kind 'youtube' : video YouTube (id), phát ẩn qua YouTube IFrame API.
+ * `room` = đường dẫn gian chùa mà bài thuộc về: vào gian nào thì thanh nhạc chọn bài của gian đó
+ * (đang phát thì đổi bài luôn).
  */
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 
 const MusicPlayerContext = createContext(null);
 
 export const TRACKS = [
-    { id: 'jKoznZSMX6s', title: 'Nhạc piano + tiếng nước chảy 2 tiếng' }
+    {
+        id: 'chanh-dien-36p',
+        kind: 'file',
+        src: '/audio/chanh-dien-36p.m4a',
+        title: 'Chánh điện — chuông, mõ, sáo (36 phút)',
+        room: '/chanh-dien'
+    },
+    {
+        id: 'jKoznZSMX6s',
+        kind: 'youtube',
+        title: 'Nhạc piano + tiếng nước chảy 2 tiếng',
+        room: '/vuon-tinh-tam'
+    }
 ];
 
 const DEFAULT_TRACK = TRACKS[0];
 
+export const trackForRoom = (pathname) => TRACKS.find((track) => track.room === pathname) || null;
+
 const embedSrcFor = (track) =>
-    `https://www.youtube.com/embed/${track.id}?rel=0&playsinline=1`;
+    track.kind === 'youtube' ? `https://www.youtube.com/embed/${track.id}?rel=0&playsinline=1` : track.src;
 
 const YT_API_SRC = 'https://www.youtube.com/iframe_api';
 let ytApiPromise = null;
@@ -53,19 +70,21 @@ const loadYouTubeApi = () => {
 };
 
 export const MusicPlayerProvider = ({ children }) => {
+    // ---- YouTube ----
     const playerRef = useRef(null);
     const hostRef = useRef(null);
     const initPromiseRef = useRef(null);
     const pendingPlayRef = useRef(false);
     const readyRef = useRef(false);
+    const pendingYtIdRef = useRef(null);      // bài YouTube cần nạp khi player sẵn sàng
+
+    // ---- file (HTML5 audio) ----
+    const audioRef = useRef(null);
+
     const volumeRef = useRef(0.65);
     const mountedRef = useRef(true);
     const tickRef = useRef(null);
-
     const currentTrackRef = useRef(DEFAULT_TRACK);
-    const pendingTrackRef = useRef(null);
-    const previousTrackRef = useRef(null);
-    const previousWasPlayingRef = useRef(false);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
@@ -76,6 +95,8 @@ export const MusicPlayerProvider = ({ children }) => {
     const [ready, setReady] = useState(false);
     const [currentTrackId, setCurrentTrackId] = useState(DEFAULT_TRACK.id);
     const [trackError, setTrackError] = useState(null);
+
+    const isYt = () => currentTrackRef.current.kind === 'youtube';
 
     useEffect(() => {
         mountedRef.current = true;
@@ -92,15 +113,21 @@ export const MusicPlayerProvider = ({ children }) => {
                 hostRef.current.remove();
                 hostRef.current = null;
             }
+            const audio = audioRef.current;
+            if (audio) {
+                audio.pause();
+                audio.removeAttribute('src');
+                audioRef.current = null;
+            }
             initPromiseRef.current = null;
             pendingPlayRef.current = false;
-            pendingTrackRef.current = null;
-            previousTrackRef.current = null;
         };
     }, []);
 
+    // thời gian của bài YouTube (file dùng sự kiện timeupdate)
     useEffect(() => {
         tickRef.current = window.setInterval(() => {
+            if (!isYt()) return;
             const player = playerRef.current;
             if (!readyRef.current || !player || typeof player.getCurrentTime !== 'function') return;
             const t = player.getCurrentTime();
@@ -113,10 +140,44 @@ export const MusicPlayerProvider = ({ children }) => {
         };
     }, []);
 
-    const createPlayer = useCallback(() => {
-        if (initPromiseRef.current) return initPromiseRef.current;
+    // ---------------------------------------------------------------- file
+    const getAudio = useCallback(() => {
+        if (audioRef.current) return audioRef.current;
+        const audio = new Audio();
+        audio.preload = 'none';                // chỉ tải khi bấm phát
+        audio.loop = true;
+        audio.volume = volumeRef.current;
+        audio.addEventListener('play', () => { if (!isYt()) setIsPlaying(true); });
+        audio.addEventListener('pause', () => { if (!isYt()) setIsPlaying(false); });
+        audio.addEventListener('timeupdate', () => { if (!isYt()) setCurrentTime(audio.currentTime); });
+        audio.addEventListener('loadedmetadata', () => {
+            if (!isYt() && Number.isFinite(audio.duration)) setDuration(audio.duration);
+        });
+        audio.addEventListener('error', () => {
+            if (isYt() || !audio.getAttribute('src')) return;
+            setIsPlaying(false);
+            setTrackError(`Không tải được "${currentTrackRef.current.title}". Kiểm tra kết nối mạng.`);
+        });
+        audioRef.current = audio;
+        return audio;
+    }, []);
 
-        const startTrack = currentTrackRef.current;
+    const playFile = useCallback((track) => {
+        const audio = getAudio();
+        if (audio.getAttribute('src') !== track.src) {
+            audio.setAttribute('src', track.src);
+            audio.load();
+        }
+        setReady(true);
+        const p = audio.play();
+        if (p && typeof p.catch === 'function') {
+            p.catch(() => { if (mountedRef.current) setIsPlaying(false); });
+        }
+    }, [getAudio]);
+
+    // ---------------------------------------------------------------- YouTube
+    const createPlayer = useCallback((startId) => {
+        if (initPromiseRef.current) return initPromiseRef.current;
 
         initPromiseRef.current = loadYouTubeApi()
             .then((YT) => new Promise((resolve, reject) => {
@@ -132,13 +193,13 @@ export const MusicPlayerProvider = ({ children }) => {
                 hostRef.current = host;
 
                 const player = new YT.Player(host, {
-                    videoId: startTrack.id,
+                    videoId: startId,
                     playerVars: {
                         autoplay: 0,
                         controls: 0,
                         disablekb: 1,
                         loop: 1,
-                        playlist: startTrack.id,
+                        playlist: startId,
                         playsinline: 1,
                         rel: 0
                     },
@@ -149,18 +210,20 @@ export const MusicPlayerProvider = ({ children }) => {
                             setReady(true);
                             event.target.setVolume(Math.round(volumeRef.current * 100));
                             if (typeof event.target.setLoop === 'function') event.target.setLoop(true);
-                            const d = event.target.getDuration();
-                            if (Number.isFinite(d) && d > 0) setDuration(d);
                             resolve(event.target);
-                            if (pendingPlayRef.current) {
+                            const want = pendingYtIdRef.current;
+                            pendingYtIdRef.current = null;
+                            if (want && want !== startId && typeof event.target.loadVideoById === 'function') {
+                                event.target.loadVideoById(want);
+                            }
+                            if (pendingPlayRef.current && isYt()) {
                                 pendingPlayRef.current = false;
                                 event.target.playVideo();
                             }
                         },
                         onStateChange: (event) => {
+                            if (!isYt()) return;
                             if (event.data === YT.PlayerState.PLAYING) {
-                                pendingTrackRef.current = null;
-                                previousTrackRef.current = null;
                                 setIsPlaying(true);
                                 const d = event.target.getDuration();
                                 if (Number.isFinite(d) && d > 0) setDuration(d);
@@ -169,27 +232,9 @@ export const MusicPlayerProvider = ({ children }) => {
                             }
                         },
                         onError: () => {
-                            const failedTrack = pendingTrackRef.current;
-                            const previousTrack = previousTrackRef.current;
-                            pendingTrackRef.current = null;
-                            previousTrackRef.current = null;
-
-                            if (failedTrack && previousTrack) {
-                                currentTrackRef.current = previousTrack;
-                                setCurrentTrackId(previousTrack.id);
-                                setTrackError(`Không phát được "${failedTrack.title}". Vẫn giữ bài đang phát.`);
-                                const p = playerRef.current;
-                                if (p && typeof p.loadVideoById === 'function') {
-                                    p.loadVideoById(previousTrack.id);
-                                    if (previousWasPlayingRef.current && typeof p.playVideo === 'function') {
-                                        p.playVideo();
-                                    }
-                                }
-                                return;
-                            }
-
-                            setAvailable(false);
-                            reject(new Error('YouTube player error'));
+                            if (!isYt()) return;
+                            setIsPlaying(false);
+                            setTrackError(`Không phát được "${currentTrackRef.current.title}" (YouTube).`);
                         }
                     }
                 });
@@ -205,75 +250,92 @@ export const MusicPlayerProvider = ({ children }) => {
         return initPromiseRef.current;
     }, []);
 
-    const play = useCallback(() => {
-        const startPlayback = () => {
-            const player = playerRef.current;
-            if (readyRef.current && player && typeof player.playVideo === 'function') {
-                player.playVideo();
-            } else {
-                pendingPlayRef.current = true;
-            }
-        };
-
+    const playYt = useCallback((track) => {
+        const player = playerRef.current;
         if (!initPromiseRef.current) {
             pendingPlayRef.current = true;
-            createPlayer().catch(() => { /* handled via available state */ });
+            createPlayer(track.id).catch(() => { /* handled via available state */ });
             return;
         }
-
-        startPlayback();
+        if (!readyRef.current || !player) {
+            pendingPlayRef.current = true;
+            pendingYtIdRef.current = track.id;
+            return;
+        }
+        const nowId = typeof player.getVideoData === 'function' ? (player.getVideoData() || {}).video_id : null;
+        if (nowId && nowId !== track.id && typeof player.loadVideoById === 'function') {
+            player.loadVideoById(track.id);
+        }
+        if (typeof player.playVideo === 'function') player.playVideo();
     }, [createPlayer]);
 
-    const pause = useCallback(() => {
+    const pauseYt = () => {
         pendingPlayRef.current = false;
         const player = playerRef.current;
-        if (readyRef.current && player && typeof player.pauseVideo === 'function') {
-            player.pauseVideo();
-        }
+        if (readyRef.current && player && typeof player.pauseVideo === 'function') player.pauseVideo();
+    };
+
+    // ---------------------------------------------------------------- chung
+    const play = useCallback(() => {
+        setTrackError(null);
+        const track = currentTrackRef.current;
+        if (track.kind === 'file') playFile(track);
+        else playYt(track);
+    }, [playFile, playYt]);
+
+    const pause = useCallback(() => {
+        if (audioRef.current) audioRef.current.pause();
+        pauseYt();
+        setIsPlaying(false);
     }, []);
 
     const toggle = useCallback(() => {
-        const player = playerRef.current;
-        if (readyRef.current && player && typeof player.getPlayerState === 'function' && player.getPlayerState() === 1) {
+        if (isYt()) {
+            const player = playerRef.current;
+            if (readyRef.current && player && typeof player.getPlayerState === 'function' && player.getPlayerState() === 1) {
+                pause();
+                return;
+            }
+        } else if (audioRef.current && !audioRef.current.paused) {
             pause();
             return;
         }
         play();
     }, [pause, play]);
 
-    const selectTrack = useCallback((trackId) => {
+    /** Đổi bài. `autoplay` mặc định true (người dùng chọn); khi đổi gian thì phát tiếp chỉ nếu đang phát. */
+    const selectTrack = useCallback((trackId, { autoplay = true } = {}) => {
         const nextTrack = TRACKS.find((track) => track.id === trackId);
-        if (!nextTrack) return;
-        if (nextTrack.id === currentTrackRef.current.id) return;
+        if (!nextTrack || nextTrack.id === currentTrackRef.current.id) return;
 
-        const previousTrack = currentTrackRef.current;
-        const player = playerRef.current;
-
+        if (audioRef.current) audioRef.current.pause();
+        pauseYt();
+        setIsPlaying(false);
         setTrackError(null);
         setDuration(0);
         setCurrentTime(0);
         currentTrackRef.current = nextTrack;
         setCurrentTrackId(nextTrack.id);
 
-        if (!readyRef.current || !player || typeof player.loadVideoById !== 'function') {
-            pendingPlayRef.current = true;
-            if (!initPromiseRef.current) createPlayer().catch(() => { /* handled via available state */ });
-            return;
+        if (autoplay) {
+            if (nextTrack.kind === 'file') playFile(nextTrack);
+            else playYt(nextTrack);
         }
-
-        pendingTrackRef.current = nextTrack;
-        previousTrackRef.current = previousTrack;
-        previousWasPlayingRef.current = typeof player.getPlayerState === 'function' && player.getPlayerState() === 1;
-
-        player.loadVideoById(nextTrack.id);
-        if (typeof player.playVideo === 'function') player.playVideo();
-    }, [createPlayer]);
+    }, [playFile, playYt]);
 
     const seek = useCallback((seconds) => {
         const next = Math.max(0, seconds);
-        const player = playerRef.current;
-        if (readyRef.current && player && typeof player.seekTo === 'function') {
-            player.seekTo(next, true);
+        if (isYt()) {
+            const player = playerRef.current;
+            if (readyRef.current && player && typeof player.seekTo === 'function') {
+                player.seekTo(next, true);
+                setCurrentTime(next);
+            }
+            return;
+        }
+        const audio = audioRef.current;
+        if (audio && audio.getAttribute('src')) {
+            audio.currentTime = next;
             setCurrentTime(next);
         }
     }, []);
@@ -282,6 +344,7 @@ export const MusicPlayerProvider = ({ children }) => {
         const value = Math.max(0, Math.min(1, next));
         volumeRef.current = value;
         setVolumeState(value);
+        if (audioRef.current) audioRef.current.volume = value;
         const player = playerRef.current;
         if (readyRef.current && player && typeof player.setVolume === 'function') {
             player.setVolume(Math.round(value * 100));

@@ -42,8 +42,9 @@ const ChanhDienPage = () => {
                 <section className="temple-card glass-card">
                     <h2>Nghe nhạc thiền</h2>
                     <p>
-                        Bản piano của Leo đã sẵn trong chùa. Bấm nút tròn ở góc dưới để phát,
-                        bấm lần nữa để mở thanh nhạc đầy đủ.
+                        Tiếng chuông, mõ và sáo của Chánh điện (36 phút). Bấm nút tròn ở góc dưới
+                        để phát, bấm lần nữa để mở thanh nhạc đầy đủ. Sang Vườn tịnh tâm sẽ đổi
+                        sang bản piano và tiếng nước.
                     </p>
                     <div className="temple-links">
                         <Link to="/vuon-tinh-tam" className="temple-link">

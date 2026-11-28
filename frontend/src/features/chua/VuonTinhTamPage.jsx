@@ -5,11 +5,16 @@ import TempleBackground from './TempleBackground';
 import TempleSceneControls, { TempleFullscreenButton } from './TempleSceneControls';
 import useTempleFullscreen from './useTempleFullscreen';
 import NpcMemory from './NpcMemory';
-import { useMusicPlayer } from '../../context/MusicPlayerContext';
+import { TRACKS, trackForRoom } from '../../context/MusicPlayerContext';
 import './TempleScene.css';
 
+// Khung video luôn là bài YouTube của Vườn tịnh tâm (không lấy "bài đang chọn" — có thể là file nhạc Chánh điện).
+const VUON_TRACK = trackForRoom('/vuon-tinh-tam') || TRACKS.find((t) => t.kind === 'youtube');
+
 const MusicVideoCard = () => {
-    const { embedSrc, currentTrack } = useMusicPlayer();
+    if (!VUON_TRACK) return null;
+    const embedSrc = `https://www.youtube.com/embed/${VUON_TRACK.id}?rel=0&playsinline=1`;
+    const currentTrack = VUON_TRACK;
 
     return (
         <section className="temple-card glass-card music-video-card">
